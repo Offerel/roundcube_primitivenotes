@@ -1,0 +1,111 @@
+#taskbar a.button-notes {
+	background: url(images/notes.png) 0px 1px/23px no-repeat;
+}
+
+.minimal #mainscreen {
+	top: 55px !important;
+}
+
+#notestoolbar {
+	top: -37px;
+	position: absolute;
+	left: 90px;
+}
+
+#notestoolbar a.button.edit {
+	background: url(../../../../skins/classic/images/mail_toolbar.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+	background-position: -64px 0;
+}
+
+#notestoolbar a.button.rename {
+	background: url(images/button_rename.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+}
+
+#notestoolbar a.button.delete {
+	background: url(../../../../skins/classic/images/mail_toolbar.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+	background-position: -192px 0;
+}
+
+#notestoolbar a.button.send {
+	background: url(images/button_send.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+}
+
+#notestoolbar a.button.new {
+	background: url(images/button_new.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+}
+
+#notestoolbar a.button.upload {
+	background: url(images/button_upload.png) 0 0 no-repeat transparent;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0;
+	margin: 0 5px;
+	overflow: hidden;
+	float: left;
+	color: transparent;
+}
+
+#notestoolbar .disabled {
+	pointer-events: none;
+	opacity: 0.2;
+}
+
+.iframebox.simplenotes_ {
+	height: 100%;
+}
+
+.upl {
+	display: none;
+}
+
+#dropzone {
+	width: 400px;
+	border: 1px solid #ababab;
+	position: absolute;
+	top: -3px;
+	right: 5px;
+	height: 44px;
+	border-radius: 4px;
+	background: lightgrey;
+}

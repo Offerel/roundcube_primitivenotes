@@ -1,0 +1,61 @@
+#taskbar a.button-notes span.button-inner {
+	background: url(images/notes.png) 5px 0 no-repeat;
+	background-size: 21px;
+}
+#taskbar a.button-notes:hover span.button-inner,
+#taskbar a.button-notes.button-selected span.button-inner {
+	background: url(images/notes_sel.png) 5px 0 no-repeat;
+	background-size: 21px;
+}
+
+.minimal #mainscreen {
+	top: 55px !important;
+}
+
+#notestoolbar {
+	top: -6px;
+	position: absolute;
+}
+
+#notestoolbar a.button.edit {
+	background: url(images/button_edit.png) 18px 2px no-repeat transparent;
+}
+
+#notestoolbar a.button.rename {
+	background: url(images/button_rename.png) 18px 2px no-repeat transparent;
+}
+
+#notestoolbar a.button.delete {
+	background: url(images/button_del.png) 14px 2px no-repeat transparent;
+}
+
+#notestoolbar a.button.send {
+	background: url(images/button_send.png) 14px 2px no-repeat transparent;
+}
+
+#notestoolbar a.button.new {
+	background: url(images/button_new.png) 14px 2px no-repeat transparent;
+}
+
+#notestoolbar a.button.upload {
+	background: url(images/button_upload.png) 14px 2px no-repeat transparent;
+}
+
+#notestoolbar .disabled {
+	pointer-events: none;
+}
+
+.upl {
+	display: none;
+}
+
+#dropzone {
+	width: 400px;
+	border: 1px solid #ababab;
+	position: absolute;
+	top: -3px;
+	right: 5px;
+	height: 44px;
+	border-radius: 4px;
+	background: lightgrey;
+}

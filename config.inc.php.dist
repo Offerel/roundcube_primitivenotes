@@ -1,0 +1,7 @@
+<?php
+// absolute base! path where your notes are stored
+$config['notes_basepath'] = '/path/to/server/folder/';
+
+// notes folder under basepath. in the end the folder is calculated by 'basepath' + 'username' + 'notes_folder'
+$config['notes_folder'] = '/files/Notes/';
+?>
