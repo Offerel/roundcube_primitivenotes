@@ -201,5 +201,5 @@
     text-decoration: none !important;
     color: #405353;
     width: 100%;
-    display: initial;
+    display: inline-block;
 }
