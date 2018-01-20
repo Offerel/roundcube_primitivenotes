@@ -80,16 +80,13 @@ if(isset($_POST['editor1'])) {
 
 // Read the files in the notes folder put them in an array and sort by last edit date
 if (is_dir($notes_path)) {
-	if ($handle = opendir($notes_path))
-		{
-		while (($file = readdir($handle)) !== false)
-			{
-			if (is_file($notes_path.$file))
-				{
+	if ($handle = opendir($notes_path)) {
+		while (($file = readdir($handle)) !== false) {
+			if (is_file($notes_path.$file)) {
 				$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
 				$tags = null;
 				$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
-				//echo ($rv);
+				
 				if(count($tags) > 0) {
 					$ttags = explode(" ", $tags[1]);
 				} else {
@@ -97,21 +94,24 @@ if (is_dir($notes_path)) {
 				}
 
 				$files[] = array(
-						'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
-						'filename' => $name,
-						'size' => filesize($notes_path.$file),
-						'type' => pathinfo($notes_path.$file,PATHINFO_EXTENSION),
-						'time' => filemtime($notes_path.$file),
-						'tags' => $ttags,
-						'id' => $id,
-						);
+					'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
+					'filename' => $name,
+					'size' => filesize($notes_path.$file),
+					'type' => pathinfo($notes_path.$file,PATHINFO_EXTENSION),
+					'time' => filemtime($notes_path.$file),
+					'tags' => $ttags,
+					'id' => $id,
+					);
 				$id++;
 				}
 			}
 		closedir($handle);
-		}
 	}
-usort($files, function($a, $b) { return $b['time'] <=> $a['time']; });
+}
+
+//usort($files, function($a, $b) { return $b['time'] <=> $a['time']; });
+usort($files, function($a, $b) { return $b['time'] > $a['time']; });	// sort by lastmodified time
+//usort($files, function($a, $b) { return $b['size'] < $a['size']; });
 
 // Delete a note
 if(isset($_POST['delNote'])) {
@@ -130,18 +130,12 @@ if(isset($_GET["n"])) {
 		$akey = array_search($_GET["n"], array_column($files, 'id'));
 		$file = $notes_path.$files[$akey]['filename'];
 		if(file_exists($file)) {
-			//$handle = fopen ($file, "r");
-			//$content = fread($handle, filesize($file));
-			//fclose ($handle);
 			$content = file_get_contents($file);
 		}}
 } else {
 	$akey = 0;
 	$file = $notes_path.$files[$akey]['filename'];
 	if(file_exists($file)) {
-		//$handle = fopen ($file, "r");		
-		//$content = fread($handle, filesize($file));
-		//fclose ($handle);
 		$content = file_get_contents($file);
 	}
 }
