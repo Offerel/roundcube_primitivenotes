@@ -35,15 +35,16 @@
 }
 
 #sidebar .searchbox input {
-	font-weight: bold;
-	font-size: 11px;
-	background: white;
-	border: none;
-	padding: 0 0 0 5px;
-	margin: 0 0 0 19px;
-	top: -2px;
-	position: relative;
-	width: calc(100% - 35px);
+    font-weight: bold;
+    font-size: 11px;
+    background: white;
+    border: none;
+    padding: 0 0 0 5px;
+    margin: 0 0 0 19px;
+    top: -1px;
+    position: relative;
+    width: calc(100% - 35px);
+    height: 15px;
 }
 
 #sidebar {
@@ -106,13 +107,14 @@
 }
 
 .main_header input {
-	border-style: solid;
-	width: calc(100% - 30px);
-	padding: 0;
-	margin-left: 15px;
-	margin-top: 5px;
-	border-radius: 4px;
-	padding-left: 5px;
+    border-style: solid;
+    width: calc(100% - 30px);
+    padding: 0;
+    margin-left: 15px;
+    margin-top: 5px;
+    border-radius: 4px;
+    padding-left: 5px;
+    border: thin solid #ababab;
 }
 
 .main_area {
@@ -196,8 +198,8 @@
 }
 
 .filelist a {
-	text-decoration: none !important;
-	color: #405353;
-	width: 100%;
-	display: block;
+    text-decoration: none !important;
+    color: #405353;
+    width: 100%;
+    display: initial;
 }

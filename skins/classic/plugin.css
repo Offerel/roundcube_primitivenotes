@@ -7,9 +7,9 @@
 }
 
 #notestoolbar {
-	top: -37px;
-	position: absolute;
-	left: 90px;
+    top: -41px;
+    position: absolute;
+    left: 405px;
 }
 
 #notestoolbar a.button.edit {
