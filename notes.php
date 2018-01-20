@@ -23,11 +23,6 @@ $id = 0;
 
 if(isset($_POST['mode'])) {
 	if($_POST['mode'] === 'p') {
-		//echo "umbenennen";
-		// bool rename ( string $oldname , string $newname [, resource $context ] )
-		//rename();
-		//echo "<pre>";
-		//var_dump($_POST);
 		$oldname = $_POST['fname'];
 		$newname = $_POST['note_name'];
 		$ext = $_POST['ftype'];
@@ -39,12 +34,9 @@ if(isset($_POST['mode'])) {
 		else
 			$tags_str = "";
 			
-		//echo $oldname."\n";
 		$newname = $newname.$tags_str.".".$ext;
-		//echo "</pre>";
 		if($oldname != $newname)
 			rename($notes_path.$oldname, $notes_path.$newname);
-		//die();
 	}
 	
 }
@@ -244,19 +236,26 @@ function human_filesize($bytes, $decimals = 2) {
 				echo "<textarea name=\"editor1\" id=\"editor1\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
 			}
 			else {
-				//if($_GET['t'] === "pdf") {
-				if($_GET['t'] != "html" || $_GET['t'] != "md" || $_GET['t'] != "txt") {
+				if(isset($_GET['t']))
+					$format = $_GET['t'];
+				else
+					$format = $fentry['type'];
+					
+				if($format === "html" || $format === "md" || $format === "txt") {
+					echo "<div id=\"content\">".$content."</div>";
+				}
+				else {
 					$akey = array_search($_GET["n"], array_column($files, 'id'));
 					$file = $files[$akey]['filename'];					
 					$base64 = base64_encode($content);
-					if($_GET['t'] === "pdf")
+					
+					if($_GET['t'] === "pdf") {
 						$height = " height: 100%;";
-					else
+					} else {
 						$height = "";
+					}
+					
 					echo "<div style=\"max-width: 100%; max-height: 100%; overflow: auto; width: inherit;$height object-fit: cover;\"><object style=\"width: inherit; height: 99.2%;\" data=\"data:".$files[$akey]['mime_type'].";base64,$base64\" type=\"".$files[$akey]['mime_type']."\" >alt : <a href=\"Notes/".$file."\">PDF Download</a></object></div>";
-				}
-				elseif($_GET['t'] === "html" || $fentry['type'] === 'html') {
-					echo "<div id=\"content\">".$content."</div>";
 				}
 			}
 		?>
