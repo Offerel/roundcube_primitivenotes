@@ -101,6 +101,7 @@ if (is_dir($notes_path)) {
 					'time' => filemtime($notes_path.$file),
 					'tags' => $ttags,
 					'id' => $id,
+					'mime_type' => mime_content_type($notes_path.$file),
 					);
 				$id++;
 				}
@@ -177,7 +178,7 @@ function human_filesize($bytes, $decimals = 2) {
 			var url = new URL(location.href);
 			var t = url.searchParams.get("t");
 			
-			if(t === 'html') {
+			if(t === 'html' || t === 'md') {
 				window.parent.document.getElementById("editnote").classList.remove('disabled');
 			} else {
 				window.parent.document.getElementById("editnote").classList.add('disabled');
@@ -243,14 +244,16 @@ function human_filesize($bytes, $decimals = 2) {
 				echo "<textarea name=\"editor1\" id=\"editor1\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
 			}
 			else {
-				if($_GET['t'] === "pdf") {
+				//if($_GET['t'] === "pdf") {
+				if($_GET['t'] != "html" || $_GET['t'] != "md" || $_GET['t'] != "txt") {
 					$akey = array_search($_GET["n"], array_column($files, 'id'));
-					$file = $files[$akey]['filename'];
-					
+					$file = $files[$akey]['filename'];					
 					$base64 = base64_encode($content);
-					
-					//echo "<object data=\"https://box.pfohlnet.de/phpnotes/Notes/".$file."\" type=\"application/pdf\" style=\"width:100%; height:100%;\">alt : <a href=\"Notes/".$file."\">PDF Download</a></object>";
-					echo "<object data=\"data:application/pdf;base64,$base64\" type=\"application/pdf\" style=\"width:100%; height:100%;\">alt : <a href=\"Notes/".$file."\">PDF Download</a></object>";
+					if($_GET['t'] === "pdf")
+						$height = " height: 100%;";
+					else
+						$height = "";
+					echo "<div style=\"max-width: 100%; max-height: 100%; overflow: auto; width: inherit;$height object-fit: cover;\"><object style=\"width: inherit; height: 99.2%;\" data=\"data:".$files[$akey]['mime_type'].";base64,$base64\" type=\"".$files[$akey]['mime_type']."\" >alt : <a href=\"Notes/".$file."\">PDF Download</a></object></div>";
 				}
 				elseif($_GET['t'] === "html" || $fentry['type'] === 'html') {
 					echo "<div id=\"content\">".$content."</div>";
@@ -273,6 +276,14 @@ function human_filesize($bytes, $decimals = 2) {
 					'instanceReady' : function( evt ) {
 						evt.editor.resize("100%", editorElem.clientHeight);
 						evt.editor.commands.save.disable();
+						
+						//var editor = event.editor;
+						var markdown = evt.editor.plugins.markdown;
+						var contents = evt.editor.getData();
+						CKEDITOR.scriptLoader.load(markdown.path + 'js/marked.js', function() {
+							evt.editor.setData(marked(contents));
+						});
+						
 					},
 					
 					'change' : function( evt ) {

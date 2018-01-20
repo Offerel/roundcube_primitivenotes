@@ -9,6 +9,9 @@ CKEDITOR.editorConfig = function( config ) {
 	config.fullPage = true;
 	config.allowedContent = true;
 	
+	config.extraPlugins = 'markdown';
+	config.format_tags = 'p;h1;h2;h3;pre';
+	
 	config.toolbarGroups = [
 		{ name: 'document', groups: [ 'document', 'doctools' ] },
 		{ name: 'styles', groups: [ 'styles' ] },
