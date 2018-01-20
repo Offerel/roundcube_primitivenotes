@@ -9,7 +9,8 @@ if (!empty($rcmail->user->ID)) {
 
 	if (!is_dir($notes_path))
 	{
-		mkdir($notes_path);         
+		if(!mkdir($notes_path, 0777, true))
+			die('Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) failed. Please check your directory permissions.');
 	}
 }
 else {
