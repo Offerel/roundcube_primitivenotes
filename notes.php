@@ -248,10 +248,11 @@ function human_filesize($bytes, $decimals = 2) {
 				echo "<textarea name=\"$format\" id=\"$format\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
 			}
 			else {			
-				if($format === "html" || $format === "txt") {
-					echo "<div id=\"content\"><pre>".$content."</pre></div>";
-				}
-				elseif ( $format === "md" ) {
+				if($format === "html") {
+					echo "<div id=\"content\">".$content."</div>";
+				} elseif ($format === "txt") {
+					echo "<textarea id=\"txt\" style=\"height: 100%; width: 100%; border:0;\">".$content."</textarea>";
+				} elseif ( $format === "md" ) {
 					echo "<textarea id=\"md\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
 				} else {
 					$akey = array_search($_GET["n"], array_column($files, 'id'));
