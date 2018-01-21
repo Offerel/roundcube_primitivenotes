@@ -129,6 +129,10 @@
 	margin-top: -1px;
 }
 
+.main_area textarea {
+	border: 0;
+}
+
 #filelist {
 	margin: 0;
 	padding: 0;

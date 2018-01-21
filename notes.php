@@ -9,12 +9,14 @@ if (!empty($rcmail->user->ID)) {
 
 	if (!is_dir($notes_path))
 	{
-		if(!mkdir($notes_path, 0777, true))
-			die('Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) failed. Please check your directory permissions.');
+		if(!mkdir($notes_path, 0774, true))
+			error_log('Plugin PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) failed. Please check your directory permissions.');
+			die();
 	}
 }
 else {
-	die('Not logged in.');
+	error_log('Plugin PrimitiveNotes: Login failed. User is not logged in.');
+	die();
 }
 
 $content = "";
@@ -125,11 +127,13 @@ if(isset($_GET["n"])) {
 		if(file_exists($file)) {
 			$content = file_get_contents($file);
 		}}
-} else {
+} else { // Note, when it's not called directly
 	$akey = 0;
 	$file = $notes_path.$files[$akey]['filename'];
 	if(file_exists($file)) {
 		$content = file_get_contents($file);
+		$nformat = $files[$akey]['type'];
+		$nid = $files[$akey]['id'];
 	}
 }
 
@@ -164,13 +168,15 @@ function human_filesize($bytes, $decimals = 2) {
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel="stylesheet" href="<?PHP echo $rcmail->config->get('skin_path') . '/primitivenotes.css'; ?>" />
+		<link rel="stylesheet" href="simplemde/simplemde.min.css">
+		<script src="simplemde/simplemde.min.js"></script>		
 		<script src="ckeditor/ckeditor.js"></script>
 		<script>
 		function loadnote() {
 			var url = new URL(location.href);
 			var t = url.searchParams.get("t");
 			
-			if(t === 'html' || t === 'md') {
+			if(t === 'html' || t === 'md' || t === 'txt') {
 				window.parent.document.getElementById("editnote").classList.remove('disabled');
 			} else {
 				window.parent.document.getElementById("editnote").classList.add('disabled');
@@ -232,51 +238,51 @@ function human_filesize($bytes, $decimals = 2) {
 		</div>
 		<div class="main_area" id="main_area">
 		<?PHP
-			if($mode === "e") {
-				echo "<textarea name=\"editor1\" id=\"editor1\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
+			if(isset($_GET['t'])) {
+				$format = $_GET['t'];
+			} else {
+				$format = $nformat;
 			}
-			else {
-				if(isset($_GET['t']))
-					$format = $_GET['t'];
-				else
-					$format = $fentry['type'];
-					
-				if($format === "html" || $format === "md" || $format === "txt") {
-					echo "<div id=\"content\">".$content."</div>";
+
+			if($mode === "e") {
+				echo "<textarea name=\"$format\" id=\"$format\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
+			}
+			else {			
+				if($format === "html" || $format === "txt") {
+					echo "<div id=\"content\"><pre>".$content."</pre></div>";
 				}
-				else {
+				elseif ( $format === "md" ) {
+					echo "<textarea id=\"md\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
+				} else {
 					$akey = array_search($_GET["n"], array_column($files, 'id'));
 					$file = $files[$akey]['filename'];					
 					$base64 = base64_encode($content);
-					
 					if($_GET['t'] === "pdf") {
 						$height = " height: 100%;";
 					} else {
 						$height = "";
 					}
-					
 					echo "<div style=\"max-width: 100%; max-height: 100%; overflow: auto; width: inherit;$height object-fit: cover;\"><object style=\"width: inherit; height: 99.2%;\" data=\"data:".$files[$akey]['mime_type'].";base64,$base64\" type=\"".$files[$akey]['mime_type']."\" >alt : <a href=\"Notes/".$file."\">PDF Download</a></object></div>";
 				}
 			}
 		?>
 		</div>
 		</div>
-		<form>
+		</form>
 		<script>
 		var url = new URL(location.href);
 		if(url.searchParams.get("m") === 'p') {
 			document.getElementById('save_button').style.display = 'inline';
 		}
 		
-		if(document.getElementById("editor1")){
+		if(document.getElementById("html")){
 			var editorElem = document.getElementById("main_area");
-			var editor = CKEDITOR.replace("editor1", { 
+			var editor = CKEDITOR.replace("html", { 
 				on : {
 					'instanceReady' : function( evt ) {
 						evt.editor.resize("100%", editorElem.clientHeight);
 						evt.editor.commands.save.disable();
 						
-						//var editor = event.editor;
 						var markdown = evt.editor.plugins.markdown;
 						var contents = evt.editor.getData();
 						CKEDITOR.scriptLoader.load(markdown.path + 'js/marked.js', function() {
@@ -293,6 +299,11 @@ function human_filesize($bytes, $decimals = 2) {
 			});
 		}
 		
+		if (document.getElementById("md")) {
+			var simplemde = new SimpleMDE({ element: document.getElementById("md") });
+			simplemde.togglePreview();
+		}
+
 		function searchList() {
 			// Declare variables
 			var input, filter, ul, li, a, i;
