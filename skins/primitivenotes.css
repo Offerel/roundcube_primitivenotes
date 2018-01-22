@@ -9,6 +9,22 @@
 	padding: 0 15px;
 }
 
+.save_button {
+	position: absolute;
+	right: 16px;
+	top: 14px;
+	height: 24px;
+	width: 24px;
+	background: url(images/button_save.png) no-repeat;
+	display: none;
+}
+
+.save_button a {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
 #sidebar .searchbox {
 	background: url(./../../../../skins/larry/images/buttons.png) 0 -316px white no-repeat;
 	width: calc(100% - 15px);
@@ -28,7 +44,7 @@
     top: -1px;
     position: relative;
     width: calc(100% - 35px);
-    height: 100%;
+    height: 15px;
 }
 
 #sidebar {
@@ -75,7 +91,7 @@
 
 .main {
 	position: absolute;
-	height: 99.5%;
+	height: 99%;
 	left: calc(var(--listwidth) + 15px);
 	width: calc(100% - var(--listwidth) - 20px);
 	border: 1px solid #b2b8bf;
@@ -101,22 +117,6 @@
     border: thin solid #ababab;
 }
 
-.save_button {
-	position: absolute;
-	right: 16px;
-	top: 11px;
-	height: 34px;
-	width: 34px;
-	background: url(images/button_save.png) no-repeat;
-	display: none;
-}
-
-.save_button a {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
-
 .main_area {
 	position: absolute;
 	top: var(--mheader_height);
@@ -131,6 +131,10 @@
 
 .main_area textarea {
 	border: 0;
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	white-space: pre;
+	padding: 5px;
 }
 
 #filelist {

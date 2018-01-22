@@ -167,7 +167,8 @@ function human_filesize($bytes, $decimals = 2) {
 		<title><?PHP echo $files[$akey]['name'] ?></title>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
-		<link rel="stylesheet" href="<?PHP echo $rcmail->config->get('skin_path') . '/primitivenotes.css'; ?>" />
+		<!-- <link rel="stylesheet" href="<?PHP //echo $rcmail->config->get('skin_path') . '/primitivenotes.css'; ?>" /> -->
+		<link rel="stylesheet" href="skins/primitivenotes.css" />
 		<link rel="stylesheet" href="simplemde/simplemde.min.css">
 		<script src="simplemde/simplemde.min.js"></script>		
 		<script src="ckeditor/ckeditor.js"></script>
@@ -199,7 +200,7 @@ function human_filesize($bytes, $decimals = 2) {
 	<body style="margin: 0; padding: 0;" onLoad="selectEntry(); loadnote();">
 		<div id="sidebar">
 			<div id="filelist_header">
-				<span class="searchbox"><input type="text" id="notesearch" name="notesearch" onkeyup="searchList()" /></span>				
+				<span class="searchbox" style="background: url(./../../skins/larry/images/buttons.png) 0 -316px white no-repeat;"><input type="text" id="notesearch" name="notesearch" onkeyup="searchList()" /></span>				
 			</div>
 			<div class="filelist">
 				<ul id="filelist">
@@ -245,15 +246,15 @@ function human_filesize($bytes, $decimals = 2) {
 			}
 
 			if($mode === "e") {
-				echo "<textarea name=\"$format\" id=\"$format\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
+				echo "<textarea name=\"$format\" id=\"$format\">".$content."</textarea>";
 			}
 			else {			
 				if($format === "html") {
 					echo "<div id=\"content\">".$content."</div>";
 				} elseif ($format === "txt") {
-					echo "<textarea id=\"txt\" style=\"height: 100%; width: 100%; border:0;\">".$content."</textarea>";
+					echo "<textarea id=\"txt\">".$content."</textarea>";
 				} elseif ( $format === "md" ) {
-					echo "<textarea id=\"md\" style=\"height: 100%; width: 100%\">".$content."</textarea>";
+					echo "<textarea id=\"md\">".$content."</textarea>";
 				} else {
 					$akey = array_search($_GET["n"], array_column($files, 'id'));
 					$file = $files[$akey]['filename'];					
