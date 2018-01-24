@@ -1,6 +1,28 @@
-:root {
-	--listwidth: 400px;
-	--mheader_height: 80px;
+object {
+	max-width: 100%;
+	max-height: 100%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.headerTitle {
+	margin: 10px;
+	font-size: 2em;
+	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	position: relative;
+	top: 5px;
+}
+
+.headerTags {
+	margin: 10px;
+	font-size: 11px;
+	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	position: relative;
+	top: 7px;
 }
 
 #content {
@@ -48,7 +70,7 @@
 }
 
 #sidebar {
-	width: var(--listwidth);
+	width: 400px;
 	position: absolute;
 	float: left;
 	height: 99.5%;
@@ -92,14 +114,14 @@
 .main {
 	position: absolute;
 	height: 99%;
-	left: calc(var(--listwidth) + 15px);
-	width: calc(100% - var(--listwidth) - 20px);
+	left: 415px;
+	width: calc(100% - 420px);
 	border: 1px solid #b2b8bf;
 	border-radius: 4px;
 }
 
 .main_header {
-	height: var(--mheader_height);
+	height: 80px;
 	background: #efefef;
 	width: 100%;
 	border-top-left-radius: 4px;
@@ -107,20 +129,19 @@
 }
 
 .main_header input {
-    border-style: solid;
-    width: calc(100% - 30px);
-    padding: 0;
-    margin-left: 15px;
-    margin-top: 5px;
-    border-radius: 4px;
-    padding-left: 5px;
-    border: thin solid #ababab;
+	width: calc(100% - 20px);
+	padding: 0;
+	margin-left: 6px;
+	margin-top: 5px;
+	border-radius: 4px;
+	padding-left: 5px;
+	border: thin solid #ababab;
 }
 
 .main_area {
 	position: absolute;
-	top: var(--mheader_height);
-	height: calc(100% - var(--mheader_height));
+	top: 80px;
+	height: calc(100% - 80px);
 	width: 100%;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
@@ -154,13 +175,11 @@
 }
 
 .filelist li {
-	text-overflow: ellipsis;
 	white-space: nowrap;
-	overflow: hidden;
 	padding: 3px 5px 2px 40px;
 	font-weight: bold;
 	color: #405353;
-	border-bottom: 1px inset;
+	border-bottom: 1px solid #b2b8bf;
 	font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
 	font-size: 12px;
 }
@@ -209,6 +228,9 @@
 .filelist a {
     text-decoration: none !important;
     color: #405353;
-    width: 100%;
-    display: inline-block;
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }

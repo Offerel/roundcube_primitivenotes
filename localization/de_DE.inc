@@ -10,6 +10,6 @@ $labels['note_upload'] = 'Hochladen';
 $labels['note_title'] = 'Name für Notiz';
 $labels['note_tags'] = 'Kommagetrennte Tagliste';
 $labels['note_inv_format'] = 'Nicht unterstütztes Notiz Format!';
-$labels['note_del_note'] = 'Möchten Sie diese Notiz wirklich löschen?';
+$labels['note_del_note'] = 'Möchten Sie "%note%" wirklich löschen?';
 $labels['note_subject'] = 'Per E-Mail senden: ';
 ?>
