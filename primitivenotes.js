@@ -18,7 +18,32 @@ function add_note() {
 }
 
 function new_note() {
-	document.getElementById('notescontentframe').src = 'plugins/primitivenotes/notes.php?m=e&t=html&n=n';
+	//document.getElementById('notescontentframe').src = 'plugins/primitivenotes/notes.php?m=e&t=html&n=n';
+	$.ajax({
+		type: "POST"
+		,url: "plugins/primitivenotes/notes.php"
+		,data: {
+			"editHeader": "1"
+			,"filename": ''
+		}
+		,success: function(data){
+			$('#notescontentframe').contents().find("div#main_header").html(data);
+		}
+	});
+	
+	//if(editFormats.indexOf(format) >= 0) {
+		$.ajax({
+			type: "POST"
+			,url: "plugins/primitivenotes/notes.php"
+			,data: {
+				'editNote': "1"
+				,'filename': ""
+			}
+			,success: function(data){
+				$('#notescontentframe').contents().find("div#main_area").html(data);
+			}
+		});
+	//}
 }
 
 function edit_note() {
@@ -40,7 +65,6 @@ function edit_note() {
 	});
 	
 	if(editFormats.indexOf(format) >= 0) {
-		console.log(format);
 		$.ajax({
 			type: "POST"
 			,url: "plugins/primitivenotes/notes.php"

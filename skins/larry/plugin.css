@@ -17,6 +17,12 @@
 	position: absolute;
 }
 
+.toolbar a.button:focus {
+	color: #fff;
+	background-color: rgba(30,150,192,0.5) !important;
+	border-radius: 3px;
+}
+
 #notestoolbar a.button.edit {
 	background: url(images/button_edit.png) 18px 2px no-repeat transparent;
 }

@@ -4,4 +4,7 @@ $config['notes_basepath'] = '/path/to/server/folder/';
 
 // notes folder under basepath. in the end the folder is calculated by 'basepath' + 'username' + 'notes_folder'
 $config['notes_folder'] = '/files/Notes/';
+
+// here you can choose between 'ckeditor' (comes with this plugin) and 'tinymce' (included in Roundcube)
+$config['html_editor'] = 'ckeditor';
 ?>

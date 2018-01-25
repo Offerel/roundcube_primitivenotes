@@ -6,7 +6,7 @@ $rcmail = rcmail::get_instance();
 // Login
 if (!empty($rcmail->user->ID)) {
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
-
+	$html_editor = $rcmail->config->get('html_editor', false);
 	if (!is_dir($notes_path))
 	{
 		if(!mkdir($notes_path, 0774, true)) {
@@ -118,7 +118,7 @@ if(isset($_POST['editor1'])) {
 		if($old_name != $new_name) {
 			rename($notes_path.$old_name, $notes_path.$new_name);
 		}
-		error_log('PrimitiveNotes: Note not found, can`t save note.');
+		//error_log('PrimitiveNotes: Note not found, can`t save note.');
 	}
 
 	$save_allowed = array("txt", "md", "html");	
@@ -188,7 +188,7 @@ function read_note($id, $filename, $mode) {
 			,'taglist'	=> substr($filename,stripos($filename, "["),stripos($filename, "]"))
 			);
 	} else {
-		error_log('PrimitiveNotes: Note not found');
+		//error_log('PrimitiveNotes: Note not found');
 	}
 	
 	if($mode === 'edit') {
@@ -198,7 +198,7 @@ function read_note($id, $filename, $mode) {
 			case 'jpg': $showNote = showBIN($note); break;
 			case 'png': $showNote = showBIN($note); break;
 			case 'md':	$showNote = editMARKDOWN($note); break;		
-			default:	$showNote = editTXT($note);
+			default:	$showNote = editHTML($note);
 		}
 	} else {
 		switch ($note['format']) {
@@ -234,24 +234,42 @@ function editTXT($note) {
 }
 
 function editHTML($note) {
-	return "<textarea name=\"editor1\" id=\"".$note['format']."\">".$note['content']."</textarea>
-	<script>
-	if(document.getElementById('html')){
-		var editorElem = document.getElementById('main_area');
-		var editor = CKEDITOR.replace('html', { 
-			on : {
-				'instanceReady' : function(evt) {
-					evt.editor.resize('100%', editorElem.clientHeight);
-					evt.editor.commands.save.disable();
-				},
-				'change' : function(evt) {
-				if( document.getElementById('note_name').value != '' )
-						evt.editor.commands.save.enable();
+	global $html_editor;
+	$format = $note['format'];
+	
+	if($format == "")
+		$format = "html";
+	
+	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea>";
+	
+	if($html_editor === 'ckeditor') {
+		$output.="<script>
+		if(document.getElementById('html')){
+			var editorElem = document.getElementById('main_area');
+			var editor = CKEDITOR.replace('html', { 
+				on : {
+					'instanceReady' : function(evt) {
+						evt.editor.resize('100%', editorElem.clientHeight);
+						evt.editor.commands.save.disable();
+					},
+					'change' : function(evt) {
+					if( document.getElementById('note_name').value != '' )
+							evt.editor.commands.save.enable();
+					}
 				}
-			}
-		});
+			});
+		}
+		</script>";
+	} else {
+		$output.="<script>
+			tinymce.init({
+				selector: '#html'
+				,plugins : 'link image code contextmenu fullpage paste save searchreplace table toc'
+				,paste_data_images: true
+		  });
+		</script>";
 	}
-	</script>";
+	return $output;
 }
 
 function showHTML($note) {
@@ -314,6 +332,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<link rel="stylesheet" href="simplemde/simplemde.min.css">
 		<link rel="stylesheet" href="skins/font-awesome/css/font-awesome.min.css">
 		<script src="../../program/js/jquery.min.js"></script>
+		<script src='../../program/js/tinymce/tinymce.min.js'></script>
 		<script src="simplemde/simplemde.min.js"></script>
 		<script src="ckeditor/ckeditor.js"></script>
 	</head>
