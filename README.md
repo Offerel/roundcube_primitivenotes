@@ -7,3 +7,5 @@ Originally, the idea for a standalone note app came from that I wanted to separa
 # [Changelog](../../wiki/Changelog)
 
 # [Installation](../../wiki/Installation)
+
+# [FAQ](../../wiki/FAQ)
