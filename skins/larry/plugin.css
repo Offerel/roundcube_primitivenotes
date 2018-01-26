@@ -2,6 +2,7 @@
 	background: url(images/notes.png) 5px 0 no-repeat;
 	background-size: 21px;
 }
+
 #taskbar a.button-notes:hover span.button-inner,
 #taskbar a.button-notes.button-selected span.button-inner {
 	background: url(images/notes_sel.png) 5px 0 no-repeat;
@@ -15,6 +16,12 @@
 #notestoolbar {
 	top: -6px;
 	position: absolute;
+}
+
+.toolbar a.button:focus {
+	color: #fff;
+	background-color: rgba(30,150,192,0.5) !important;
+	border-radius: 3px;
 }
 
 #notestoolbar a.button.edit {

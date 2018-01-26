@@ -9,22 +9,10 @@ CKEDITOR.editorConfig = function( config ) {
 	config.fullPage = true;
 	config.allowedContent = true;
 	
-	config.toolbarGroups = [
-		{ name: 'document', groups: [ 'document', 'doctools' ] },
-		{ name: 'styles', groups: [ 'styles' ] },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-		{ name: 'forms', groups: [ 'forms' ] },
-		{ name: 'links', groups: [ 'links' ] },
-		{ name: 'insert', groups: [ 'insert' ] },
-		{ name: 'colors', groups: [ 'colors' ] },
-		{ name: 'tools', groups: [ 'tools' ] },
-		{ name: 'others', groups: [ 'others' ] },
-		{ name: 'about', groups: [ 'about' ] },
-		{ name: 'test', groups: [ 'mode' ] }
-	];
+	config.extraPlugins = 'find,font,justify,bidi,blockquote,colorbutton,';
 
-	config.removeButtons = 'Cut,Copy,Paste,Anchor,Subscript';
+	//,font,justify,bidi,blockquote,colorbutton
+	config.toolbar = [
+		{ name: 'document', items: [ 'Save', 'DocProps', '-', 'Undo', 'Redo', 'PasteText','-', 'Bold', 'Italic', 'Underline', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BulletedList','NumberedList', 'Outdent', 'Indent', 'BidiLtr', 'BidiRtl', 'Blockquote', '-', 'TextColor', 'BGColor', '-', 'Font', 'FontSize', '-', 'Link', 'Unlink', 'Table', 'base64image', '-', 'Source', 'Find','Replace','Maximize' ] }
+	];
 };

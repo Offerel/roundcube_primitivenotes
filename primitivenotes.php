@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 0.0.1
+ * @version 1.0.0
  * @author Offerel
  * @copyright Copyright (c) 2018, Offerel
  * @license GNU General Public License, version 3
@@ -27,33 +27,27 @@ class primitivenotes extends rcube_plugin
 			'classsel'	=> 'button-notes button-notes',
 			'innerclass'=> 'button-inner'
 		), 'taskbar');
-		
+
 		if ($rcmail->task == 'notes') {
 			$this->register_action('index', array($this, 'action'));
 		}
-		
+
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
-		/*
-		$this->register_action('new_note', array($this, 'action'));
-		$this->register_action('edit_note', array($this, 'action'));
-		$this->register_action('delete_note', array($this, 'action'));
-		$this->register_action('send_note', array($this, 'action'));
-		*/
 	}
-	/*
-	public function get_notesPath() {
-		$rcmail = rcmail::get_instance();
-		$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
-		return $notes_path;
-	}
-	*/
+
 	function note_mail_compose($args)
 	{
 		$rcmail = rcmail::get_instance();
 
-		$name = $args['param']['note_name'];
-		$type = $args['param']['note_type'];
 		$filename = $args['param']['note_filename'];
+
+		if(stripos($filename, "[")) {
+			$name = substr($filename, 0, stripos($filename, "["));
+		} else {
+			$name = substr($filename, 0, stripos($filename, "."));
+		}
+
+		$type = substr($filename,stripos($filename, ".")+1);
 		
 		$subject = $this->gettext('note_subject').$name;
 		$sublength = strlen($subject);
@@ -67,16 +61,18 @@ class primitivenotes extends rcube_plugin
 			$handle = fopen ($note_file, "r");
 			$note_content = fread($handle, filesize($note_file));
 			fclose ($handle);
-		};
+		} else {
+			error_log("PrimitiveNotes: Note not found. Attach the note to the mail failed.");
+		}
 
 		switch ($type) {
-			case 'html': $mimetype = "text/html"; break;
-			case 'pdf': $mimetype = "application/pdf"; break;
-			case 'jpg': $mimetype = "image/jpeg"; break;
-			case 'png': $mimetype = "image/png"; break;
-			case 'md': $mimetype = "text/markdown"; break;
-			case 'txt': $mimetype = "text/plain"; break;
-			default: return false;
+			case 'html': $mimetype = mime_content_type($note_file); break;
+			case 'pdf': $mimetype = mime_content_type($note_file); break;
+			case 'jpg': $mimetype = mime_content_type($note_file); break;
+			case 'png': $mimetype = mime_content_type($note_file); break;
+			case 'md': $mimetype = mime_content_type($note_file); break;
+			case 'txt': $mimetype = mime_content_type($note_file); break;
+			default: error_log("PrimitiveNotes: Unsupported file format. Attach the note to the mail failed."); return false;
 		}
 		
 		$args['attachments'][] = array(

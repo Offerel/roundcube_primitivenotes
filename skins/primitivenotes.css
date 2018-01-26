@@ -1,6 +1,28 @@
-:root {
-	--listwidth: 400px;
-	--mheader_height: 80px;
+object {
+	max-width: 100%;
+	max-height: 100%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.headerTitle {
+	margin: 10px;
+	font-size: 2em;
+	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	position: relative;
+	top: 5px;
+}
+
+.headerTags {
+	margin: 10px;
+	font-size: 11px;
+	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	position: relative;
+	top: 7px;
 }
 
 #content {
@@ -48,7 +70,7 @@
 }
 
 #sidebar {
-	width: var(--listwidth);
+	width: 400px;
 	position: absolute;
 	float: left;
 	height: 99.5%;
@@ -92,14 +114,14 @@
 .main {
 	position: absolute;
 	height: 99%;
-	left: calc(var(--listwidth) + 15px);
-	width: calc(100% - var(--listwidth) - 20px);
+	left: 415px;
+	width: calc(100% - 420px);
 	border: 1px solid #b2b8bf;
 	border-radius: 4px;
 }
 
 .main_header {
-	height: var(--mheader_height);
+	height: 80px;
 	background: #efefef;
 	width: 100%;
 	border-top-left-radius: 4px;
@@ -107,20 +129,19 @@
 }
 
 .main_header input {
-    border-style: solid;
-    width: calc(100% - 30px);
-    padding: 0;
-    margin-left: 15px;
-    margin-top: 5px;
-    border-radius: 4px;
-    padding-left: 5px;
-    border: thin solid #ababab;
+	width: calc(100% - 20px);
+	padding: 0;
+	margin-left: 6px;
+	margin-top: 5px;
+	border-radius: 4px;
+	padding-left: 5px;
+	border: thin solid #ababab;
 }
 
 .main_area {
 	position: absolute;
-	top: var(--mheader_height);
-	height: calc(100% - var(--mheader_height));
+	top: 80px;
+	height: calc(100% - 80px);
 	width: 100%;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
@@ -141,7 +162,7 @@
 	margin: 0;
 	padding: 0;
 }
-
+/*
 .fsize {
 	text-align: right;
 	float: right;
@@ -152,17 +173,46 @@
 	background: cornsilk;
 	position: relative;
 }
+*/
+.fsize {
+	text-align: right;
+	float: right;
+	/* border: 1px solid #b2b8bf; */
+	width: 50px;
+	border-radius: 9px;
+	padding: 0 6px;
+	background: #929292;
+	position: relative;
+	color: #fff !important;
+	font-weight: bold !important;
+	line-height: 15px;
+}
 
 .filelist li {
-	text-overflow: ellipsis;
 	white-space: nowrap;
-	overflow: hidden;
 	padding: 3px 5px 2px 40px;
 	font-weight: bold;
 	color: #405353;
-	border-bottom: 1px inset;
+	border-bottom: 1px solid #b2b8bf;
 	font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
 	font-size: 12px;
+	height: 35px;
+}
+
+.filelist a:hover span#taglist {
+	display: block;
+	background: black !important;
+	z-index: 10;
+	position: absolute;
+	max-width: 300px;
+	border-radius: 5px;
+	padding: 5px;
+	color: #fff;
+	white-space: normal;
+	margin: ;
+	margin-top: -55px;
+	box-shadow: 1px 1px 3px gray;
+	left: 10px;
 }
 
 .filelist li.pdf {
@@ -190,8 +240,12 @@
 }
 
 .selected, .selected a, .selected span {
-	background-color: #017db6 !important;
+	background-color: #4c9dc3 !important;
 	color: white !important;
+}
+
+.selected span.fsize {
+	background: #13aff8 !important;
 }
 
 .filelist li:hover {
@@ -209,6 +263,9 @@
 .filelist a {
     text-decoration: none !important;
     color: #405353;
-    width: 100%;
-    display: inline-block;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }

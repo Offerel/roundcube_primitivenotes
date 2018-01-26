@@ -10,6 +10,6 @@ $labels['note_upload'] = 'Upload';
 $labels['note_title'] = 'Name for Note';
 $labels['note_tags'] = 'Comma Separated Taglist';
 $labels['note_inv_format'] = 'Unsupported note format!';
-$labels['note_del_note'] = 'Do you really want to delete this note?';
+$labels['note_del_note'] = 'Do you really want to delete "%note%"?';
 $labels['note_subject'] = 'Send by e-mail: ';
 ?>
