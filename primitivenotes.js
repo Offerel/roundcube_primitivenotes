@@ -4,21 +4,13 @@ window.rcmail && rcmail.addEventListener('init', function(evt) {
 	rcmail.register_command('deletenote', delete_note, true);
 	rcmail.register_command('sendnote', send_note, true);
 	rcmail.register_command('addnote', add_note, true);
-	//rcmail.register_command('rennote', rename_note, true);
 });
-
-function rename_note() {
-	var url = new URL(window.frames['notescontentframe'].location.href);
-	var note_data = [url.searchParams.get("n"), window.frames['notescontentframe'].document.title, url.searchParams.get("t")];
-	document.getElementById('notescontentframe').src = 'plugins/primitivenotes/notes.php?m=p&t=' + note_data[2] + '&n=' + note_data[0];
-}
 
 function add_note() {
 	document.getElementById('upl').click();
 }
 
 function new_note() {
-	//document.getElementById('notescontentframe').src = 'plugins/primitivenotes/notes.php?m=e&t=html&n=n';
 	$.ajax({
 		type: "POST"
 		,url: "plugins/primitivenotes/notes.php"
@@ -31,19 +23,17 @@ function new_note() {
 		}
 	});
 	
-	//if(editFormats.indexOf(format) >= 0) {
-		$.ajax({
-			type: "POST"
-			,url: "plugins/primitivenotes/notes.php"
-			,data: {
-				'editNote': "1"
-				,'filename': ""
-			}
-			,success: function(data){
-				$('#notescontentframe').contents().find("div#main_area").html(data);
-			}
-		});
-	//}
+	$.ajax({
+		type: "POST"
+		,url: "plugins/primitivenotes/notes.php"
+		,data: {
+			'editNote': "1"
+			,'filename': ""
+		}
+		,success: function(data){
+			$('#notescontentframe').contents().find("div#main_area").html(data);
+		}
+	});
 }
 
 function edit_note() {

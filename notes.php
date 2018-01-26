@@ -118,7 +118,8 @@ if(isset($_POST['editor1'])) {
 		if($old_name != $new_name) {
 			rename($notes_path.$old_name, $notes_path.$new_name);
 		}
-		//error_log('PrimitiveNotes: Note not found, can`t save note.');
+	} elseif ($old_name != "") {
+		error_log('PrimitiveNotes: Note not found, can`t save note.');
 	}
 
 	$save_allowed = array("txt", "md", "html");	
@@ -187,8 +188,8 @@ function read_note($id, $filename, $mode) {
 			,'filename'	=> $filename
 			,'taglist'	=> substr($filename,stripos($filename, "["),stripos($filename, "]"))
 			);
-	} else {
-		//error_log('PrimitiveNotes: Note not found');
+	} elseif($filename != "" ) {
+		error_log('PrimitiveNotes: Note not found');
 	}
 	
 	if($mode === 'edit') {
@@ -242,7 +243,15 @@ function editHTML($note) {
 	
 	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea>";
 	
-	if($html_editor === 'ckeditor') {
+	if($html_editor === 'tinymce') {
+		$output.="<script>
+			tinymce.init({
+				selector: '#html'
+				,plugins : 'link image code contextmenu fullpage paste save searchreplace table toc'
+				,paste_data_images: true
+		  });
+		</script>";
+	} else {
 		$output.="<script>
 		if(document.getElementById('html')){
 			var editorElem = document.getElementById('main_area');
@@ -259,14 +268,6 @@ function editHTML($note) {
 				}
 			});
 		}
-		</script>";
-	} else {
-		$output.="<script>
-			tinymce.init({
-				selector: '#html'
-				,plugins : 'link image code contextmenu fullpage paste save searchreplace table toc'
-				,paste_data_images: true
-		  });
 		</script>";
 	}
 	return $output;
@@ -302,20 +303,6 @@ function showMARKDOWN($note) {
 		</script>";
 }
 
-/*
-// change open mode
-if(isset($_GET["m"]))
-{
-	if($_GET["m"] === "v")
-	{
-		$mode = "v";
-	} elseif ($_GET["m"] === "p"){
-		$mode = "p";
-	} else {
-		$mode = "e";
-	}
-}
-*/
 function human_filesize($bytes, $decimals = 2) {
   $sz = 'BKMGTP';
   $factor = round((strlen($bytes) - 1) / 3);
@@ -376,12 +363,6 @@ function human_filesize($bytes, $decimals = 2) {
 		</div>
 		</form>
 		<script>
-		/*
-		var url = new URL(location.href);
-		if(url.searchParams.get("m") === 'p') {
-			document.getElementById('save_button').style.display = 'inline';
-		}
-		*/
 		function revealButton() {
 			if(document.getElementById('fname').value.indexOf('html') < 0)
 				document.getElementById('save_button').style.display = 'inline';
@@ -401,15 +382,8 @@ function human_filesize($bytes, $decimals = 2) {
 			}			
 			document.getElementById(id).classList.add('selected');
 			
-			// change the toolbar button according to the note format
-/*			var editFormats = ['html', 'txt', 'md'];
-			if(editFormats.indexOf(format) >= 0)
-				window.parent.document.getElementById("editnote").classList.remove('disabled');
-			else
-				window.parent.document.getElementById("editnote").classList.add('disabled');
-*/			
+			// change the toolbar button according to the note format	
 			window.parent.document.getElementById("editnote").classList.remove('disabled');
-			//window.parent.document.getElementById("rennote").classList.remove('disabled');
 			window.parent.document.getElementById("deletenote").classList.remove('disabled');
 			window.parent.document.getElementById("sendnote").classList.remove('disabled');
 			

@@ -5,12 +5,12 @@
 <roundcube:include file="/includes/links.html" />
 </head>
 <roundcube:if condition="env:extwin" /><body class="extwin"><roundcube:else /><body><roundcube:endif />
+<roundcube:include file="/includes/taskbar.html" />
 <roundcube:include file="/includes/header.html" />
 <div id="mainscreen">
 	<div id="notestoolbar" class="toolbar" role="toolbar" >
 		<roundcube:button id="newnote" command="newnote" type="link" class="button new" label="primitivenotes.note_new" title="primitivenotes.note_new" />
 		<roundcube:button id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
-		<!-- <roundcube:button id="rennote" command="rennote" type="link" class="button rename disabled" label="primitivenotes.note_rename" title="primitivenotes.note_rename" /> -->
 		<roundcube:button id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
 		<roundcube:button id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
 		<roundcube:button id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
@@ -33,7 +33,7 @@
 		}
 		</script>
 	</div>
-	<div id="pluginbody" class="offset">
+	<div id="pluginbody" class="offset" style="height: 100%;">
 		<div class="iframebox simplenotes_<roundcube:var name='env:action' />">
 			<roundcube:object name="notescontent" id="notescontentframe" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
 		</div>
