@@ -236,6 +236,7 @@ function editTXT($note) {
 
 function editHTML($note) {
 	global $html_editor;
+	//$user_lang = rcube::get_instance()->get_user_language();
 	$format = $note['format'];
 	
 	if($format == "")
@@ -247,8 +248,11 @@ function editHTML($note) {
 		$output.="<script>
 			tinymce.init({
 				selector: '#html'
-				,plugins : 'link image code contextmenu fullpage paste save searchreplace table toc'
+				,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
+				,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
 				,paste_data_images: true
+				,menubar: false
+				,toolbar_items_size:'small'
 		  });
 		</script>";
 	} else {
@@ -317,6 +321,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
 		<link rel="stylesheet" href="simplemde/simplemde.min.css">
+		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">
 		<link rel="stylesheet" href="skins/font-awesome/css/font-awesome.min.css">
 		<script src="../../program/js/jquery.min.js"></script>
 		<script src='../../program/js/tinymce/tinymce.min.js'></script>
