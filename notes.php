@@ -344,7 +344,7 @@ function human_filesize($bytes, $decimals = 2) {
 					if(strlen($fentry['name']) > 0 ) {
 						$fsize = human_filesize($fentry['size'], 2);
 						
-						if(count($fentry['tags']) > 1)
+						if(count($fentry['tags']) > 0)
 							$tlist = implode(" ",$fentry['tags']);
 						else
 							$tlist = "";
@@ -439,7 +439,7 @@ function human_filesize($bytes, $decimals = 2) {
 			// Loop through all list items, and hide those who don't match the search query
 			for (i = 0; i < li.length; i++) {
 				a = li[i].getElementsByTagName("a")[0];
-				if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				if (a.innerHTML.toUpperCase().indexOf(filter) > -1 ) {
 					li[i].style.display = "";
 				} else {
 					li[i].style.display = "none";
