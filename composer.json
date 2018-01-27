@@ -1,8 +1,8 @@
 {
 	"name": "offerel/primitivenotes",
 	"description": "A deadly simple notes plugin for Roundcube",
-	"keywords": ["notes","plugin","html","markdown","images","pdf"],
-	"homepage": "https://github.com/Offerel/roundcube_elfinder",
+	"keywords": ["notes","plugin","html","markdown","images","pdf","roundcube"],
+	"homepage": "https://github.com/Offerel/roundcube_primitivenotes",
 	"type": "roundcube-plugin",
 	"license": "AGPL-3.0",
 	"authors": [
@@ -12,7 +12,7 @@
 		"role": "Developer"
 	}
 	],
-	"version": "1.0.0-b1",
+	"version": "1.0.0",
 	"repositories": [
 		{
 			"type": "composer",
