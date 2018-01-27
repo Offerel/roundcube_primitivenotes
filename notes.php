@@ -58,10 +58,14 @@ if(isset($_POST['editHeader'])) {
 		$tagsH = $rcmail->gettext('note_tags','primitivenotes');
 		
 		$note_header = "<input id=\"note_name\" name=\"note_name\" type=\"text\" placeholder=\"$titleH\" value=\"$note_name\" style=\"font-size: 2em\" required onInput=\"revealButton()\" /><br />";
-		$note_header.="<input id=\"note_tags\" name=\"note_tags\" type=\"text\" placeholder=\"$tagsH\" value=\"$taglist\" onInput=\"revealButton()\" />";
-		$note_header.="<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"$filename\" />";
-		$note_header.="<input id=\"ftype\" name=\"ftype\" type='hidden\" value=\"$format\" />";
-		$note_header.="<input id=\"mode\" name=\"mode\" type=\"hidden\" value=\"e\" />";
+		$note_header.= "<input id=\"note_tags\" name=\"note_tags\" type=\"text\" placeholder=\"$tagsH\" value=\"$taglist\" onInput=\"revealButton()\" />";
+		$note_header.= "<input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
+		$note_header.= "<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"$filename\" />";
+		
+		$save_allowed = array("txt", "md", "html");	
+		if(!in_array($format,$save_allowed)) {
+			$note_header.= "<input type=\"hidden\" name=\"editor1\" value=\"e\" />";
+		}
 		
 		die($note_header);
 }
