@@ -10,6 +10,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.allowedContent = true;
 	
 	config.extraPlugins = 'find,font,justify,bidi,blockquote,colorbutton,';
+	config.removePlugins = 'markdown';
 
 	//,font,justify,bidi,blockquote,colorbutton
 	config.toolbar = [

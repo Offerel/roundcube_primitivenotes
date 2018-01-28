@@ -7,6 +7,7 @@ $rcmail = rcmail::get_instance();
 if (!empty($rcmail->user->ID)) {
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	$html_editor = $rcmail->config->get('html_editor', false);
+	$language = $rcmail->get_user_language();
 	if (!is_dir($notes_path))
 	{
 		if(!mkdir($notes_path, 0774, true)) {
@@ -239,7 +240,7 @@ function editTXT($note) {
 }
 
 function editHTML($note) {
-	global $html_editor;
+	global $html_editor, $language;
 	//$user_lang = rcube::get_instance()->get_user_language();
 	$format = $note['format'];
 	
@@ -247,6 +248,9 @@ function editHTML($note) {
 		$format = "html";
 	
 	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea>";
+	
+	if($language != 'en_US')
+		$language = substr($language,0,2);
 	
 	if($html_editor === 'tinymce') {
 		$output.="<script>
@@ -257,6 +261,7 @@ function editHTML($note) {
 				,paste_data_images: true
 				,menubar: false
 				,toolbar_items_size:'small'
+				,language: '$language'
 		  });
 		</script>";
 	} else {
@@ -344,16 +349,17 @@ function human_filesize($bytes, $decimals = 2) {
 					if(strlen($fentry['name']) > 0 ) {
 						$fsize = human_filesize($fentry['size'], 2);
 						
-						if(count($fentry['tags']) > 0)
+						if(is_array($fentry['tags'])) {
 							$tlist = implode(" ",$fentry['tags']);
-						else
+							$tlist = "<span id=\"taglist\">$tlist</span>";
+						} else
 							$tlist = "";
 						
 						$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
 						$filename = $fentry['filename'];
 						$format = $fentry['type'];
 						
-						echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" href='#'>".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span><span id=\"taglist\">$tlist</span></a></li>";
+						echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" href='#'>".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span>$tlist</a></li>";
 					}
 				} 
 				?>
