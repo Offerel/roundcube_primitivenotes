@@ -4,13 +4,23 @@ window.rcmail && rcmail.addEventListener('init', function(evt) {
 	rcmail.register_command('deletenote', delete_note, true);
 	rcmail.register_command('sendnote', send_note, true);
 	rcmail.register_command('addnote', add_note, true);
+	
+	rcmail.register_command('htmlnote', new_note, true);
+	rcmail.register_command('mdnote', new_note, true);
+	rcmail.register_command('txtnote', new_note, true);
 });
 
 function add_note() {
 	document.getElementById('upl').click();
 }
 
-function new_note() {
+function new_note(prop) {
+	if(prop) {
+		format = prop;
+	} else {
+		format = "";
+	}
+	
 	$.ajax({
 		type: "POST"
 		,url: "plugins/primitivenotes/notes.php"
@@ -29,6 +39,7 @@ function new_note() {
 		,data: {
 			'editNote': "1"
 			,'filename': ""
+			,'format': format
 		}
 		,success: function(data){
 			$('#notescontentframe').contents().find("div#main_area").html(data);

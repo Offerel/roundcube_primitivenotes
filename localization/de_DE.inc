@@ -12,4 +12,7 @@ $labels['note_tags'] = 'Kommagetrennte Tagliste';
 $labels['note_inv_format'] = 'Nicht unterstütztes Notiz Format!';
 $labels['note_del_note'] = 'Möchten Sie "%note%" wirklich löschen?';
 $labels['note_subject'] = 'Per E-Mail senden: ';
+$labels['note_formathtml'] = 'HTML';
+$labels['note_formatmd'] = 'Markdown';
+$labels['note_formattxt'] = 'Normaler Text';
 ?>

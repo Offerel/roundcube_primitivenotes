@@ -7,6 +7,7 @@ $rcmail = rcmail::get_instance();
 if (!empty($rcmail->user->ID)) {
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	$html_editor = $rcmail->config->get('html_editor', false);
+	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
 	if (!is_dir($notes_path))
 	{
@@ -40,7 +41,7 @@ if(isset($_POST['showHeader'])) {
 if(isset($_POST['showNote'])) {
 		$id =  $_POST['id'];
 		$filename = $_POST['filename'];
-		read_note($id, $filename, null);
+		read_note($id, $filename, null, null);
 		die();
 }
 
@@ -75,7 +76,8 @@ if(isset($_POST['editHeader'])) {
 if(isset($_POST['editNote'])) {
 		$id =  $_POST['id'];
 		$filename = $_POST['filename'];
-		read_note($id, $filename, 'edit');
+		$format = $_POST['format'];
+		read_note($id, $filename, 'edit', $format);
 		die();
 }
 
@@ -150,24 +152,29 @@ if (is_dir($notes_path)) {
 		while (($file = readdir($handle)) !== false) {
 			if (is_file($notes_path.$file)) {
 				$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
-				$tags = null;
-				$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
+				$ext = pathinfo($notes_path.$file,PATHINFO_EXTENSION);
 				
-				if(count($tags) > 0) {
-					$ttags = explode(" ", $tags[1]);
-				} else {
-					$ttags = "";
-				}
+				$supported_ext = array("md", "html", "txt", "pdf", "jpg", "png");	
+				if(in_array($ext,$supported_ext)) {				
+					$tags = null;
+					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
+					
+					if(count($tags) > 0)
+						$ttags = explode(" ", $tags[1]);
+					else
+						$ttags = "";
 
-				$files[] = array(
-					'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0]
-					,'filename' => $name
-					,'size' => filesize($notes_path.$file)
-					,'type' => pathinfo($notes_path.$file,PATHINFO_EXTENSION)
-					,'time' => filemtime($notes_path.$file)
-					,'tags' => $ttags
-					,'id' => $id
-					);
+					// put found files in array
+					$files[] = array(
+						'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0]
+						,'filename' => $name
+						,'size' => filesize($notes_path.$file)
+						,'type' => $ext
+						,'time' => filemtime($notes_path.$file)
+						,'tags' => $ttags
+						,'id' => $id
+						);
+					}	
 				$id++;
 				}
 			}
@@ -178,16 +185,35 @@ if (is_dir($notes_path)) {
 // sort the files array by lastmodified time
 usort($files, function($a, $b) { return $b['time'] > $a['time']; });
 
+function getBimage($match) {
+	global $notes_path;
+	//var_dump($match);
+	//die();
+	$imagePath = $notes_path.$match[1];
+	$imgContent = file_get_contents($imagePath);
+	$base64str = base64_encode($imgContent);
+	$mime = mime_content_type($imagePath);
+	return "(data:$mime;base64,$base64str)";
+}
+
 // get contents of the note
-function read_note($id, $filename, $mode) {
+function read_note($id, $filename, $mode, $format) {
 	global $notes_path;
 	$file = $notes_path.$filename;
 	
+	if($filename != '')
+		$format = substr($filename,strripos($filename, ".")+1);		
+
 	if(file_exists($file)) {
+		$content = file_get_contents($file);
+		$re = '/\(file:\/\/([^\)]*?)\)/m';
+
+		$inhalt = preg_replace_callback($re, "getBimage", $content);
+
 		$note = array(
 			'name'		=> substr($filename, 0, stripos($filename, "["))
-			,'content'	=> file_get_contents($file)
-			,'format'	=> substr($filename,strripos($filename, ".")+1)
+			,'content'	=> $inhalt
+			,'format'	=> $format
 			,'id'		=> $id
 			,'mime_type'=> mime_content_type($file)
 			,'filename'	=> $filename
@@ -199,11 +225,9 @@ function read_note($id, $filename, $mode) {
 	
 	if($mode === 'edit') {
 		switch ($note['format']) {
-			case 'html':$showNote = editHTML($note); break;
 			case 'pdf':	$showNote = showBIN($note); break;
 			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;
-			case 'md':	$showNote = editMARKDOWN($note); break;		
+			case 'png': $showNote = showBIN($note); break;	
 			default:	$showNote = editHTML($note);
 		}
 	} else {
@@ -220,18 +244,6 @@ function read_note($id, $filename, $mode) {
 	die($showNote);
 }
 
-function editMARKDOWN($note) {
-	return "<textarea id=\"md\" name=\"editor1\">".$note['content']."</textarea>
-	<script>
-	var simplemde = new SimpleMDE({ 
-		element: document.getElementById('md')
-		,autoDownloadFontAwesome: false
-		,spellChecker: false
-	});
-	document.getElementById('save_button').style.display = 'inline';
-	</script>";
-}
-
 function editTXT($note) {
 	return "<textarea id=\"txt\" name=\"editor1\">".$note['content']."</textarea>
 	<script>
@@ -240,48 +252,79 @@ function editTXT($note) {
 }
 
 function editHTML($note) {
-	global $html_editor, $language;
-	//$user_lang = rcube::get_instance()->get_user_language();
+	global $html_editor, $language, $default_format;
 	$format = $note['format'];
 	
 	if($format == "")
-		$format = "html";
-	
+		$format = ($default_format != '') ? $default_format : 'html';
+
 	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea>";
 	
 	if($language != 'en_US')
 		$language = substr($language,0,2);
 	
-	if($html_editor === 'tinymce') {
-		$output.="<script>
-			tinymce.init({
-				selector: '#html'
-				,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
-				,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
-				,paste_data_images: true
-				,menubar: false
-				,toolbar_items_size:'small'
-				,language: '$language'
-		  });
-		</script>";
+	
+	if($format == 'html') {
+		if($html_editor === 'tinymce') {
+			$output.="<script>
+				tinymce.init({
+					selector: '#html'
+					,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
+					,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
+					,paste_data_images: true
+					,menubar: false
+					,toolbar_items_size:'small'
+					,language: '$language'
+			  });
+			</script>";
+		} else {
+			$output.="<script>
+			if(document.getElementById('html')){
+				var editorElem = document.getElementById('main_area');
+				var editor = CKEDITOR.replace('html', { 
+					on : {
+						'instanceReady' : function(evt) {
+							evt.editor.resize('100%', editorElem.clientHeight);
+							evt.editor.commands.save.disable();
+						},
+						'change' : function(evt) {
+						if( document.getElementById('note_name').value != '' )
+								evt.editor.commands.save.enable();
+						}
+					}
+				});
+			}
+			</script>";
+		}
 	} else {
 		$output.="<script>
-		if(document.getElementById('html')){
-			var editorElem = document.getElementById('main_area');
-			var editor = CKEDITOR.replace('html', { 
-				on : {
-					'instanceReady' : function(evt) {
-						evt.editor.resize('100%', editorElem.clientHeight);
-						evt.editor.commands.save.disable();
-					},
-					'change' : function(evt) {
-					if( document.getElementById('note_name').value != '' )
-							evt.editor.commands.save.enable();
-					}
-				}
-			});
+	var simplemde = new SimpleMDE({ 
+		element: document.getElementById('md')
+		,autoDownloadFontAwesome: false
+		,spellChecker: false
+		,autofocus: true
+		,status: false
+		,promptURLs: true
+		,renderingConfig: {
+			codeSyntaxHighlighting: true,
 		}
-		</script>";
+		,toolbar: 	[{ name: 'Save',
+						action: saveFile,
+						className: 'fa fa-floppy-o',
+						title: 'Save',
+					}, '|',
+					'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
+					'code', 'quote', 'unordered-list', 'ordered-list', '|',
+					'link', 'image', 'table', '|',
+					'preview', 'side-by-side', 'fullscreen', '|',
+					]
+	});
+	document.getElementById('save_button').style.display = 'inline';
+	
+	function saveFile(editor) {
+		document.getElementById('metah').submit();
+	}
+	</script>";
 	}
 	return $output;
 }
@@ -307,9 +350,13 @@ function showMARKDOWN($note) {
 	if (document.getElementById('md')) {
 			var simplemde = new SimpleMDE({ 
 				element: document.getElementById('md')
+				,status: false
 				,toolbar: false
 				,autoDownloadFontAwesome: false
 				,spellChecker: false
+				,renderingConfig: {
+					codeSyntaxHighlighting: true,
+				}
 			});
 			simplemde.togglePreview();
 		}
@@ -329,13 +376,20 @@ function human_filesize($bytes, $decimals = 2) {
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		<link rel="stylesheet" href="simplemde/simplemde.min.css">
-		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">
+		
+		<link rel="stylesheet" href="highlight/styles/default.css">
+		<script src="highlight/highlight.pack.js"></script>
+		
+		<link rel="stylesheet" href="simplemde/simplemde.css">
 		<link rel="stylesheet" href="skins/font-awesome/css/font-awesome.min.css">
-		<script src="../../program/js/jquery.min.js"></script>
-		<script src='../../program/js/tinymce/tinymce.min.js'></script>
 		<script src="simplemde/simplemde.min.js"></script>
+		
 		<script src="ckeditor/ckeditor.js"></script>
+		
+		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">
+		<script src='../../program/js/tinymce/tinymce.min.js'></script>
+		
+		<script src="../../program/js/jquery.min.js"></script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
 		<div id="sidebar">
@@ -377,7 +431,7 @@ function human_filesize($bytes, $decimals = 2) {
 		</div>
 		</div>
 		</form>
-		<script>
+		<script>		
 		function revealButton() {
 			if(document.getElementById('fname').value.indexOf('html') < 0)
 				document.getElementById('save_button').style.display = 'inline';

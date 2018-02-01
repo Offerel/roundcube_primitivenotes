@@ -15,6 +15,11 @@ object {
 	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
 	position: relative;
 	top: 5px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display: inherit;
+	margin-top: 0px;
 }
 
 .headerTags {
@@ -22,7 +27,7 @@ object {
 	font-size: 11px;
 	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
 	position: relative;
-	top: 7px;
+	top: -20px;
 }
 
 #content {
@@ -148,6 +153,7 @@ object {
 	background: white;
 	border-top: 1px solid #b2b8bf;
 	margin-top: -1px;
+	background: #efefef;
 }
 
 .main_area textarea {
@@ -162,18 +168,6 @@ object {
 	margin: 0;
 	padding: 0;
 }
-/*
-.fsize {
-	text-align: right;
-	float: right;
-	border: 1px solid #b2b8bf;
-	width: 50px;
-	border-radius: 4px;
-	padding: 0 3px;
-	background: cornsilk;
-	position: relative;
-}
-*/
 .fsize {
 	text-align: right;
 	float: right;
@@ -216,27 +210,27 @@ object {
 }
 
 .filelist li.pdf {
-	background: #fceae8 url(images/pdf-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/pdf-icon.png) 5px 7px/27px no-repeat;
 }
 
 .filelist li.html, li.htm {
-	background: #f1f3f4 url(images/html-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/html-icon.png) 5px 7px/27px no-repeat;
 }
 
 .filelist li.jpg {
-	background: #eaf9fb url(images/jpg-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/jpg-icon.png) 5px 7px/27px no-repeat;
 }
 
 .filelist li.md {
-	background: #e4e4e4 url(images/md-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/md-icon.png) 5px 7px/27px no-repeat;
 }
 
 .filelist li.txt {
-	background: #ffffff url(images/txt-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/txt-icon.png) 5px 7px/27px no-repeat;
 }
 
 .filelist li {
-	background: #fff7e6 url(images/unknown-icon.png) 5px 7px/27px no-repeat;
+	background: white url(images/unknown-icon.png) 5px 7px/27px no-repeat;
 }
 
 .selected, .selected a, .selected span {
@@ -252,14 +246,12 @@ object {
 	background-color: #e8eaf6;
 	text-decoration: none !important;
 }
-
 .filelist a > span {
 	color: #666;
 	font-weight: normal;
 	font-size: 11px;
 	font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
 }
-
 .filelist a {
     text-decoration: none !important;
     color: #405353;
