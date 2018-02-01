@@ -22,6 +22,15 @@ else {
 	die();
 }
 
+if(isset($_POST['uplImage'])) {
+	$imageURL = $_POST['imageURL'];
+	$filename = basename($imageURL);
+	$img = $notes_path."media/".$filename;
+	file_put_contents($img, file_get_contents($imageURL));
+	echo "file://media/".$filename;
+	die();
+}
+
 // ShowNote Header
 if(isset($_POST['showHeader'])) {
 		$filename = $_POST['filename'];
@@ -111,7 +120,7 @@ if(isset($_POST['editor1'])) {
 	$old_name = $_POST['fname'];
 
 	if(!$note_type = substr($old_name,strripos($old_name,".") +1))
-		$note_type = 'html';
+		$note_type = ($default_format != '') ? $default_format : 'html';
 	
 	$tags_arr = array_map('trim', $note_tags);
 	$tags_str = implode(' ',$tags_arr);
@@ -315,14 +324,41 @@ function editHTML($note) {
 					}, '|',
 					'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
 					'code', 'quote', 'unordered-list', 'ordered-list', '|',
-					'link', 'image', 'table', '|',
-					'preview', 'side-by-side', 'fullscreen', '|',
+					'link', 
+					{ name: 'Image',
+						action: uplInsertImage,
+						className: 'fa fa-picture-o',
+						title: 'Upload and insert Image',
+					}
+					, 'table', '|',
+					'preview', 'side-by-side', 'fullscreen', '|'
+					
 					]
 	});
 	document.getElementById('save_button').style.display = 'inline';
 	
 	function saveFile(editor) {
 		document.getElementById('metah').submit();
+	}
+	
+	function uplInsertImage() {
+		var imageURL = prompt('URL of the image', '');
+		if(imageURL) {
+			$.ajax({
+				type: 'POST'
+				,url: 'notes.php'
+				,data: {
+					'uplImage': '1'
+					,'imageURL': imageURL
+				}
+				,success: function(data){
+					pos = simplemde.codemirror.getCursor();
+					simplemde.codemirror.setSelection(pos, pos);
+					simplemde.codemirror.replaceSelection('![](' + data + ')');
+				}
+			});
+		} else
+			return false;
 	}
 	</script>";
 	}
