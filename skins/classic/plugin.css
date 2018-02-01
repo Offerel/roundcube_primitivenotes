@@ -11,7 +11,13 @@
     position: absolute;
     left: 405px;
 }
-
+.menuentry {
+	color: black !important;
+}
+.menuentry:hover {
+	color: white !important;
+	background-color: #c00;
+}
 #notestoolbar a.button.edit {
 	background: url(../../../../skins/classic/images/mail_toolbar.png) 0 0 no-repeat transparent;
 	display: block;

@@ -3,13 +3,19 @@
 <head>
 <title><roundcube:object name="pagetitle" /></title>
 <roundcube:include file="/includes/links.html" />
+<script type="text/javascript" src="/splitter.js"></script>
+<script type="text/javascript" src="/functions.js"></script>
 </head>
-<roundcube:if condition="env:extwin" /><body class="extwin"><roundcube:else /><body><roundcube:endif />
+<roundcube:if condition="env:extwin" /><body class="extwin"><roundcube:else /><body onload="rcube_init_mail_ui()" ><roundcube:endif />
 <roundcube:include file="/includes/taskbar.html" />
 <roundcube:include file="/includes/header.html" />
 <div id="mainscreen">
 	<div id="notestoolbar" class="toolbar" role="toolbar" >
+		<span class="dropbutton">
 		<roundcube:button id="newnote" command="newnote" type="link" class="button new" label="primitivenotes.note_new" title="primitivenotes.note_new" />
+		<span id="newmenulink" onclick="rcmail_ui.show_popup('newmenu');return false"></span>
+		</span>
+		<!-- <roundcube:button id="newnote" command="newnote" type="link" class="button new" label="primitivenotes.note_new" title="primitivenotes.note_new" /> -->
 		<roundcube:button id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
 		<roundcube:button id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
 		<roundcube:button id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
@@ -38,6 +44,14 @@
 			<roundcube:object name="notescontent" id="notescontentframe" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
 		</div>
 	</div>
+</div>
+<div id="newmenu" class="popupmenu">
+    <ul id="newmenumenu">
+        <roundcube:button type="link-menuitem" command="htmlnote" class="menuentry" label="primitivenotes.note_formathtml" prop="html" />
+		<roundcube:button type="link-menuitem" command="mdnote" class="menuentry" label="primitivenotes.note_formatmd" prop="md" />
+		<roundcube:button type="link-menuitem" command="txtnote" class="menuentry" label="primitivenotes.note_formattxt" prop="txt" />
+        <roundcube:container name="newmenu" id="newmenumenu" />
+    </ul>
 </div>
 <roundcube:include file="/includes/footer.html" />
 </body>
