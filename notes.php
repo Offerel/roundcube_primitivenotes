@@ -22,12 +22,20 @@ else {
 	die();
 }
 
+// Get image from URL and save to media folder
 if(isset($_POST['uplImage'])) {
 	$imageURL = $_POST['imageURL'];
 	$filename = basename($imageURL);
 	$img = $notes_path."media/".$filename;
 	file_put_contents($img, file_get_contents($imageURL));
 	echo "file://media/".$filename;
+	die();
+}
+
+// Get local image and save to media folder
+if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
+	move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'media/'.$_FILES['localFile']['name']);
+	echo "file://media/".$_FILES['localFile']['name'];
 	die();
 }
 
@@ -196,8 +204,6 @@ usort($files, function($a, $b) { return $b['time'] > $a['time']; });
 
 function getBimage($match) {
 	global $notes_path;
-	//var_dump($match);
-	//die();
 	$imagePath = $notes_path.$match[1];
 	$imgContent = file_get_contents($imagePath);
 	$base64str = base64_encode($imgContent);
@@ -306,8 +312,8 @@ function editHTML($note) {
 			</script>";
 		}
 	} else {
-		$output.="<script>
-	var simplemde = new SimpleMDE({ 
+		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
+		var simplemde = new SimpleMDE({ 
 		element: document.getElementById('md')
 		,autoDownloadFontAwesome: false
 		,spellChecker: false
@@ -329,16 +335,58 @@ function editHTML($note) {
 						action: uplInsertImage,
 						className: 'fa fa-picture-o',
 						title: 'Upload and insert Image',
-					}
-					, 'table', '|',
+					},
+					{ name: 'Image',
+						action: uplLocalImage,
+						className: 'fa fa-file-image-o',
+						title: 'Upload and insert Image',
+					},
+					'table', '|',
 					'preview', 'side-by-side', 'fullscreen', '|'
 					
 					]
 	});
 	document.getElementById('save_button').style.display = 'inline';
 	
+	function simage() {
+		var allowed_extensions = new Array('jpg', 'jpeg', 'png');
+		var file_extension = document.getElementById('localimg').value.split('.').pop().toLowerCase();
+
+		for(var i = 0; i <= allowed_extensions.length; i++)
+		{
+			if(allowed_extensions[i]==file_extension)
+			{
+				var file_data = $('#localimg').prop('files')[0];
+				var formData = new FormData();
+				formData.append('localFile', file_data);
+				
+				$.ajax({
+					type: 'POST'
+					,url: 'notes.php'
+					,dataType: 'text'
+					,cache: false
+					,contentType: false
+					,processData: false
+					,data: formData
+					,success: function(data){
+						pos = simplemde.codemirror.getCursor();
+						simplemde.codemirror.setSelection(pos, pos);
+						simplemde.codemirror.replaceSelection('![](' + data + ')');
+					}
+				});
+				return true;
+			}
+		}
+		alert('Unsupported file format');
+		return false;
+	}
+	
 	function saveFile(editor) {
 		document.getElementById('metah').submit();
+	}
+	
+	function uplLocalImage() {
+		document.getElementById('localimg').click();
 	}
 	
 	function uplInsertImage() {
