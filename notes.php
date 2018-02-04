@@ -78,7 +78,6 @@ if(isset($_POST['editHeader'])) {
 		
 		$note_header = "<input id=\"note_name\" name=\"note_name\" type=\"text\" placeholder=\"$titleH\" value=\"$note_name\" style=\"font-size: 2em\" required onInput=\"revealButton()\" /><br />";
 		$note_header.= "<input id=\"note_tags\" name=\"note_tags\" type=\"text\" placeholder=\"$tagsH\" value=\"$taglist\" onInput=\"revealButton()\" />";
-		$note_header.= "<input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
 		$note_header.= "<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"$filename\" />";
 		
 		$save_allowed = array("txt", "md", "html");	
@@ -127,7 +126,7 @@ if(isset($_POST['editor1'])) {
 	$note_content = $_POST['editor1'];
 	$old_name = $_POST['fname'];
 
-	if(!$note_type = substr($old_name,strripos($old_name,".") +1))
+	if(!$note_type = $_POST['ftype'])
 		$note_type = ($default_format != '') ? $default_format : 'html';
 	
 	$tags_arr = array_map('trim', $note_tags);
@@ -273,7 +272,7 @@ function editHTML($note) {
 	if($format == "")
 		$format = ($default_format != '') ? $default_format : 'html';
 
-	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea>";
+	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
 	
 	if($language != 'en_US')
 		$language = substr($language,0,2);

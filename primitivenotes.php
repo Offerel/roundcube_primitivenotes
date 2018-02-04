@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @author Offerel
  * @copyright Copyright (c) 2018, Offerel
  * @license GNU General Public License, version 3
@@ -22,10 +22,11 @@ class primitivenotes extends rcube_plugin
 		$this->add_button(array(
 			'label'	=> 'primitivenotes.notes',
 			'command'	=> 'notes',
-			'id'		=> 'snbutton',
+			'id'		=> '201ec534-0cce-4b38-8016-4bcbb405e4b0',
 			'class'		=> 'button-notes',
 			'classsel'	=> 'button-notes button-notes',
-			'innerclass'=> 'button-inner'
+			'innerclass'=> 'button-inner',
+			'type'		=> 'link'
 		), 'taskbar');
 
 		if ($rcmail->task == 'notes') {

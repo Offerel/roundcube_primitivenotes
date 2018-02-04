@@ -9,11 +9,11 @@ CKEDITOR.editorConfig = function( config ) {
 	config.fullPage = true;
 	config.allowedContent = true;
 	
-	config.extraPlugins = 'find,font,justify,bidi,blockquote,colorbutton,';
-	config.removePlugins = 'markdown';
+	config.extraPlugins = 'savemarkdown,markdown,find,font,justify,bidi,blockquote,colorbutton,';
+	//config.removePlugins = 'markdown';
 
 	//,font,justify,bidi,blockquote,colorbutton
 	config.toolbar = [
-		{ name: 'document', items: [ 'Save', 'DocProps', '-', 'Undo', 'Redo', 'PasteText','-', 'Bold', 'Italic', 'Underline', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BulletedList','NumberedList', 'Outdent', 'Indent', 'BidiLtr', 'BidiRtl', 'Blockquote', '-', 'TextColor', 'BGColor', '-', 'Font', 'FontSize', '-', 'Link', 'Unlink', 'Table', 'base64image', '-', 'Source', 'Find','Replace','Maximize' ] }
+		{ name: 'document', items: [ 'Save', 'SaveMarkdown', 'DocProps', '-', 'Undo', 'Redo', 'PasteText','-', 'Bold', 'Italic', 'Underline', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BulletedList','NumberedList', 'Outdent', 'Indent', 'BidiLtr', 'BidiRtl', 'Blockquote', '-', 'TextColor', 'BGColor', '-', 'Font', 'FontSize', '-', 'Link', 'Unlink', 'Table', 'base64image', '-', 'Source', 'Markdown', 'Find','Replace','Maximize' ] }
 	];
 };

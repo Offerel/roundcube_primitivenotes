@@ -22,7 +22,8 @@
                 defaultConfig = {
                     mode: 'gfm',
                     lineNumbers: true,
-                    theme: 'default'
+                    theme: 'default',
+                    readOnly : ('disabled' == editor.element.getAttribute('disabled'))
                 };
             editor.config.markdown = CKEDITOR.tools.extend(defaultConfig, editor.config.markdown || {}, true);
 
@@ -46,12 +47,12 @@
                 // regardless of editor language (#10105).
                 textarea.setAttribute('dir', 'ltr');
 
-                textarea.addClass('cke_source cke_reset cke_enable_context_menu');
+                textarea.addClass('cke_source').addClass('cke_reset').addClass('cke_enable_context_menu');  // fix issue #2
 
                 editor.ui.space('contents').append(textarea);
 
                 var editable = editor.editable(new sourceEditable(editor, textarea)),
-                    htmlData = editor.getData(1);
+                    htmlData = editor.getData(1).replace(/(\r\n|\n|\r)/gm,""); // remove all linebreaks to prevent some parsing issues
 
                 // Convert to Markdown and Fill the textarea.
                 if (typeof(toMarkdown) == 'undefined') {
@@ -89,7 +90,12 @@
                 }
 
                 editor.fire('ariaWidget', this);
-                editor.commands.maximize.modes.markdown = 1;
+
+                //If the maximize plugin is not installed, then this throws an error when first
+                //launching the markdown plugin. Fixing this by first checking for the Maximize plugin.
+                if(typeof editor.commands.maximize !== 'undefined'){
+                    editor.commands.maximize.modes.markdown = 1;
+                }
                 callback();
             });
 
