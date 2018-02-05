@@ -7,13 +7,19 @@ CKEDITOR.editorConfig = function( config ) {
 	config.toolbarCanCollapse = false;
 	config.skin = 'moono-lisa';
 	config.fullPage = true;
-	config.allowedContent = true;
+	config.allowedContent =
+    'h1 h2 h3 h4 p blockquote strong em pre code table thead tbody th tr td del p ol ul li b i u br hr kbd strike;' +
+    'a[!href];' +
+    'img[!src,alt,title];';
 	
-	config.extraPlugins = 'savemarkdown,markdown,find,font,justify,bidi,blockquote,colorbutton,';
-	//config.removePlugins = 'markdown';
+	config.extraAllowedContent = 'kbd';
+	config.removeFormatTags = '';
+	config.removeFormatAttributes = '';
+	
+	config.extraPlugins = 'basicstyles,markdown,format,find,blockquote,';
+	//config.removePlugins = 'markdown,richcombo';
 
-	//,font,justify,bidi,blockquote,colorbutton
 	config.toolbar = [
-		{ name: 'document', items: [ 'Save', 'SaveMarkdown', 'DocProps', '-', 'Undo', 'Redo', 'PasteText','-', 'Bold', 'Italic', 'Underline', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BulletedList','NumberedList', 'Outdent', 'Indent', 'BidiLtr', 'BidiRtl', 'Blockquote', '-', 'TextColor', 'BGColor', '-', 'Font', 'FontSize', '-', 'Link', 'Unlink', 'Table', 'base64image', '-', 'Source', 'Markdown', 'Find','Replace','Maximize' ] }
+		{ name: 'document', items: [ 'Save', 'DocProps', '-', 'Undo', 'Redo', 'PasteText','-', 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat', '-', 'Format', 'BulletedList', 'NumberedList', 'Blockquote', '-', 'Link', 'Unlink', 'Table', 'base64image', '-', 'Source', 'Markdown', 'Find','Replace','Maximize' ] }
 	];
 };

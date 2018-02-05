@@ -26,16 +26,47 @@ else {
 if(isset($_POST['uplImage'])) {
 	$imageURL = $_POST['imageURL'];
 	$filename = basename($imageURL);
-	$img = $notes_path."media/".$filename;
-	file_put_contents($img, file_get_contents($imageURL));
-	echo "file://media/".$filename;
+	//$img = $notes_path."media/".$filename;
+	$ext = pathinfo($imageURL, PATHINFO_EXTENSION);
+	$fname = time().$ext;
+	
+	$img = $notes_path."media/".$fname;
+
+	if (!is_dir($notes_path."media/"))
+	{
+		if(!mkdir($notes_path."media/", 0774, true)) {
+			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
+			die();
+		}
+	}
+	if(!file_put_contents($img, file_get_contents($imageURL))) {
+		error_log('PrimitiveNotes: Cant write to media subfolder.');
+		echo 'PrimitiveNotes: Cant write to media subfolder.';
+		die();
+	}
+	echo "file://media/".$fname;
 	die();
 }
 
 // Get local image and save to media folder
 if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
-	move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'media/'.$_FILES['localFile']['name']);
-	echo "file://media/".$_FILES['localFile']['name'];
+	if (!is_dir($notes_path."media/"))
+	{
+		if(!mkdir($notes_path."media/", 0774, true)) {
+			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
+			die();
+		}
+	}
+	
+	$ext = pathinfo($_FILES['localFile']['name'], PATHINFO_EXTENSION);
+	$fname = time().$ext;
+	
+	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'media/'.$fname)) {
+		error_log('PrimitiveNotes: Cant write to media subfolder.');
+		echo 'PrimitiveNotes: Cant write to media subfolder.';
+		die();
+	}
+	echo "file://media/".$fname;
 	die();
 }
 
@@ -222,7 +253,10 @@ function read_note($id, $filename, $mode, $format) {
 		$content = file_get_contents($file);
 		$re = '/\(file:\/\/([^\)]*?)\)/m';
 
-		$inhalt = preg_replace_callback($re, "getBimage", $content);
+		if($mode != 'edit')
+			$inhalt = preg_replace_callback($re, "getBimage", $content);
+		else
+			$inhalt = $content;
 
 		$note = array(
 			'name'		=> substr($filename, 0, stripos($filename, "["))
@@ -302,8 +336,8 @@ function editHTML($note) {
 							evt.editor.commands.save.disable();
 						},
 						'change' : function(evt) {
-						if( document.getElementById('note_name').value != '' )
-								evt.editor.commands.save.enable();
+							if( document.getElementById('note_name').value != '' )
+									evt.editor.commands.save.enable();
 						}
 					}
 				});
@@ -451,6 +485,13 @@ function human_filesize($bytes, $decimals = 2) {
   $factor = round((strlen($bytes) - 1) / 3);
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+
+if ($html_editor == 'ckeditor') {
+	$editor_js = '<script src="ckeditor/ckeditor.js"></script>';
+}
+else {
+	$editor_js = '<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">\n\t<script src=\"../../program/js/tinymce/tinymce.min.js\"></script>';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -459,19 +500,12 @@ function human_filesize($bytes, $decimals = 2) {
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		
 		<link rel="stylesheet" href="highlight/styles/default.css">
 		<script src="highlight/highlight.pack.js"></script>
-		
 		<link rel="stylesheet" href="simplemde/simplemde.css">
-		<link rel="stylesheet" href="skins/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="simplemde/simplemde.min.js"></script>
-		
-		<script src="ckeditor/ckeditor.js"></script>
-		
-		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">
-		<script src='../../program/js/tinymce/tinymce.min.js'></script>
-		
+		<?PHP echo $editor_js ?>
 		<script src="../../program/js/jquery.min.js"></script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
