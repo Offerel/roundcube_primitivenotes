@@ -9,6 +9,7 @@ if (!empty($rcmail->user->ID)) {
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
+	
 	if (!is_dir($notes_path))
 	{
 		if(!mkdir($notes_path, 0774, true)) {
@@ -26,7 +27,6 @@ else {
 if(isset($_POST['uplImage'])) {
 	$imageURL = $_POST['imageURL'];
 	$filename = basename($imageURL);
-	//$img = $notes_path."media/".$filename;
 	$ext = pathinfo($imageURL, PATHINFO_EXTENSION);
 	$fname = time().$ext;
 	
@@ -107,15 +107,14 @@ if(isset($_POST['editHeader'])) {
 		$titleH = $rcmail->gettext('note_title','primitivenotes');
 		$tagsH = $rcmail->gettext('note_tags','primitivenotes');
 		
-		$note_header = "<input id=\"note_name\" name=\"note_name\" type=\"text\" placeholder=\"$titleH\" value=\"$note_name\" style=\"font-size: 2em\" required onInput=\"revealButton()\" /><br />";
-		$note_header.= "<input id=\"note_tags\" name=\"note_tags\" type=\"text\" placeholder=\"$tagsH\" value=\"$taglist\" onInput=\"revealButton()\" />";
+		$note_header = "<input id=\"note_name\" name=\"note_name\" type=\"text\" placeholder=\"$titleH\" value=\"$note_name\" style=\"font-size: 2em\" required /><br />";
+		$note_header.= "<textarea id=\"note_tags\" name=\"note_tags\" class=\"example\" rows=\"1\"></textarea>";
 		$note_header.= "<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"$filename\" />";
-		
+		$note_header.= "<script>tagsuggest('$taglist');</script>";
 		$save_allowed = array("txt", "md", "html");	
 		if(!in_array($format,$save_allowed)) {
 			$note_header.= "<input type=\"hidden\" name=\"editor1\" value=\"e\" />";
 		}
-		
 		die($note_header);
 }
 
@@ -152,7 +151,7 @@ if(isset($_POST['mode'])) {
 // Save a note, when its changed
 if(isset($_POST['editor1'])) {
 	$note_name = ($_POST['note_name'] != "") ? $_POST['note_name'] : "new_unknown_note";
-	$note_tags = explode(",",$_POST['note_tags']);
+	$note_tags = explode(",",str_replace(['"', '[', ']'], '', $_POST['note_tags']));
 
 	$note_content = $_POST['editor1'];
 	$old_name = $_POST['fname'];
@@ -160,7 +159,8 @@ if(isset($_POST['editor1'])) {
 	if(!$note_type = $_POST['ftype'])
 		$note_type = ($default_format != '') ? $default_format : 'html';
 	
-	$tags_arr = array_map('trim', $note_tags);
+	$note_tags = array_unique($note_tags);
+	$tags_arr = array_map('trim', $note_tags);		
 	$tags_str = implode(' ',$tags_arr);
 	$tags_str = ($tags_str != "") ? "[".$tags_str."]" : $tags_str;
 
@@ -195,6 +195,7 @@ if(isset($_POST['delNote'])) {
 
 // Read the files in the notes folder put them in an array and sort by last edit date
 if (is_dir($notes_path)) {
+	$taglist = array();
 	if ($handle = opendir($notes_path)) {
 		while (($file = readdir($handle)) !== false) {
 			if (is_file($notes_path.$file)) {
@@ -206,10 +207,12 @@ if (is_dir($notes_path)) {
 					$tags = null;
 					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
 					
-					if(count($tags) > 0)
+					if(count($tags) > 0) {
 						$ttags = explode(" ", $tags[1]);
-					else
+						$taglist = array_merge($taglist,$ttags);
+					} else {
 						$ttags = "";
+					}
 
 					// put found files in array
 					$files[] = array(
@@ -231,6 +234,7 @@ if (is_dir($notes_path)) {
 
 // sort the files array by lastmodified time
 usort($files, function($a, $b) { return $b['time'] > $a['time']; });
+$taglist = array_unique ($taglist);
 
 function getBimage($match) {
 	global $notes_path;
@@ -245,7 +249,6 @@ function getBimage($match) {
 function read_note($id, $filename, $mode, $format) {
 	global $notes_path;
 	$file = $notes_path.$filename;
-	
 	if($filename != '')
 		$format = substr($filename,strripos($filename, ".")+1);		
 
@@ -288,7 +291,6 @@ function read_note($id, $filename, $mode, $format) {
 			default:	$showNote = showTXT($note);
 		}
 	}
-
 	die($showNote);
 }
 
@@ -310,8 +312,7 @@ function editHTML($note) {
 	
 	if($language != 'en_US')
 		$language = substr($language,0,2);
-	
-	
+
 	if($format == 'html') {
 		if($html_editor === 'tinymce') {
 			$output.="<script>
@@ -379,7 +380,6 @@ function editHTML($note) {
 					
 					]
 	});
-	document.getElementById('save_button').style.display = 'inline';
 	
 	function simage() {
 		var allowed_extensions = new Array('jpg', 'jpeg', 'png');
@@ -453,7 +453,6 @@ function showHTML($note) {
 function showBIN($note) {
 	$base64 = base64_encode($note['content']);
 	if($note['format']==='pdf') $pdf_style = "style=\"width: 100%; height: 100%;\"";
-
 	return "<div style=\"overflow: auto; max-width: 100%; max-height: 100%\"><object $pdf_style data=\"data:".$note['mime_type'].";base64,$base64\" type=\"".$note['mime_type']."\" ></object></div>";
 }
 
@@ -473,6 +472,7 @@ function showMARKDOWN($note) {
 				,spellChecker: false
 				,renderingConfig: {
 					codeSyntaxHighlighting: true,
+					highlightingTheme: 'solarized-dark',
 				}
 			});
 			simplemde.togglePreview();
@@ -500,13 +500,28 @@ else {
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		<link rel="stylesheet" href="highlight/styles/default.css">
+		<link rel="stylesheet" href="highlight/styles/vs.css">
 		<script src="highlight/highlight.pack.js"></script>
 		<link rel="stylesheet" href="simplemde/simplemde.css">
 		<link rel="stylesheet" href="simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="simplemde/simplemde.min.js"></script>
 		<?PHP echo $editor_js ?>
-		<script src="../../program/js/jquery.min.js"></script>
+		<script src="../../program/js/jquery.min.js"></script>	
+		<link rel="stylesheet" href="textext/css/textext.core.css" type="text/css" />
+		<link rel="stylesheet" href="textext/css/textext.plugin.tags.css" type="text/css" />
+		<link rel="stylesheet" href="textext/css/textext.plugin.autocomplete.css" type="text/css" />
+		<link rel="stylesheet" href="textext/css/textext.plugin.focus.css" type="text/css" />
+		<link rel="stylesheet" href="textext/css/textext.plugin.prompt.css" type="text/css" />
+		<link rel="stylesheet" href="textext/css/textext.plugin.arrow.css" type="text/css" />
+		<script src="textext/js/textext.core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.tags.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.autocomplete.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.suggestions.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.filter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.focus.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.prompt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.ajax.js" type="text/javascript" charset="utf-8"></script>
+		<script src="textext/js/textext.plugin.arrow.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
 		<div id="sidebar">
@@ -548,7 +563,17 @@ else {
 		</div>
 		</div>
 		</form>
-		<script>		
+		<script>
+		var suggestList = [<?php echo '"'.implode('", "', $taglist).'"' ?>];
+		function tagsuggest(taglist) {
+			var tagitemlist = taglist.split(", ");
+			$('#note_tags').textext({
+				plugins: 'tags,autocomplete,suggestions',
+				tagsItems: tagitemlist,
+				suggestions: suggestList
+			});
+		}
+		
 		function revealButton() {
 			if(document.getElementById('fname').value.indexOf('html') < 0)
 				document.getElementById('save_button').style.display = 'inline';

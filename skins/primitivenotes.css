@@ -1,3 +1,31 @@
+#suggest {
+	position: absolute;
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCFF;
+	/* font-size: 90%; */
+	/* width: 200px; */
+	z-index: 100;
+	left: 9px;
+	padding: 5px;
+	top: 70px;
+	overflow: auto;
+}
+#suggest div {
+	/* display: block; */
+	/* width: 200px; */
+	/* overflow: hidden; */
+	white-space: nowrap;
+	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	font-size: .8em;
+}
+#suggest div.select{ /* keydown, keyup */
+    color: #FFFFFF;
+    background-color: #3366FF;
+}
+#suggest div.over{ /* mouse over */
+    background-color: #99CCFF;
+}
+
 object {
 	max-width: 100%;
 	max-height: 100%;
