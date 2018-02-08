@@ -5,6 +5,16 @@ $rcmail = rcmail::get_instance();
 
 // Login
 if (!empty($rcmail->user->ID)) {
+	if(substr($rcmail->config->get('notes_basepath', false), -1) != '/') {
+		error_log('PrimitiveNotes: check $config[\'notes_basepath\'] the path must end with a backslash.');
+		die();
+	}
+	
+	if(substr($rcmail->config->get('notes_folder', false), -1) != '/') {
+		error_log('PrimitiveNotes: check $config[\'notes_folder\'] the path must end with a backslash.');
+		die();
+	}
+	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
