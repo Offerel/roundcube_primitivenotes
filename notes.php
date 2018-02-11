@@ -497,7 +497,7 @@ function human_filesize($bytes, $decimals = 2) {
 }
 
 if ($html_editor == 'ckeditor') {
-	$editor_js = '<script src="ckeditor/ckeditor.js"></script>';
+	$editor_js = '<script src="js/ckeditor/ckeditor.js"></script>';
 }
 else {
 	$editor_js = '<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">\n\t<script src=\"../../program/js/tinymce/tinymce.min.js\"></script>';
@@ -509,32 +509,36 @@ else {
 		<title><?PHP echo $note['name'] ?></title>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
+		
+		<script type="text/javascript" src="../../skins/larry/ui.js"></script>
+		<link rel="stylesheet" href="../../skins/larry/styles.css" />
+		
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		<link rel="stylesheet" href="highlight/styles/vs.css">
-		<script src="highlight/highlight.pack.js"></script>
-		<link rel="stylesheet" href="simplemde/simplemde.css">
-		<link rel="stylesheet" href="simplemde/font-awesome/css/font-awesome.min.css">
-		<script src="simplemde/simplemde.min.js"></script>
+		<link rel="stylesheet" href="js/highlight/styles/vs.css">
+		<script src="js/highlight/highlight.pack.js"></script>
+		<link rel="stylesheet" href="js/simplemde/simplemde.css">
+		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
+		<script src="js/simplemde/simplemde.min.js"></script>
 		<?PHP echo $editor_js ?>
 		<script src="../../program/js/jquery.min.js"></script>	
-		<link rel="stylesheet" href="textext/css/textext.core.css" type="text/css" />
-		<link rel="stylesheet" href="textext/css/textext.plugin.tags.css" type="text/css" />
-		<link rel="stylesheet" href="textext/css/textext.plugin.autocomplete.css" type="text/css" />
-		<link rel="stylesheet" href="textext/css/textext.plugin.focus.css" type="text/css" />
-		<link rel="stylesheet" href="textext/css/textext.plugin.prompt.css" type="text/css" />
-		<link rel="stylesheet" href="textext/css/textext.plugin.arrow.css" type="text/css" />
-		<script src="textext/js/textext.core.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.tags.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.autocomplete.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.suggestions.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.filter.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.focus.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.prompt.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.ajax.js" type="text/javascript" charset="utf-8"></script>
-		<script src="textext/js/textext.plugin.arrow.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="js/textext/css/textext.core.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.focus.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.prompt.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.arrow.css" type="text/css" />
+		<script src="js/textext/js/textext.core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.tags.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.autocomplete.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.suggestions.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.filter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.focus.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.prompt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.ajax.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.arrow.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
-		<div id="sidebar">
+		<div id="sidebar" class="uibox listbox">
 			<div id="filelist_header">
 				<span class="searchbox" style="background: url(./../../skins/larry/images/buttons.png) 0 -316px white no-repeat;"><input type="text" id="notesearch" name="notesearch" onkeyup="searchList()" /></span>				
 			</div>
@@ -562,7 +566,7 @@ else {
 				</ul>
 			</div>
 		</div>
-		<div class="main">
+		<div class="main uibox contentbox">
 		<form method="POST" id="metah">
 		<div id="main_header" class="main_header">
 		</div>
@@ -574,6 +578,8 @@ else {
 		</div>
 		</form>
 		<script>
+		new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:300, size:12 }).init();
+		
 		var suggestList = [<?php echo '"'.implode('", "', $taglist).'"' ?>];
 		function tagsuggest(taglist) {
 			var tagitemlist = taglist.split(", ");
