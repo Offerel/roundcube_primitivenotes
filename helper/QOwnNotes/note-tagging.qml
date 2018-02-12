@@ -3,8 +3,8 @@ import QOwnNotesTypes 1.0
 
 QtObject {
     function init() {
-        script.registerCustomAction("getTagsFromName", "Get Tag's from Notename", "Get Tag's");
-		script.registerCustomAction("setTagsToName", "Rename an Note with Tags", "Set Tag's");
+        script.registerCustomAction("getTagsFromName", "Get tags from note filename", "Get tags");
+		script.registerCustomAction("setTagsToName", "Rename a note with tags", "Set tags");
 	}
 	
 	function customActionInvoked(identifier) {
@@ -33,7 +33,7 @@ QtObject {
 					var arguments = [fileName,path + newName];
 					
 					if (script.platformIsWindows()) {
-						script.informationMessageBox("If you click on \"OK\", the currently selected note is renamed according to his tags. As a sideffect, all tags associated with this note, are removed.\n\nYou can run \"Get Tag's\" afterwards to rei-mport the tags.", "Rename Note");
+						script.informationMessageBox("If you click on \"OK\", the currently selected note is renamed according to his tags. As a sideffect, all tags associated with this note, are removed.\n\nYou can run \"Get tags\" afterwards to re-import the tags.", "Rename note");
 						
 						arguments = ["/C","move",script.toNativeDirSeparators(fileName),script.toNativeDirSeparators(path) + newName];
 						script.startSynchronousProcess("cmd.exe", arguments, "");
