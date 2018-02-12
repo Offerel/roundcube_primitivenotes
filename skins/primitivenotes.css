@@ -1,3 +1,7 @@
+body {
+	font-size: unset;
+	background: unset;
+}
 #suggest {
 	position: absolute;
 	background-color: #FFFFFF;
@@ -88,31 +92,31 @@ object {
 	height: 18px;
 	border-radius: 4px;
 }
-
 #sidebar .searchbox input {
-    font-weight: bold;
-    font-size: 11px;
-    background: white;
-    border: none;
-    padding: 0 0 0 5px;
-    margin: 0 0 0 19px;
-    top: -1px;
-    position: relative;
-    width: calc(100% - 35px);
-    height: 15px;
+	font-weight: bold;
+	font-size: 11px;
+	background: white;
+	border: none;
+	padding: 0 0 0 5px;
+	margin: 0 0 0 19px;
+	top: -3px;
+	position: relative;
+	width: calc(100% - 35px);
+	height: 15px;
 }
-
 #sidebar {
 	width: 400px;
 	position: absolute;
 	float: left;
-	height: 99.5%;
 	overflow: hidden;
 	border-radius: 4px;
 	margin-right: 5px;
 	border: 1px solid #b2b8bf;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
-
 #filelist_header {
 	display: block;
 	top: 0;
@@ -143,16 +147,18 @@ object {
 .cke_chrome {
 	border: 0px !important;
 }
-
-.main {
+#main {
 	position: absolute;
-	height: 99%;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+.main {
 	left: 415px;
-	width: calc(100% - 420px);
 	border: 1px solid #b2b8bf;
 	border-radius: 4px;
 }
-
 .main_header {
 	height: 80px;
 	background: #efefef;

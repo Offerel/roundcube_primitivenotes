@@ -509,9 +509,12 @@ else {
 		<title><?PHP echo $note['name'] ?></title>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
-		
-		<script type="text/javascript" src="../../skins/larry/ui.js"></script>
-		<link rel="stylesheet" href="../../skins/larry/styles.css" />
+
+		<script type="text/javascript" src="../../program/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../skins/larry/ui.min.js"></script>
+		<script type="text/javascript" src="../../program/js/common.min.js"></script>
+		<script type="text/javascript" src="../../program/js/app.min.js"></script>
+		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
 		
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
 		<link rel="stylesheet" href="js/highlight/styles/vs.css">
@@ -520,7 +523,7 @@ else {
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="js/simplemde/simplemde.min.js"></script>
 		<?PHP echo $editor_js ?>
-		<script src="../../program/js/jquery.min.js"></script>	
+		
 		<link rel="stylesheet" href="js/textext/css/textext.core.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.css" type="text/css" />
@@ -536,6 +539,9 @@ else {
 		<script src="js/textext/js/textext.plugin.prompt.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/textext/js/textext.plugin.ajax.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/textext/js/textext.plugin.arrow.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var rcmail = new rcube_webmail();
+		</script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
 		<div id="sidebar" class="uibox listbox">
@@ -566,7 +572,7 @@ else {
 				</ul>
 			</div>
 		</div>
-		<div class="main uibox contentbox">
+		<div id="main" class="main uibox contentbox">
 		<form method="POST" id="metah">
 		<div id="main_header" class="main_header">
 		</div>
@@ -578,7 +584,7 @@ else {
 		</div>
 		</form>
 		<script>
-		new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:300, size:12 }).init();
+		new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:250, size:12 }).init();
 		
 		var suggestList = [<?php echo '"'.implode('", "', $taglist).'"' ?>];
 		function tagsuggest(taglist) {
