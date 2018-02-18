@@ -9,7 +9,7 @@
  */
 class primitivenotes extends rcube_plugin
 {
-	public $task = '.*';
+	public $task = '?(?!login|logout).*';
 	
 	public function init()
 	{
@@ -133,3 +133,4 @@ if ($_FILES) {
 		
 		move_uploaded_file($_FILES['files']['tmp_name'], $_POST['path'].$fname.".".$ext);
 }
+?>
