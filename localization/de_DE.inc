@@ -15,4 +15,5 @@ $labels['note_subject'] = 'Per E-Mail senden: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
 $labels['note_formattxt'] = 'Normaler Text';
+$labels['ariallabelnewoptions'] = 'Optionen';
 ?>
