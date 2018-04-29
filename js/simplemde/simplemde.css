@@ -651,8 +651,9 @@ span.CodeMirror-selectedtext {
 	margin: 15px 0;
 	border-bottom-left-radius: 0;
 	border-top-left-radius: 0;
-	margin-left: 1.5em;
+	/* margin-left: 1.5em; */
 	border-left: 5px solid #c2d1b6;
+	box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
 }
 .editor-preview-side blockquote p, .editor-preview blockquote p {
 	padding: 5px 10px;
@@ -690,6 +691,7 @@ span.CodeMirror-selectedtext {
 	background: #f6f8fa;
 	font-size: 85%;
 	padding: 0 3px;
+	/* color: white; */
 }
 .editor-preview pre, .editor-preview-side pre {
 	background: #f6f8fa;

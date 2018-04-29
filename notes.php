@@ -50,8 +50,8 @@ if(isset($_POST['uplImage'])) {
 		}
 	}
 	if(!file_put_contents($img, file_get_contents($imageURL))) {
-		error_log('PrimitiveNotes: Cant write to media subfolder.');
-		echo 'PrimitiveNotes: Cant write to media subfolder.';
+		error_log("PrimitiveNotes: Can't write to media subfolder.");
+		echo "PrimitiveNotes: Can't write to media subfolder.";
 		die();
 	}
 	echo "file://media/".$fname;
@@ -72,8 +72,8 @@ if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
 	$fname = time().$ext;
 	
 	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'media/'.$fname)) {
-		error_log('PrimitiveNotes: Cant write to media subfolder.');
-		echo 'PrimitiveNotes: Cant write to media subfolder.';
+		error_log("PrimitiveNotes: Can't write to media subfolder.");
+		echo "PrimitiveNotes: Can't write to media subfolder.";
 		die();
 	}
 	echo "file://media/".$fname;
@@ -137,7 +137,7 @@ if(isset($_POST['editNote'])) {
 		die();
 }
 
-// rename a note
+// Rename a note
 if(isset($_POST['mode'])) {
 	if($_POST['mode'] === 'p') {
 		$oldname = $_POST['fname'];
@@ -482,7 +482,7 @@ function showMARKDOWN($note) {
 				,spellChecker: false
 				,renderingConfig: {
 					codeSyntaxHighlighting: true,
-					highlightingTheme: 'solarized-dark',
+					highlightingTheme: 'monokai',
 				}
 			});
 			simplemde.togglePreview();
@@ -517,6 +517,7 @@ else {
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
 		
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
+		<!-- <link rel="stylesheet" href="js/highlight/styles/monokai-sublime.css"> -->
 		<link rel="stylesheet" href="js/highlight/styles/vs.css">
 		<script src="js/highlight/highlight.pack.js"></script>
 		<link rel="stylesheet" href="js/simplemde/simplemde.css">

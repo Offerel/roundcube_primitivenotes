@@ -65,15 +65,16 @@ class primitivenotes extends rcube_plugin
 		} else {
 			error_log("PrimitiveNotes: Note not found. Attach the note to the mail failed.");
 		}
-
-		switch ($type) {
-			case 'html': $mimetype = mime_content_type($note_file); break;
-			case 'pdf': $mimetype = mime_content_type($note_file); break;
-			case 'jpg': $mimetype = mime_content_type($note_file); break;
-			case 'png': $mimetype = mime_content_type($note_file); break;
-			case 'md': $mimetype = mime_content_type($note_file); break;
-			case 'txt': $mimetype = mime_content_type($note_file); break;
-			default: error_log("PrimitiveNotes: Unsupported file format. Attach the note to the mail failed."); return false;
+		if($type != "") {
+			switch ($type) {
+				case 'html': $mimetype = mime_content_type($note_file); break;
+				case 'pdf': $mimetype = mime_content_type($note_file); break;
+				case 'jpg': $mimetype = mime_content_type($note_file); break;
+				case 'png': $mimetype = mime_content_type($note_file); break;
+				case 'md': $mimetype = mime_content_type($note_file); break;
+				case 'txt': $mimetype = mime_content_type($note_file); break;
+				default: error_log("PrimitiveNotes: Unsupported file format ($type). Attach the note to the mail failed."); return false;
+			}
 		}
 		
 		$args['attachments'][] = array(

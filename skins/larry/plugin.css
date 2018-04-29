@@ -1,4 +1,19 @@
 #taskbar a.button-notes span.button-inner {
+	background: url(images/notes002.png) no-repeat;
+	/*
+	width: 24px !important;
+	height: 23px !important;
+	*/
+	background-position: 0px 0px;
+	display: inline-block;
+}
+
+#taskbar a.button-notes:hover span.button-inner,
+#taskbar a.button-notes.button-selected span.button-inner {
+	background-position: 0px -24px;
+}
+/*
+#taskbar a.button-notes span.button-inner {
 	background: url(images/notes.png) 5px 0 no-repeat;
 	background-size: 21px;
 }
@@ -8,17 +23,13 @@
 	background: url(images/notes_sel.png) 5px 0 no-repeat;
 	background-size: 21px;
 }
-
+*/
 .menuentry {
 	color: white !important;
 }
 
 .menuentry:hover {
 	background: #0883d0;
-}
-
-.minimal #mainscreen {
-	top: 55px !important;
 }
 
 #notestoolbar {
