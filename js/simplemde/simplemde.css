@@ -690,7 +690,7 @@ span.CodeMirror-selectedtext {
 .editor-preview code, .editor-preview-side code {
 	background: #f6f8fa;
 	font-size: 85%;
-	padding: 0 3px;
+	/* padding: 0 3px; */
 	/* color: white; */
 }
 .editor-preview pre, .editor-preview-side pre {

@@ -4,15 +4,13 @@ body {
 #taskbar a.button-notes {
 	background: url(images/notes.png) 0px 1px/23px no-repeat;
 }
-
 .minimal #mainscreen {
 	top: 55px !important;
 }
-
 #notestoolbar {
     top: -41px;
     position: absolute;
-    left: 405px;
+    left: 185px;
 }
 .menuentry {
 	color: black !important;
@@ -33,7 +31,6 @@ body {
 	color: transparent;
 	background-position: -64px 0;
 }
-
 #notestoolbar a.button.rename {
 	background: url(images/button_rename.png) 0 0 no-repeat transparent;
 	display: block;
@@ -45,7 +42,6 @@ body {
 	float: left;
 	color: transparent;
 }
-
 #notestoolbar a.button.delete {
 	background: url(../../../../skins/classic/images/mail_toolbar.png) 0 0 no-repeat transparent;
 	display: block;
