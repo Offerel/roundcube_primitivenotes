@@ -357,7 +357,8 @@ function editHTML($note) {
 		}
 	} else {
 		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
-		var simplemde = new SimpleMDE({ 
+		//var simplemde = new SimpleMDE({
+		var inscybmde = new InscrybMDE({
 		element: document.getElementById('md')
 		,autoDownloadFontAwesome: false
 		,spellChecker: false
@@ -412,9 +413,12 @@ function editHTML($note) {
 					,processData: false
 					,data: formData
 					,success: function(data){
-						pos = simplemde.codemirror.getCursor();
-						simplemde.codemirror.setSelection(pos, pos);
-						simplemde.codemirror.replaceSelection('![](' + data + ')');
+						//pos = simplemde.codemirror.getCursor();
+						//simplemde.codemirror.setSelection(pos, pos);
+						//simplemde.codemirror.replaceSelection('![](' + data + ')');
+						pos = inscybmde.codemirror.getCursor();
+						inscybmde.codemirror.setSelection(pos, pos);
+						inscybmde.codemirror.replaceSelection('![](' + data + ')');
 					}
 				});
 				return true;
@@ -443,9 +447,12 @@ function editHTML($note) {
 					,'imageURL': imageURL
 				}
 				,success: function(data){
-					pos = simplemde.codemirror.getCursor();
-					simplemde.codemirror.setSelection(pos, pos);
-					simplemde.codemirror.replaceSelection('![](' + data + ')');
+					//pos = simplemde.codemirror.getCursor();
+					//simplemde.codemirror.setSelection(pos, pos);
+					//simplemde.codemirror.replaceSelection('![](' + data + ')');
+					pos = inscybmde.codemirror.getCursor();
+					inscybmde.codemirror.setSelection(pos, pos);
+					inscybmde.codemirror.replaceSelection('![](' + data + ')');
 				}
 			});
 		} else
@@ -474,7 +481,8 @@ function showMARKDOWN($note) {
 	return "<textarea id=\"md\">".$note['content']."</textarea>
 	<script>
 	if (document.getElementById('md')) {
-			var simplemde = new SimpleMDE({ 
+			//var simplemde = new SimpleMDE({
+			var inscybmde = new InscrybMDE({
 				element: document.getElementById('md')
 				,status: false
 				,toolbar: false
@@ -485,7 +493,7 @@ function showMARKDOWN($note) {
 					highlightingTheme: 'monokai',
 				}
 			});
-			simplemde.togglePreview();
+			inscybmde.togglePreview();
 		}
 		</script>";
 }
@@ -522,7 +530,7 @@ else {
 		<script src="js/highlight/highlight.pack.js"></script>
 		<link rel="stylesheet" href="js/simplemde/simplemde.css">
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
-		<script src="js/simplemde/simplemde.min.js"></script>
+		<script src="js/simplemde/inscrybmde.min.js"></script>
 		<?PHP echo $editor_js ?>
 		
 		<link rel="stylesheet" href="js/textext/css/textext.core.css" type="text/css" />

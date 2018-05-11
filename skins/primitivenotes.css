@@ -2,6 +2,12 @@ body {
 	font-size: unset;
 	background: unset;
 }
+.editor-toolbar button {
+	border: 0;
+}
+.editor-toolbar button:hover {
+	background: lightgray;
+}
 #suggest {
 	position: absolute;
 	background-color: #FFFFFF;
