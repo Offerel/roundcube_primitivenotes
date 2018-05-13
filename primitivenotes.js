@@ -1,3 +1,11 @@
+/**
+ * Roundcube Notes Plugin
+ *
+ * @version 1.3.0
+ * @author Offerel
+ * @copyright Copyright (c) 2018, Offerel
+ * @license GNU General Public License, version 3
+ */
 window.rcmail && rcmail.addEventListener('init', function(evt) {
 	rcmail.register_command('newnote', new_note, true);
 	rcmail.register_command('editnote', edit_note, true);

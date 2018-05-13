@@ -30,7 +30,9 @@ if (!empty($rcmail->user->ID)) {
 }
 else {
 	error_log('PrimitiveNotes: Login failed. User is not logged in.');
-	die();
+	http_response_code(403);
+	header('location: ../../');
+    die('Login failed. User is not logged in.');
 }
 
 // Get image from URL and save to media folder
@@ -88,9 +90,23 @@ if(isset($_POST['showHeader'])) {
 			$taglist = str_replace(" ", ", ", substr(substr($filename, 0, stripos($filename, "]")), stripos($filename, "[") +1));
 		} else {
 			$note_name = substr($filename, 0, stripos($filename, "."));
-			$taglist = "";
+			if($rcmail->config->get('yaml_support', '') && stripos($filename,".md")) {
+				$contents = file_get_contents($notes_path.$filename);
+				$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
+				$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
+				if($yaml_beginn == 0 && $yaml_end > 0) {
+					$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+					foreach($yaml_arr as $line) {
+						if(strpos($line,"tags:") === 0) {
+							$taglist = str_replace(" ", ", ", substr($line,6));
+						}
+					}
+				}
+			}
+			else {
+				$taglist = "";
+			}
 		}
-
 		$note_header = "<span id=\"headerTitle\" class=\"headerTitle\">".$note_name."</span><br />\n\t\t\t<span class=\"headerTags\">".$taglist."</span>\n\t\t\t<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"".$filename."\">\n";
 		die($note_header);
 }
@@ -109,7 +125,22 @@ if(isset($_POST['editHeader'])) {
 		if(stripos($filename, "[")) {
 			$note_name = substr($filename, 0, stripos($filename, "["));
 			$taglist = str_replace(" ", ", ", substr(substr($filename, 0, stripos($filename, "]")), stripos($filename, "[") +1));
-		} else {
+		} 
+		elseif($rcmail->config->get('yaml_support', '') && stripos($filename, ".md")) {
+			$note_name = substr($filename, 0, stripos($filename, "."));
+			$contents = file_get_contents($notes_path.$filename);
+			$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
+			$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
+			if($yaml_beginn == 0 && $yaml_end > 0) {
+				$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+				foreach($yaml_arr as $line) {
+					if(strpos($line,"tags:") === 0) {
+						$taglist = str_replace(" ", ", ", substr($line,6));
+					}
+				}
+			}
+		}
+		else {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			$taglist = "";
 		}
@@ -146,12 +177,21 @@ if(isset($_POST['mode'])) {
 		$tags = explode (",", $_POST['note_tags']);
 		$tags_arr = array_map('trim', $tags);
 		
-		if(count($tags) > 1)
-			$tags_str = "[".implode(" ",$tags_arr)."]";
-		else
+		if(count($tags) > 1) {
+			if($rcmail->config->get('yaml_support', '') && $ext == "md") {
+				$tags_str = "tags: ".implode(" ",$tags_arr);
+				$newname = $newname.".".$ext;
+			}
+			else {
+				$tags_str = "[".implode(" ",$tags_arr)."]";
+				$newname = $newname.$tags_str.".".$ext;
+			}
+		}
+		else {
 			$tags_str = "";
+			$newname = $newname.".".$ext;
+		}
 			
-		$newname = $newname.$tags_str.".".$ext;
 		if($oldname != $newname)
 			rename($notes_path.$oldname, $notes_path.$newname);
 	}
@@ -172,9 +212,48 @@ if(isset($_POST['editor1'])) {
 	$note_tags = array_unique($note_tags);
 	$tags_arr = array_map('trim', $note_tags);		
 	$tags_str = implode(' ',$tags_arr);
-	$tags_str = ($tags_str != "") ? "[".$tags_str."]" : $tags_str;
 
-	$new_name = $note_name.$tags_str.".".$note_type;
+	if($rcmail->config->get('yaml_support', '') && $note_type == "md") {
+		$tags_str = "tags: ".$tags_str;
+		$yaml_beginn = strpos($note_content, $rcmail->config->get('yaml_start', ''));
+		$yaml_end = strpos($note_content, $rcmail->config->get('yaml_end', ''));
+		$yaml_new = array();
+		$tagset = false;
+		
+		if($yaml_beginn == 0 && $yaml_end > 0) {
+			$yaml_arr = preg_split("/\r\n|\n|\r/", substr($note_content,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+			foreach($yaml_arr as $line) {
+				if(stripos($line,"tags: ") === 0) {
+					$yaml_new[] = $tags_str;
+					$tagset = true;
+				}
+				elseif(stripos($line,"title: ") === 0) {
+					$yaml_new[] = "title: ".$note_name;
+				}
+				else {
+					$yaml_new[] = $line;
+				}
+			}
+			
+			if(!$tagset && strlen($tags_str) > 6) array_splice($yaml_new, 1, 0, $tags_str);
+			$note_content = implode("\r\n", $yaml_new).substr($note_content,$yaml_end + strlen($rcmail->config->get('yaml_end', '')));
+		}
+		else {
+			$yaml_new[] = "---";
+			if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
+			$yaml_new[] = "title: ".$note_name;
+			$yaml_new[] = "date: ".date('Y-m-d');
+			$yaml_new[] = "author: ".$rcmail->user->get_username();
+			$yaml_new[] = "...";
+			$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
+		}
+		
+		$new_name = $note_name.".".$note_type;
+	}
+	else {
+		$tags_str = ($tags_str != "") ? "[".$tags_str."]" : $tags_str;
+		$new_name = $note_name.$tags_str.".".$note_type;
+	}
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	
@@ -217,6 +296,20 @@ if (is_dir($notes_path)) {
 					$tags = null;
 					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
 					
+					if($rcmail->config->get('yaml_support', '') && stripos($file,".md")) {
+						$contents = file_get_contents($notes_path.$file);
+						$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
+						$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
+						if($yaml_beginn == 0 && $yaml_end > 0) {
+							$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+							foreach($yaml_arr as $line) {
+								if(strpos($line,"tags:") === 0) {
+									$tags[1] = substr($line,6);								
+								}
+							}
+						}
+					}
+					
 					if(count($tags) > 0) {
 						$ttags = explode(" ", $tags[1]);
 						$taglist = array_merge($taglist,$ttags);
@@ -257,7 +350,7 @@ function getBimage($match) {
 
 // get contents of the note
 function read_note($id, $filename, $mode, $format) {
-	global $notes_path;
+	global $rcmail, $notes_path;
 	$file = $notes_path.$filename;
 	if($filename != '')
 		$format = substr($filename,strripos($filename, ".")+1);		
@@ -266,8 +359,16 @@ function read_note($id, $filename, $mode, $format) {
 		$content = file_get_contents($file);
 		$re = '/\(file:\/\/([^\)]*?)\)/m';
 
-		if($mode != 'edit')
+		if($mode != 'edit') {
 			$inhalt = preg_replace_callback($re, "getBimage", $content);
+			if($rcmail->config->get('yaml_support', '')) {
+				$yaml_beginn = strpos($inhalt, $rcmail->config->get('yaml_start', ''));
+				$yaml_end = strpos($inhalt, $rcmail->config->get('yaml_end', ''));
+				if($yaml_beginn == 0 && $yaml_end > 0) {
+					$inhalt = substr($inhalt,$yaml_end + strlen($rcmail->config->get('yaml_end', '')));
+				}
+			}
+		}
 		else
 			$inhalt = $content;
 
@@ -481,7 +582,6 @@ function showMARKDOWN($note) {
 	return "<textarea id=\"md\">".$note['content']."</textarea>
 	<script>
 	if (document.getElementById('md')) {
-			//var simplemde = new SimpleMDE({
 			var inscybmde = new InscrybMDE({
 				element: document.getElementById('md')
 				,status: false
