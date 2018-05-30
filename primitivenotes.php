@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @author Offerel
  * @copyright Copyright (c) 2018, Offerel
  * @license GNU General Public License, version 3
@@ -32,14 +32,12 @@ class primitivenotes extends rcube_plugin
 		if ($rcmail->task == 'notes') {
 			$this->register_action('index', array($this, 'action'));
 		}
-
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
 	}
 
 	function note_mail_compose($args)
 	{
 		$rcmail = rcmail::get_instance();
-
 		$filename = $args['param']['note_filename'];
 
 		if(stripos($filename, "[")) {
@@ -50,10 +48,12 @@ class primitivenotes extends rcube_plugin
 
 		$type = substr($filename,stripos($filename, ".")+1);
 		
-		$subject = $this->gettext('note_subject').$name;
-		$sublength = strlen($subject);
-		if(strlen($subject) > 50 ) {
-			$subject = substr($subject,0,47)."...";
+		if(strlen($name) > 0) {
+			$subject = $this->gettext('note_subject').$name;
+			$sublength = strlen($subject);
+			if(strlen($subject) > 50 ) {
+				$subject = substr($subject,0,47)."...";
+			}
 		}
 
 		$note_file = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false).$filename;

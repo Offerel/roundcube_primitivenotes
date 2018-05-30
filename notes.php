@@ -16,6 +16,7 @@ if (!empty($rcmail->user->ID)) {
 	}
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
+	//error_log($rcmail->get_user_language()); // de_DE
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
