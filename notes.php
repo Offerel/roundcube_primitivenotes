@@ -1,4 +1,12 @@
 <?php
+/**
+ * Roundcube Notes Plugin
+ *
+ * @version 1.3.2
+ * @author Offerel
+ * @copyright Copyright (c) 2018, Offerel
+ * @license GNU General Public License, version 3
+ */
 define('INSTALL_PATH', realpath(__DIR__ . '/../../') . '/');
 include INSTALL_PATH . 'program/include/iniset.php';
 $rcmail = rcmail::get_instance();
@@ -243,7 +251,7 @@ if(isset($_POST['editor1'])) {
 			$yaml_new[] = "---";
 			if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
 			$yaml_new[] = "title: ".$note_name;
-			$yaml_new[] = "date: ".date('Y-m-d');
+			$yaml_new[] = "date: ".strftime('%x %X');
 			$yaml_new[] = "author: ".$rcmail->user->get_username();
 			$yaml_new[] = "...";
 			$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
