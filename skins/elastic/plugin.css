@@ -1,0 +1,55 @@
+.iframebox.simplenotes_ {
+	height: 100%;
+}
+#pluginbody {
+	height: 100%;
+}
+#taskbar a.button-notes span.button-inner {
+	background: url(images/notes002.png) no-repeat;
+	background-position: 0px 0px;
+	display: inline-block;
+}
+#taskbar a.button-notes:hover span.button-inner,
+#taskbar a.button-notes.button-selected span.button-inner {
+	background-position: 0px -24px;
+}
+.menuentry {
+	color: white !important;
+}
+.menuentry:hover {
+	background: #0883d0;
+}
+#notestoolbar {
+	top: -6px;
+	position: absolute;
+}
+.toolbar a.button:focus {
+	color: #fff;
+	background-color: rgba(30,150,192,0.5) !important;
+	border-radius: 3px;
+}
+.toolbar a.button {
+	display: inline-block;
+	border: 0 !important;
+	height: 4.2rem;
+	min-width: 3.5rem;
+	max-width: 6rem;
+	width: auto;
+	padding: 0.45rem;
+	text-align: center;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	line-height: 2.4;
+}
+
+.toolbar a.button::before {
+	width: 3.18em;
+}
+
+#notestoolbar .disabled {
+	pointer-events: none;
+}
+
+.upl {
+	display: none;
+}

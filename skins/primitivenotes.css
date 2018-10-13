@@ -12,8 +12,6 @@ body {
 	position: absolute;
 	background-color: #FFFFFF;
 	border: 1px solid #CCCCFF;
-	/* font-size: 90%; */
-	/* width: 200px; */
 	z-index: 100;
 	left: 9px;
 	padding: 5px;
@@ -21,9 +19,6 @@ body {
 	overflow: auto;
 }
 #suggest div {
-	/* display: block; */
-	/* width: 200px; */
-	/* overflow: hidden; */
 	white-space: nowrap;
 	font-family: 'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
 	font-size: .8em;
