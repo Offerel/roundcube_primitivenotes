@@ -1,0 +1,1 @@
+CKEDITOR.plugins.setLang("basicstyles","id",{bold:"Huruf Tebal",italic:"Huruf Miring",strike:"Strikethrough",subscript:"Subscript",superscript:"Superscript",underline:"Garis Bawah"});

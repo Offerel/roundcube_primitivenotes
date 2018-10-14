@@ -1,0 +1,1 @@
+CKEDITOR.plugins.setLang("basicstyles","oc",{bold:"Gras",italic:"Italica",strike:"Raiat",subscript:"Indici",superscript:"Exponent",underline:"Solinhat"});
