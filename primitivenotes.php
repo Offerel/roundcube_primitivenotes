@@ -24,7 +24,7 @@ class primitivenotes extends rcube_plugin
 			'command'	=> 'notes',
 			'id'		=> '201ec534-0cce-4b38-8016-4bcbb405e4b0',
 			'class'		=> 'button-notes',
-			'classsel'	=> 'button-notes button-notes',
+			'classsel'	=> 'button-notes button-selected',
 			'innerclass'=> 'button-inner',
 			'type'		=> 'link'
 		), 'taskbar');
