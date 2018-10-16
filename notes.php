@@ -24,7 +24,6 @@ if (!empty($rcmail->user->ID)) {
 	}
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
-	//error_log($rcmail->get_user_language()); // de_DE
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
@@ -634,7 +633,6 @@ else {
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
 		
 		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		<!-- <link rel="stylesheet" href="js/highlight/styles/monokai-sublime.css"> -->
 		<link rel="stylesheet" href="js/highlight/styles/vs.css">
 		<script src="js/highlight/highlight.pack.js"></script>
 		<link rel="stylesheet" href="js/simplemde/simplemde.css">
@@ -683,7 +681,7 @@ else {
 						$filename = $fentry['filename'];
 						$format = $fentry['type'];
 						
-						echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" href='#'>".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span>$tlist</a></li>";
+						echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" >".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span>$tlist</a></li>";
 					}
 				} 
 				?>

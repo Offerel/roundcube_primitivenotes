@@ -5,12 +5,10 @@
 	<div class="header">
 		<a class="button icon menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
 		<span class="header-title primitivenotestitle"><roundcube:label name="primitivenotes.notes" /></span>
-	</div>
-	<div class="iframe-wrapper">	
 		<div id="notestoolbar" class="toolbar" role="toolbar">
 			<span class="dropbutton">
 				<roundcube:button id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
-				<a href="#new-note" class="button dropdown" id="newmenulink" onclick="UI.toggle_popup('newmenu',event);return false" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
+				<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
 					<span class="inner"><roundcube:label name="primitivenotes.note_new" /></span>
 				</a>
 			</span>
@@ -37,6 +35,8 @@
 			}
 			</script>
 		</div>
+	</div>
+	<div class="iframe-wrapper">
 		<div id="pluginbody" class="offset">
 			<div class="iframebox simplenotes_<roundcube:var name='env:action' />">
 				<roundcube:object name="notescontent" id="notescontentframe" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
