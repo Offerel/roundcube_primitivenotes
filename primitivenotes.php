@@ -16,7 +16,7 @@ class primitivenotes extends rcube_plugin
 		$rcmail = rcmail::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		$this->include_stylesheet($this->local_skin_path() . '/plugin.css');
+		$this->include_stylesheet($this->local_skin_path() . '/plugin.min.css');
 		$this->register_task('notes');
 		
 		$this->add_button(array(

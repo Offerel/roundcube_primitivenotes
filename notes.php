@@ -466,7 +466,6 @@ function editHTML($note) {
 		}
 	} else {
 		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
-		//var simplemde = new SimpleMDE({
 		var inscybmde = new InscrybMDE({
 		element: document.getElementById('md')
 		,autoDownloadFontAwesome: false
@@ -632,29 +631,29 @@ else {
 		<script type="text/javascript" src="../../program/js/app.min.js"></script>
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
 		
-		<link rel="stylesheet" href="skins/primitivenotes.css" />
-		<link rel="stylesheet" href="js/highlight/styles/vs.css">
+		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
+		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-		<link rel="stylesheet" href="js/simplemde/simplemde.css">
+		<link rel="stylesheet" href="js/simplemde/simplemde.min.css">
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="js/simplemde/inscrybmde.min.js"></script>
 		<?PHP echo $editor_js ?>
 		
-		<link rel="stylesheet" href="js/textext/css/textext.core.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.focus.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.prompt.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.arrow.css" type="text/css" />
-		<script src="js/textext/js/textext.core.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.tags.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.autocomplete.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.suggestions.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.filter.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.focus.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.prompt.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.ajax.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.arrow.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="js/textext/css/textext.core.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.focus.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.prompt.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.plugin.arrow.min.css" type="text/css" />
+		<script src="js/textext/js/textext.core.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.tags.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.suggestions.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.filter.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.focus.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.prompt.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.ajax.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.plugin.arrow.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var rcmail = new rcube_webmail();
 		</script>

@@ -1,1 +1,280 @@
-.iframebox.simplenotes_{height:100%}.uibox{border:0!important;border-radius:0}#notessplitter{display:none}body{font-size:unset;background:unset}.editor-toolbar button{border:0;background:transparent}.editor-toolbar button:hover{background:lightgray}#suggest{position:absolute;background-color:#FFF;border:1px solid #CCF;z-index:100;left:9px;padding:5px;top:70px;overflow:auto}#suggest div{white-space:nowrap;font-family:'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;font-size:.8em}#suggest div.select{color:#FFF;background-color:#36F}#suggest div.over{background-color:#9CF}object{max-width:100%;max-height:100%;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto}.headerTitle{margin:10px;font-size:2em;font-family:'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;position:relative;top:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:inherit;margin-top:0}.headerTags{margin:10px;font-size:11px;font-family:'Lucida Grande',Verdana,Arial,Helvetica,sans-serif;position:relative;top:-20px}#content{height:100%;overflow:auto;padding:0 15px}.save_button{position:absolute;right:16px;top:14px;height:24px;width:24px;background:url(images/button_save.png) no-repeat;display:none}.save_button a{width:100%;height:100%;position:absolute}#sidebar .searchbox{background:url(./../../../../skins/larry/images/buttons.png) 0 -316px #fff no-repeat;width:calc(100% - 15px);border:1px solid #ababab;position:absolute;height:18px;border-radius:4px}#sidebar .searchbox input{font-weight:700;font-size:11px;background:#fff;border:none;padding:0 0 0 5px;margin:0 0 0 19px;top:-3px;position:relative;width:calc(100% - 35px);height:15px}#sidebar{width:400px;position:absolute;float:left;overflow:hidden;border-radius:0;margin-right:5px;top:0;bottom:0;left:0;right:0;border-right:1px solid #d4dbde!important}#filelist_header{display:block;top:0;left:0;right:0;height:34px;padding:6px;background:#efefef;white-space:nowrap;border-bottom:1px solid #dfdfdf;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#taglist{display:none}#note_tags{border:thin solid #ced4da}.filelist{width:100%;height:calc(100% - 34px);overflow:auto;background:#dcdcdc}.cke_chrome{border:0!important}#main{position:absolute;left:0;right:0;top:0;bottom:0}.main{left:395px!important;border-radius:0!important}.main_header{height:80px;background:#efefef;width:100%}.main_header input{width:calc(100% - 20px);padding:0;margin-left:6px;margin-top:5px;padding-left:5px;border:thin solid #ced4da!important}.main_area{position:absolute;top:74px;height:calc(100% - 74px);width:100%;border-bottom-left-radius:4px;border-bottom-right-radius:4px;background:#fff;background:#efefef}.main_area textarea{border:0;width:calc(100% - 10px);height:calc(100% - 10px);white-space:pre;padding:5px}#filelist{margin:0;padding:0}.fsize{text-align:right;float:right;width:50px;border-radius:9px;padding:0 6px;background:#929292;position:relative;color:#fff!important;font-weight:700!important;line-height:15px}.filelist li{white-space:nowrap;padding:3px 5px 2px 40px;font-weight:700;color:#405353;border-bottom:1px solid #b2b8bf;font-family:"Lucida Grande",Verdana,Arial,Helvetica,sans-serif;font-size:12px;height:35px}.filelist a:hover span#taglist{display:block;background:#000!important;z-index:10;position:absolute;max-width:300px;border-radius:5px;padding:5px;color:#fff;white-space:normal;margin:;margin-top:-55px;box-shadow:1px 1px 3px gray;left:10px}.filelist li.pdf{background:#fff url(images/pdf-icon.png) 5px 7px/27px no-repeat}.filelist li.html,li.htm{background:#fff url(images/html-icon.png) 5px 7px/27px no-repeat}.filelist li.jpg{background:#fff url(images/jpg-icon.png) 5px 7px/27px no-repeat}.filelist li.md{background:#fff url(images/md-icon.png) 5px 7px/27px no-repeat}.filelist li.txt{background:#fff url(images/txt-icon.png) 5px 7px/27px no-repeat}.filelist li{background:#fff url(images/unknown-icon.png) 5px 7px/27px no-repeat}.selected,.selected a,.selected span{background-color:#4c9dc3!important;color:#fff!important}.selected span.fsize{background:#13aff8!important}.filelist li:hover{background-color:#e8eaf6;text-decoration:none!important}.filelist a > span{color:#666;font-weight:400;font-size:11px;font-family:"Lucida Grande",Verdana,Arial,Helvetica,sans-serif}.filelist a{text-decoration:none!important;color:#405353;width:100%;height:100%;display:inline-block;text-overflow:ellipsis;overflow:hidden}.cke_editable{cursor:text;font-family:Helvetica Neue,Helvetica,Segoe UI,Arial,freesans,sans-serif}
+.iframebox.simplenotes_ {
+    height: 100%}
+.uibox {
+    border: 0!important;
+    border-radius: 0;
+}
+#notessplitter {
+    display: none;
+}
+body {
+    font-size: unset;
+    background: unset;
+}
+.editor-toolbar button {
+    border: 0;
+    background: transparent;
+}
+.editor-toolbar button:hover {
+    background: lightgray;
+}
+#suggest {
+    position: absolute;
+    background-color: #FFF;
+    border: 1px solid #CCF;
+    z-index: 100;
+    left: 9px;
+    padding: 5px;
+    top: 70px;
+    overflow: auto;
+}
+#suggest div {
+    white-space: nowrap;
+    font-family: 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+    font-size: .8em;
+}
+#suggest div.select {
+    color: #FFF;
+    background-color: #36F;
+}
+#suggest div.over {
+    background-color: #9CF;
+}
+object {
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.headerTitle {
+    margin: 10px;
+    font-size: 2em;
+    font-family: 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+    position: relative;
+    top: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inherit;
+    margin-top: 0;
+}
+.headerTags {
+    margin: 10px;
+    font-size: 11px;
+    font-family: 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+    position: relative;
+    top: -20px;
+}
+#content {
+    height: 100%;
+    overflow: auto;
+    padding: 0 15px;
+}
+.save_button {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    height: 24px;
+    width: 24px;
+    background: url(images/button_save.png) no-repeat;
+    display: none;
+}
+.save_button a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+#sidebar .searchbox {
+    background: url(./../../../../skins/larry/images/buttons.png) 0 -316px #fff no-repeat;
+    width: calc(100% - 15px);
+    border: 1px solid #ababab;
+    position: absolute;
+    height: 18px;
+    border-radius: 4px;
+}
+#sidebar .searchbox input {
+    font-weight: 700;
+    font-size: 11px;
+    background: #fff;
+    border: none;
+    padding: 0 0 0 5px;
+    margin: 0 0 0 19px;
+    top: -3px;
+    position: relative;
+    width: calc(100% - 35px);
+    height: 15px;
+}
+#sidebar {
+    width: 400px;
+    position: absolute;
+    float: left;
+    overflow: hidden;
+    border-radius: 0;
+    margin-right: 5px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-right: 1px solid #d4dbde!important;
+}
+#filelist_header {
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 34px;
+    padding: 6px;
+    background: #efefef;
+    white-space: nowrap;
+    border-bottom: 1px solid #dfdfdf;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#taglist {
+    display: none;
+}
+#note_tags {
+    border: thin solid #ced4da;
+}
+.filelist {
+    width: 100%;
+    height: calc(100% - 34px);
+    overflow: auto;
+    background: #dcdcdc;
+}
+.cke_chrome {
+    border: 0!important;
+}
+#main {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.main {
+    left: 395px!important;
+    border-radius: 0!important;
+}
+.main_header {
+    height: 80px;
+    background: #efefef;
+    width: 100%}
+.main_header input {
+    width: calc(100% - 20px);
+    padding: 0;
+    margin-left: 6px;
+    margin-top: 5px;
+    padding-left: 5px;
+    border: thin solid #ced4da!important;
+}
+.main_area {
+    position: absolute;
+    top: 74px;
+    height: calc(100% - 74px);
+    width: 100%;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: #fff;
+    background: #efefef;
+}
+.main_area textarea {
+    border: 0;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    white-space: pre;
+    padding: 5px;
+}
+#filelist {
+    margin: 0;
+    padding: 0;
+}
+.fsize {
+    text-align: right;
+    float: right;
+    width: 50px;
+    border-radius: 9px;
+    padding: 0 6px;
+    background: #929292;
+    position: relative;
+    color: #fff!important;
+    font-weight: 700!important;
+    line-height: 15px;
+}
+.filelist li {
+    white-space: nowrap;
+    padding: 3px 5px 2px 40px;
+    font-weight: 700;
+    color: #405353;
+    border-bottom: 1px solid #b2b8bf;
+    font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    height: 35px;
+}
+.filelist a:hover span#taglist {
+    display: block;
+    background: #000!important;
+    z-index: 10;
+    position: absolute;
+    max-width: 300px;
+    border-radius: 5px;
+    padding: 5px;
+    color: #fff;
+    white-space: normal;
+    margin-top: -55px;
+    box-shadow: 1px 1px 3px gray;
+    left: 10px;
+}
+.filelist li.pdf {
+    background: #fff url(images/pdf-icon.png) 5px 7px/27px no-repeat;
+}
+.filelist li.html, li.htm {
+    background: #fff url(images/html-icon.png) 5px 7px/27px no-repeat;
+}
+.filelist li.jpg {
+    background: #fff url(images/jpg-icon.png) 5px 7px/27px no-repeat;
+}
+.filelist li.md {
+    background: #fff url(images/md-icon.png) 5px 7px/27px no-repeat;
+}
+.filelist li.txt {
+    background: #fff url(images/txt-icon.png) 5px 7px/27px no-repeat;
+}
+.filelist li {
+    background: #fff url(images/unknown-icon.png) 5px 7px/27px no-repeat;
+}
+.selected, .selected a, .selected span {
+    background-color: #4c9dc3!important;
+    color: #fff!important;
+}
+.selected span.fsize {
+    background: #13aff8!important;
+}
+.filelist li:hover {
+    background-color: #e8eaf6;
+    text-decoration: none!important;
+}
+.filelist a > span {
+    color: #666;
+    font-weight: 400;
+    font-size: 11px;
+    font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+}
+.filelist a {
+    text-decoration: none!important;
+    color: #405353;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.cke_editable {
+    cursor: text;
+    font-family: Helvetica Neue, Helvetica, Segoe UI, Arial, freesans, sans-serif;
+}
