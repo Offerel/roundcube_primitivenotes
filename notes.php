@@ -2,9 +2,9 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.4.0
+ * @version 1.4.1
  * @author Offerel
- * @copyright Copyright (c) 2018, Offerel
+ * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
  */
 define('INSTALL_PATH', realpath(__DIR__ . '/../../') . '/');
@@ -27,6 +27,8 @@ if (!empty($rcmail->user->ID)) {
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
+	$yh_begin = $rcmail->config->get('yaml_start', '');
+	$yh_end = $rcmail->config->get('yaml_end', '');
 	
 	if (!is_dir($notes_path))
 	{
@@ -100,10 +102,11 @@ if(isset($_POST['showHeader'])) {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			if($rcmail->config->get('yaml_support', '') && stripos($filename,".md")) {
 				$contents = file_get_contents($notes_path.$filename);
-				$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
-				$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
-				if($yaml_beginn == 0 && $yaml_end > 0) {
-					$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+				$yhb_pos = strpos($contents, $yh_begin);
+				$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+				//die($yhb_pos."|".$yhe_pos);
+				if($yhb_pos == 0 && $yhe_pos > 0) {
+					$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 					foreach($yaml_arr as $line) {
 						if(strpos($line,"tags:") === 0) {
 							$taglist = str_replace(" ", ", ", substr($line,6));
@@ -137,10 +140,10 @@ if(isset($_POST['editHeader'])) {
 		elseif($rcmail->config->get('yaml_support', '') && stripos($filename, ".md")) {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			$contents = file_get_contents($notes_path.$filename);
-			$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
-			$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
-			if($yaml_beginn == 0 && $yaml_end > 0) {
-				$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+			$yhb_pos = strpos($contents, $yh_begin);
+			$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+			if($yhb_pos == 0 && $yhe_pos > 0) {
+				$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 				foreach($yaml_arr as $line) {
 					if(strpos($line,"tags:") === 0) {
 						$taglist = str_replace(" ", ", ", substr($line,6));
@@ -223,13 +226,13 @@ if(isset($_POST['editor1'])) {
 
 	if($rcmail->config->get('yaml_support', '') && $note_type == "md") {
 		$tags_str = "tags: ".$tags_str;
-		$yaml_beginn = strpos($note_content, $rcmail->config->get('yaml_start', ''));
-		$yaml_end = strpos($note_content, $rcmail->config->get('yaml_end', ''));
+		$yhb_pos = strpos($note_content, $yh_begin);
+		$yhe_pos = strpos($note_content, $yh_end, strlen($yh_begin));
 		$yaml_new = array();
 		$tagset = false;
 		
-		if($yaml_beginn == 0 && $yaml_end > 0) {
-			$yaml_arr = preg_split("/\r\n|\n|\r/", substr($note_content,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+		if($yhb_pos == 0 && $yhe_pos > 0) {
+			$yaml_arr = preg_split("/\r\n|\n|\r/", substr($note_content,0,$yhe_pos + strlen(yh_begin)));
 			foreach($yaml_arr as $line) {
 				if(stripos($line,"tags: ") === 0) {
 					$yaml_new[] = $tags_str;
@@ -244,15 +247,15 @@ if(isset($_POST['editor1'])) {
 			}
 			
 			if(!$tagset && strlen($tags_str) > 6) array_splice($yaml_new, 1, 0, $tags_str);
-			$note_content = implode("\r\n", $yaml_new).substr($note_content,$yaml_end + strlen($rcmail->config->get('yaml_end', '')));
+			$note_content = implode("\r\n", $yaml_new).substr($note_content,$yhe_pos + strlen(yh_end));
 		}
 		else {
-			$yaml_new[] = "---";
+			$yaml_new[] = $yh_begin;
 			if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
 			$yaml_new[] = "title: ".$note_name;
 			$yaml_new[] = "date: ".strftime('%x %X');
 			$yaml_new[] = "author: ".$rcmail->user->get_username();
-			$yaml_new[] = "...";
+			$yaml_new[] = $yh_end;
 			$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
 		}
 		
@@ -306,10 +309,10 @@ if (is_dir($notes_path)) {
 					
 					if($rcmail->config->get('yaml_support', '') && stripos($file,".md")) {
 						$contents = file_get_contents($notes_path.$file);
-						$yaml_beginn = strpos($contents, $rcmail->config->get('yaml_start', ''));
-						$yaml_end = strpos($contents, $rcmail->config->get('yaml_end', ''));
-						if($yaml_beginn == 0 && $yaml_end > 0) {
-							$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yaml_end + strlen($rcmail->config->get('yaml_end', ''))));
+						$yhb_pos = strpos($contents, $yh_begin);
+						$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+						if($yhb_pos == 0 && $yhe_pos > 0) {
+							$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 							foreach($yaml_arr as $line) {
 								if(strpos($line,"tags:") === 0) {
 									$tags[1] = substr($line,6);								
@@ -358,7 +361,7 @@ function getBimage($match) {
 
 // get contents of the note
 function read_note($id, $filename, $mode, $format) {
-	global $rcmail, $notes_path;
+	global $rcmail, $notes_path, $yh_begin, $yh_end;
 	$file = $notes_path.$filename;
 	if($filename != '')
 		$format = substr($filename,strripos($filename, ".")+1);		
@@ -370,10 +373,10 @@ function read_note($id, $filename, $mode, $format) {
 		if($mode != 'edit') {
 			$inhalt = preg_replace_callback($re, "getBimage", $content);
 			if($rcmail->config->get('yaml_support', '')) {
-				$yaml_beginn = strpos($inhalt, $rcmail->config->get('yaml_start', ''));
-				$yaml_end = strpos($inhalt, $rcmail->config->get('yaml_end', ''));
-				if($yaml_beginn == 0 && $yaml_end > 0) {
-					$inhalt = substr($inhalt,$yaml_end + strlen($rcmail->config->get('yaml_end', '')));
+				$yhb_pos = strpos($inhalt, $yh_begin);
+				$yhe_pos = strpos($inhalt, $yh_end, strlen($yh_begin));
+				if($yhb_pos == 0 && $yhe_pos > 0) {
+					$inhalt = substr($inhalt,$yhe_pos + strlen($yh_end));
 				}
 			}
 		}
@@ -421,49 +424,34 @@ function editTXT($note) {
 }
 
 function editHTML($note) {
-	global $html_editor, $language, $default_format;
+	global $html_editor, $language, $default_format, $yh_begin, $yh_end;
+
 	$format = $note['format'];
 	
 	if($format == "")
 		$format = ($default_format != '') ? $default_format : 'html';
 
-	$output = "<textarea name=\"editor1\" id=\"$format\">".$note['content']."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
-	
+	$content = $note['content'];
+	$yhb_pos = strpos($content, $yh_begin);
+	$yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
+
+	$output = "<textarea name=\"editor1\" id=\"$format\">".substr($content, $yhe_pos + strlen($yh_end))."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
+
 	if($language != 'en_US')
 		$language = substr($language,0,2);
 
 	if($format == 'html') {
-		if($html_editor === 'tinymce') {
-			$output.="<script>
-				tinymce.init({
-					selector: '#html'
-					,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
-					,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
-					,paste_data_images: true
-					,menubar: false
-					,toolbar_items_size:'small'
-					,language: '$language'
-			  });
-			</script>";
-		} else {
-			$output.="<script>
-			if(document.getElementById('html')){
-				var editorElem = document.getElementById('main_area');
-				var editor = CKEDITOR.replace('html', { 
-					on : {
-						'instanceReady' : function(evt) {
-							evt.editor.resize('100%', editorElem.clientHeight);
-							evt.editor.commands.save.disable();
-						},
-						'change' : function(evt) {
-							if( document.getElementById('note_name').value != '' )
-									evt.editor.commands.save.enable();
-						}
-					}
-				});
-			}
-			</script>";
-		}
+		$output.="<script>
+			tinymce.init({
+				selector: '#html'
+				,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
+				,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
+				,paste_data_images: true
+				,menubar: false
+				,toolbar_items_size:'small'
+				,language: '$language'
+		  });
+		</script>";
 	} else {
 		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
 		var inscybmde = new InscrybMDE({
@@ -611,12 +599,6 @@ function human_filesize($bytes, $decimals = 2) {
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
 
-if ($html_editor == 'ckeditor') {
-	$editor_js = '<script src="js/ckeditor/ckeditor.js"></script>';
-}
-else {
-	$editor_js = '<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css">\n\t<script src=\"../../program/js/tinymce/tinymce.min.js\"></script>';
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -634,11 +616,10 @@ else {
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-		<link rel="stylesheet" href="js/simplemde/simplemde.min.css">
+		<link rel="stylesheet" href="js/simplemde/simplemde.css">
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="js/simplemde/inscrybmde.min.js"></script>
-		<?PHP echo $editor_js ?>
-		
+		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css"><script src="../../program/js/tinymce/tinymce.min.js"></script>
 		<link rel="stylesheet" href="js/textext/css/textext.core.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.min.css" type="text/css" />

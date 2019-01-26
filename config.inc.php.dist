@@ -1,9 +1,8 @@
 <?php
 $config['notes_basepath'] = '/path/to/server/folder/'; // absolute base! path where your notes are stored
 $config['notes_folder'] = '/files/Notes/'; // notes folder under basepath. in the end the folder is calculated by 'basepath' + 'username' + 'notes_folder'
-$config['html_editor'] = 'ckeditor'; // here you can choose between 'ckeditor' (comes with this plugin) and 'tinymce' (included in Roundcube)
 $config['default_format'] = 'md'; // default format, you can choose between 'html', 'md' or 'txt'
 $config['yaml_support'] = true;  // set to true, if you want enable yaml support
 $config['yaml_start'] = '---';  // the yaml header should starts as the first sign in a markdown note and is marked by default with '---'
-$config['yaml_end'] = '...';  // the signs which marks the end of the yaml header
+$config['yaml_end'] = '---';  // the signs which marks the end of the yaml header
 ?>

@@ -602,39 +602,27 @@ span.CodeMirror-selectedtext {
     background: -moz-linear-gradient(top, #f2f2f2, #f0f0f0);
 }
 .editor-preview-side kbd, .editor-preview kbd {
-    font-family: Consolas, "Lucida Console", monospace;
+    font-family: Consolas,"Lucida Console",monospace;
     display: inline-block;
     border-radius: 3px;
     padding: 0 4px;
-    box-shadow: 1px 1px 1px #777;
     margin: 2px;
-    font-size: small;
+    font-size: .8em;
     vertical-align: text-bottom;
-    background: #eee;
-    font-weight: 500;
+    background: #fff;
     color: #555;
-    font-variant: small-caps;
     font-weight: 600;
     letter-spacing: 1px;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
+    border: 1px solid #adb3b9;
+    box-shadow: 0 1px 0 rgba(12,13,14,.2), 0 0 0 2px #FFF inset;
 }
-.editor-preview-side blockquote, .editor-preview blockquote {
+.editor-preview blockquote, .editor-preview-side blockquote {
     color: #3c763d;
-    background-color: #dff0d8;
-    border: thin solid #c2d1b6;
-    margin: 0;
-    border-radius: 8px;
+    background-color: rgba(66, 185, 131, .1);
     padding: 0;
     margin: 15px 0;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    border-left: 5px solid #c2d1b6;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #42b983;
 }
 .editor-preview-side blockquote p, .editor-preview blockquote p {
     padding: 5px 10px;
@@ -669,8 +657,14 @@ span.CodeMirror-selectedtext {
     margin-top: 0;
 }
 .editor-preview code, .editor-preview-side code {
-    background: #f6f8fa;
-    font-size: 85%}
+	background: #f8f8f8;
+    font-size: .92em;
+    font-family: Roboto Mono, Source Sans Pro, Monaco, courier, monospace !important;
+    color: #e96900;
+    margin: 0 2px;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
 .editor-preview pre, .editor-preview-side pre {
     background: #f6f8fa;
     margin-bottom: 10px;
