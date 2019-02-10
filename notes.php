@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.4.1
+ * @version 1.4.2
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -49,47 +49,45 @@ else {
 if(isset($_POST['uplImage'])) {
 	$imageURL = $_POST['imageURL'];
 	$filename = basename($imageURL);
-	$ext = pathinfo($imageURL, PATHINFO_EXTENSION);
-	$fname = time().$ext;
-	
-	$img = $notes_path."media/".$fname;
+	$fname = time().image_type_to_extension(exif_imagetype($imageURL));
+	$img = $notes_path.".media/".$fname;
 
-	if (!is_dir($notes_path."media/"))
+	if (!is_dir($notes_path.".media/"))
 	{
-		if(!mkdir($notes_path."media/", 0774, true)) {
+		if(!mkdir($notes_path.".media/", 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
 		}
 	}
+	
 	if(!file_put_contents($img, file_get_contents($imageURL))) {
-		error_log("PrimitiveNotes: Can't write to media subfolder.");
-		echo "PrimitiveNotes: Can't write to media subfolder.";
-		die();
+		$message = "PrimitiveNotes: Can't write from URL image to media subfolder.";
+		error_log($message);
+		die($message);
 	}
-	echo "file://media/".$fname;
-	die();
+	
+	die("./.media/".$fname);
 }
 
 // Get local image and save to media folder
 if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
-	if (!is_dir($notes_path."media/"))
+	if (!is_dir($notes_path.".media/"))
 	{
-		if(!mkdir($notes_path."media/", 0774, true)) {
+		if(!mkdir($notes_path.".media/", 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
 		}
 	}
 	
-	$ext = pathinfo($_FILES['localFile']['name'], PATHINFO_EXTENSION);
-	$fname = time().$ext;
+	$fname = time().image_type_to_extension(exif_imagetype($_FILES['localFile']['tmp_name']));
 	
-	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'media/'.$fname)) {
-		error_log("PrimitiveNotes: Can't write to media subfolder.");
-		echo "PrimitiveNotes: Can't write to media subfolder.";
-		die();
+	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'.media/'.$fname)) {
+		$message = "PrimitiveNotes: Can't write from local image to media subfolder.";
+		error_log($message);
+		die($message);
 	}
-	echo "file://media/".$fname;
-	die();
+
+	die("./.media/".$fname);
 }
 
 // ShowNote Header
@@ -104,7 +102,6 @@ if(isset($_POST['showHeader'])) {
 				$contents = file_get_contents($notes_path.$filename);
 				$yhb_pos = strpos($contents, $yh_begin);
 				$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
-				//die($yhb_pos."|".$yhe_pos);
 				if($yhb_pos == 0 && $yhe_pos > 0) {
 					$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 					foreach($yaml_arr as $line) {
@@ -175,8 +172,7 @@ if(isset($_POST['editNote'])) {
 		$id =  $_POST['id'];
 		$filename = $_POST['filename'];
 		$format = $_POST['format'];
-		read_note($id, $filename, 'edit', $format);
-		die();
+		die(read_note($id, $filename, 'edit', $format));
 }
 
 // Rename a note
@@ -289,7 +285,9 @@ if(isset($_POST['delNote'])) {
 	$file = $notes_path.$_POST["fileid"];
 
 	if(file_exists($file)) {
-		unlink($file);
+		if(!unlink($file)) {
+			error_log('PrimitiveNotes: Couldn\'t delete note. Please check your directory permissions.');
+		}
 	}
 }
 
@@ -352,11 +350,13 @@ $taglist = array_unique ($taglist);
 
 function getBimage($match) {
 	global $notes_path;
-	$imagePath = $notes_path.$match[1];
+	$image = $match[2];
+	$image = substr($image,strpos($image,'.media'));
+	$imagePath = $notes_path.$image;
 	$imgContent = file_get_contents($imagePath);
 	$base64str = base64_encode($imgContent);
 	$mime = mime_content_type($imagePath);
-	return "(data:$mime;base64,$base64str)";
+	return "![".$match[1]."](data:$mime;base64,$base64str)";
 }
 
 // get contents of the note
@@ -368,7 +368,7 @@ function read_note($id, $filename, $mode, $format) {
 
 	if(file_exists($file)) {
 		$content = file_get_contents($file);
-		$re = '/\(file:\/\/([^\)]*?)\)/m';
+		$re = '/(?:!\[(.*?)\]\((.*?)\))/m';
 
 		if($mode != 'edit') {
 			$inhalt = preg_replace_callback($re, "getBimage", $content);
@@ -475,12 +475,12 @@ function editHTML($note) {
 					{ name: 'Image',
 						action: uplInsertImage,
 						className: 'fa fa-picture-o',
-						title: 'Upload and insert Image',
+						title: 'Add image from URL',
 					},
 					{ name: 'Image',
 						action: uplLocalImage,
 						className: 'fa fa-file-image-o',
-						title: 'Upload and insert Image',
+						title: 'Upload and insert local image',
 					},
 					'table', '|',
 					'preview', 'side-by-side', 'fullscreen', '|'
@@ -509,9 +509,6 @@ function editHTML($note) {
 					,processData: false
 					,data: formData
 					,success: function(data){
-						//pos = simplemde.codemirror.getCursor();
-						//simplemde.codemirror.setSelection(pos, pos);
-						//simplemde.codemirror.replaceSelection('![](' + data + ')');
 						pos = inscybmde.codemirror.getCursor();
 						inscybmde.codemirror.setSelection(pos, pos);
 						inscybmde.codemirror.replaceSelection('![](' + data + ')');
@@ -543,9 +540,6 @@ function editHTML($note) {
 					,'imageURL': imageURL
 				}
 				,success: function(data){
-					//pos = simplemde.codemirror.getCursor();
-					//simplemde.codemirror.setSelection(pos, pos);
-					//simplemde.codemirror.replaceSelection('![](' + data + ')');
 					pos = inscybmde.codemirror.getCursor();
 					inscybmde.codemirror.setSelection(pos, pos);
 					inscybmde.codemirror.replaceSelection('![](' + data + ')');
@@ -606,17 +600,15 @@ function human_filesize($bytes, $decimals = 2) {
 		<title><?PHP echo $note['name'] ?></title>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
-
 		<script type="text/javascript" src="../../program/js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../skins/larry/ui.min.js"></script>
 		<script type="text/javascript" src="../../program/js/common.min.js"></script>
 		<script type="text/javascript" src="../../program/js/app.min.js"></script>
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
-		
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-		<link rel="stylesheet" href="js/simplemde/simplemde.css">
+		<link rel="stylesheet" href="js/simplemde/simplemde.min.css">
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
 		<script src="js/simplemde/inscrybmde.min.js"></script>
 		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css"><script src="../../program/js/tinymce/tinymce.min.js"></script>
