@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.4.2
+ * @version 1.5.0
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -24,6 +24,7 @@ if (!empty($rcmail->user->ID)) {
 	}
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
+	$media_folder = $rcmail->config->get('media_folder', false);
 	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
@@ -45,16 +46,43 @@ else {
     die('Login failed. User is not logged in.');
 }
 
+if(isset($_GET['blink'])) {
+	$file = urldecode($_GET['blink']);
+	$type = $_GET['t'];
+	if(file_exists($notes_path.$media_folder.$file)) {
+		$fileh = file_get_contents($notes_path.$media_folder.$file);
+		if($type == 'i') {
+			$imagev = imagecreatefromstring($fileh);
+			list($width, $height, $type, $attr) = getimagesizefromstring($fileh);
+			if($width > 860) {
+				$imagev = imagescale($imagev, 860);
+			}
+			header("Content-Type: image/jpeg");
+			header("Content-Disposition: inline; filename='$file'");
+			imagejpeg($imagev);
+			imagedestroy($imagev);
+		}
+		elseif($type == 'l') {
+			$mime = mime_content_type($notes_path.$media_folder.$file);
+			header("Content-type: $mime");
+			header("Content-Disposition: inline; filename='$file'");
+			echo $fileh;
+		}
+	}
+
+	die();
+}
+
 // Get image from URL and save to media folder
 if(isset($_POST['uplImage'])) {
 	$imageURL = $_POST['imageURL'];
 	$filename = basename($imageURL);
 	$fname = time().image_type_to_extension(exif_imagetype($imageURL));
-	$img = $notes_path.".media/".$fname;
+	$img = $notes_path.$media_folder.$fname;
 
-	if (!is_dir($notes_path.".media/"))
+	if (!is_dir($notes_path.$media_folder))
 	{
-		if(!mkdir($notes_path.".media/", 0774, true)) {
+		if(!mkdir($notes_path.$media_folder, 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
 		}
@@ -66,14 +94,14 @@ if(isset($_POST['uplImage'])) {
 		die($message);
 	}
 	
-	die("./.media/".$fname);
+	die($media_folder.$fname);
 }
 
 // Get local image and save to media folder
 if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
-	if (!is_dir($notes_path.".media/"))
+	if (!is_dir($notes_path.$media_folder))
 	{
-		if(!mkdir($notes_path.".media/", 0774, true)) {
+		if(!mkdir($notes_path.$media_folder, 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
 		}
@@ -81,13 +109,13 @@ if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
 	
 	$fname = time().image_type_to_extension(exif_imagetype($_FILES['localFile']['tmp_name']));
 	
-	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.'.media/'.$fname)) {
+	if(!move_uploaded_file($_FILES['localFile']['tmp_name'], $notes_path.$media_folder.$fname)) {
 		$message = "PrimitiveNotes: Can't write from local image to media subfolder.";
 		error_log($message);
 		die($message);
 	}
 
-	die("./.media/".$fname);
+	die($media_folder.$fname);
 }
 
 // ShowNote Header
@@ -348,15 +376,14 @@ if (is_dir($notes_path)) {
 usort($files, function($a, $b) { return $b['time'] > $a['time']; });
 $taglist = array_unique ($taglist);
 
-function getBimage($match) {
-	global $notes_path;
-	$image = $match[2];
-	$image = substr($image,strpos($image,'.media'));
-	$imagePath = $notes_path.$image;
-	$imgContent = file_get_contents($imagePath);
-	$base64str = base64_encode($imgContent);
-	$mime = mime_content_type($imagePath);
-	return "![".$match[1]."](data:$mime;base64,$base64str)";
+function parseLink($match) {
+	$target = basename($match[2]);
+	if($match[0][0] == '!') {
+		return "<img src='notes.php?blink=$target&t=i' title='".$match[1]."'>";
+	}
+	else {
+		return "<a class='tlink' href='notes.php?blink=$target&t=l' title='".$match[1]."'>$match[1]</a>";
+	}
 }
 
 // get contents of the note
@@ -368,10 +395,10 @@ function read_note($id, $filename, $mode, $format) {
 
 	if(file_exists($file)) {
 		$content = file_get_contents($file);
-		$re = '/(?:!\[(.*?)\]\((.*?)\))/m';
+		$re = '/(?:[!]?\[(.*?)\]\((.*?)\))/m';
 
 		if($mode != 'edit') {
-			$inhalt = preg_replace_callback($re, "getBimage", $content);
+			$inhalt = preg_replace_callback($re, "parseLink", $content);
 			if($rcmail->config->get('yaml_support', '')) {
 				$yhb_pos = strpos($inhalt, $yh_begin);
 				$yhe_pos = strpos($inhalt, $yh_end, strlen($yh_begin));
@@ -584,6 +611,12 @@ function showMARKDOWN($note) {
 			});
 			inscybmde.togglePreview();
 		}
+		
+		$('.tlink').on('click', function(e) {
+			e.preventDefault();
+			content = $(this).attr('href')
+			$('#main_area').html('<iframe src=\'' + content + '\' style=\'border: none; width: 100%; height: 100%\'></iframe>');
+		});
 		</script>";
 }
 
@@ -628,7 +661,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<script src="js/textext/js/textext.plugin.ajax.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/textext/js/textext.plugin.arrow.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var rcmail = new rcube_webmail();
+			var rcmail = new rcube_webmail();			
 		</script>
 	</head>
 	<body style="margin: 0; padding: 0;" onload="firstNote();">
@@ -673,8 +706,8 @@ function human_filesize($bytes, $decimals = 2) {
 		</form>
 		<script>
 		new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:250, size:12 }).init();
-		
 		var suggestList = [<?php echo '"'.implode('", "', $taglist).'"' ?>];
+		
 		function tagsuggest(taglist) {
 			var tagitemlist = taglist.split(", ");
 			$('#note_tags').textext({
