@@ -57,15 +57,16 @@ if(isset($_GET['blink'])) {
 			if($width > 860) {
 				$imagev = imagescale($imagev, 860);
 			}
+			
 			header("Content-Type: image/jpeg");
-			header("Content-Disposition: inline; filename='$file'");
+			header("Content-Disposition: inline; filename=\"".pathinfo($file)['filename'].".jpg\"");
 			imagejpeg($imagev);
 			imagedestroy($imagev);
 		}
 		elseif($type == 'l') {
 			$mime = mime_content_type($notes_path.$media_folder.$file);
 			header("Content-type: $mime");
-			header("Content-Disposition: inline; filename='$file'");
+			header("Content-Disposition: inline; filename=\"$file\"");
 			echo $fileh;
 		}
 	}
@@ -373,7 +374,13 @@ if (is_dir($notes_path)) {
 }
 
 // sort the files array by lastmodified time
-usort($files, function($a, $b) { return $b['time'] > $a['time']; });
+if(count($files) > 0) {
+	usort($files, function($a, $b) { return $b['time'] > $a['time']; });
+}
+else {
+	error_log('PrimitiveNotes: No files found at configured path '.$notes_path.'. If thats not ok, please check your directory permissions and the configured path.');
+}
+
 $taglist = array_unique ($taglist);
 
 function parseLink($match) {
@@ -427,7 +434,8 @@ function read_note($id, $filename, $mode, $format) {
 		switch ($note['format']) {
 			case 'pdf':	$showNote = showBIN($note); break;
 			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;	
+			case 'png': $showNote = showBIN($note); break;
+			case 'txt': $showNote = editTXT($note); break;			
 			default:	$showNote = editHTML($note);
 		}
 	} else {
@@ -672,23 +680,25 @@ function human_filesize($bytes, $decimals = 2) {
 			<div class="filelist" id="entrylist">
 				<ul id="filelist">
 				<?PHP
-				foreach ($files as $fentry) {
-					if(strlen($fentry['name']) > 0 ) {
-						$fsize = human_filesize($fentry['size'], 2);
-						
-						if(is_array($fentry['tags'])) {
-							$tlist = implode(" ",$fentry['tags']);
-							$tlist = "<span id=\"taglist\">$tlist</span>";
-						} else
-							$tlist = "";
-						
-						$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
-						$filename = $fentry['filename'];
-						$format = $fentry['type'];
-						
-						echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" >".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span>$tlist</a></li>";
+				if(count($files) > 0) {
+					foreach ($files as $fentry) {
+						if(strlen($fentry['name']) > 0 ) {
+							$fsize = human_filesize($fentry['size'], 2);
+							
+							if(is_array($fentry['tags'])) {
+								$tlist = implode(" ",$fentry['tags']);
+								$tlist = "<span id=\"taglist\">$tlist</span>";
+							} else
+								$tlist = "";
+							
+							$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
+							$filename = $fentry['filename'];
+							$format = $fentry['type'];
+							
+							echo "<li id=\"$id\" class=\"$id $format\"><input value=\"$filename\" id=\"entry$id\" type=\"hidden\"/><a id=\"entry\" onClick=\"showNote($id, '$format');\" title=\"".$fentry['name']."\" >".$fentry['name']."<br /><span class=\"fsize\">$fsize</span><span>".date("d.m.y H:i",$fentry['time'])."</span>$tlist</a></li>";
+						}
 					}
-				} 
+				}
 				?>
 				</ul>
 			</div>
