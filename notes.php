@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.1
+ * @version 1.5.2
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -227,7 +227,6 @@ if(isset($_POST['mode'])) {
 			$tags_str = "";
 			$newname = $newname.".".$ext;
 		}
-			
 		if($oldname != $newname)
 			rename($notes_path.$oldname, $notes_path.$newname);
 	}
@@ -241,7 +240,7 @@ if(isset($_POST['editor1'])) {
 
 	$note_content = $_POST['editor1'];
 	$old_name = $_POST['fname'];
-
+	
 	if(!$note_type = $_POST['ftype'])
 		$note_type = ($default_format != '') ? $default_format : 'html';
 	
@@ -595,7 +594,7 @@ function showHTML($note) {
 function showBIN($note) {
 	$base64 = base64_encode($note['content']);
 	if($note['format']==='pdf') $pdf_style = "style=\"width: 100%; height: 100%;\"";
-	return "<div style=\"overflow: auto; max-width: 100%; max-height: 100%\"><object $pdf_style data=\"data:".$note['mime_type'].";base64,$base64\" type=\"".$note['mime_type']."\" ></object></div>";
+	return "<input type=\"hidden\" name=\"ftype\" value=\"".$note['format']."\"><div style=\"overflow: auto; max-width: 100%; max-height: 100%\"><object $pdf_style data=\"data:".$note['mime_type'].";base64,$base64\" type=\"".$note['mime_type']."\" ></object></div>";
 }
 
 function showTXT($note) {
