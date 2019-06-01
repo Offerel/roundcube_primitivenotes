@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.2
+ * @version 1.5.3
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -467,12 +467,17 @@ function editHTML($note) {
 
 	$content = $note['content'];
 	$yhb_pos = strpos($content, $yh_begin);
-	$yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
+	if(strlen($content) > strlen($yh_begin))
+		$yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
 
 	$output = "<textarea name=\"editor1\" id=\"$format\">".substr($content, $yhe_pos + strlen($yh_end))."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
 
-	if($language != 'en_US')
-		$language = substr($language,0,2);
+	if($pos = strpos($language, '_')) {
+		$lang = substr($language, 0, $pos);
+		if(!file_exists(INSTALL_PATH."program/js/tinymce/langs/$lang.js")) {
+			$lang = 'en';
+		}
+	}
 
 	if($format == 'html') {
 		$output.="<script>
@@ -483,7 +488,7 @@ function editHTML($note) {
 				,paste_data_images: true
 				,menubar: false
 				,toolbar_items_size:'small'
-				,language: '$language'
+				,language: '$lang'
 		  });
 		</script>";
 	} else {
