@@ -213,7 +213,7 @@ if(isset($_POST['mode'])) {
 		$tags = explode (",", $_POST['note_tags']);
 		$tags_arr = array_map('trim', $tags);
 		
-		if(count($tags) > 1) {
+		if(is_array($tags) && count($tags) > 1) {
 			if($rcmail->config->get('yaml_support', '') && $ext == "md") {
 				$tags_str = "tags: ".implode(" ",$tags_arr);
 				$newname = $newname.".".$ext;
@@ -347,7 +347,7 @@ if (is_dir($notes_path)) {
 						}
 					}
 					
-					if(count($tags) > 0) {
+					if(is_array($tags) && count($tags) > 0) {
 						$ttags = explode(" ", $tags[1]);
 						$taglist = array_merge($taglist,$ttags);
 					} else {
@@ -373,7 +373,7 @@ if (is_dir($notes_path)) {
 }
 
 // sort the files array by lastmodified time
-if(count($files) > 0) {
+if(is_array($files) && count($files) > 0) {
 	usort($files, function($a, $b) { return $b['time'] > $a['time']; });
 }
 else {
@@ -684,7 +684,7 @@ function human_filesize($bytes, $decimals = 2) {
 			<div class="filelist" id="entrylist">
 				<ul id="filelist">
 				<?PHP
-				if(count($files) > 0) {
+				if(is_array($files) && count($files) > 0) {
 					foreach ($files as $fentry) {
 						if(strlen($fentry['name']) > 0 ) {
 							$fsize = human_filesize($fentry['size'], 2);
