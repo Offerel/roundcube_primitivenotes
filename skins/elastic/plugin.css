@@ -1,3 +1,41 @@
+.iframe-wrapper {
+	height: calc(100% - 58px);
+}
+#content {
+	width: 100%;
+}
+#newnote::before {
+	content: "\f0fe";
+	display: block;
+	text-align: center;
+}
+#notestoolbar a {
+	font-family: "Icons";
+	font-size: 1.35rem;
+	font-style: normal;
+}
+#notestoolbar a.button::before {
+	margin-bottom: -29px;
+	margin-top: -10px;
+}
+#notestoolbar a .inner {
+	font-family: Roboto,sans-serif;
+	font-size: 0.65em;
+	font-weight: normal;
+}
+#editnote::before {
+	content: "\f044";
+}
+#deletenote::before {
+	content: "\f2ed";
+}
+#sendnote::before {
+	content: "\f1e1";
+}
+#addnote::before {
+	content: "\f093";
+}
+
 .iframebox.simplenotes_ {
     height: 100%}
 #pluginbody {
@@ -58,7 +96,7 @@
     line-height: 2.5;
 }
 .toolbar a.button::before {
-    width: 3.18em;
+	display: block;
 }
 #notestoolbar .disabled {
     pointer-events: none;

@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.3
+ * @version 1.5.4
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -658,20 +658,20 @@ function human_filesize($bytes, $decimals = 2) {
 		<script src="js/simplemde/inscrybmde.min.js"></script>
 		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css"><script src="../../program/js/tinymce/tinymce.min.js"></script>
 		<link rel="stylesheet" href="js/textext/css/textext.core.min.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.tags.min.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.autocomplete.min.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.focus.min.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.prompt.min.css" type="text/css" />
-		<link rel="stylesheet" href="js/textext/css/textext.plugin.arrow.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.addon.tags.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.addon.autocomplete.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.addon.focus.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.addon.prompt.min.css" type="text/css" />
+		<link rel="stylesheet" href="js/textext/css/textext.addon.arrow.min.css" type="text/css" />
 		<script src="js/textext/js/textext.core.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.tags.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.suggestions.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.filter.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.focus.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.prompt.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.ajax.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/textext/js/textext.plugin.arrow.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.tags.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.suggestions.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.filter.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.focus.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.prompt.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.ajax.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/textext/js/textext.addon.arrow.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var rcmail = new rcube_webmail();			
 		</script>

@@ -4,18 +4,16 @@
 <div id="content" class="content selected" role="main">
 	<div class="header">
 		<a class="button icon menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
-		<span class="header-title primitivenotestitle"><roundcube:label name="primitivenotes.notes" /></span>
 		<div id="notestoolbar" class="toolbar" role="toolbar">
 			<span class="dropbutton">
-				<roundcube:button id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
+				<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
 				<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
-					<span class="inner"><roundcube:label name="primitivenotes.note_new" /></span>
 				</a>
 			</span>
-			<roundcube:button id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
-			<roundcube:button id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
-			<roundcube:button id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
-			<roundcube:button id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
+			<roundcube:button innerclass="inner" id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
+			<roundcube:button innerclass="inner" id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
+			<roundcube:button innerclass="inner" id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
+			<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
 			<form id="upl_form" method="POST" enctype="multipart/form-data"><input name="path" value="<roundcube:var name="env:npath" />" type="hidden" /><input type="file" id="upl" class="upl" name="files" onchange="javascript:sform(this.value);" /></form>
 			<script>
 			function sform(fileName) {
