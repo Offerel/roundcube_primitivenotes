@@ -16,4 +16,6 @@ $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
 $labels['note_formattxt'] = 'Pure Text';
 $labels['ariallabelnewoptions'] = 'Options';
+$labels['note_defaultformat'] = 'Default Format';
+$labels['note_yamls'] = 'Enable YAML';
 ?>

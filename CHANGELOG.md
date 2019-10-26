@@ -1,3 +1,7 @@
+### v1.5.5
+- Added Preferences Page
+- Removed refresh when plugin is active
+  
 ### v1.5.4
 - Added support for Roundcube 1.4 RC2
 - Added better changelog

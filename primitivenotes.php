@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.4
+ * @version 1.5.5
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -11,12 +11,10 @@ class primitivenotes extends rcube_plugin
 {
 	public $task = '?(?!login|logout).*';
 	
-	public function init()
-	{
+	public function init() {
 		$rcmail = rcmail::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		//$this->include_stylesheet($this->local_skin_path() . '/plugin.min.css');
 		$this->include_stylesheet($this->local_skin_path() . '/plugin.css');
 		$this->register_task('notes');
 		
@@ -32,12 +30,62 @@ class primitivenotes extends rcube_plugin
 
 		if ($rcmail->task == 'notes') {
 			$this->register_action('index', array($this, 'action'));
+			$rcmail->output->set_env('refresh_interval', 0);
 		}
+
+		if ($rcmail->task == 'settings') {
+			$this->add_hook('preferences_sections_list', array($this, 'pmn_preferences_sections_list'));
+			$this->add_hook('preferences_list', array($this, 'pmn_preferences_list'));
+			$this->add_hook('preferences_save', array($this, 'pmn_preferences_save'));
+		}
+
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
 	}
 
-	function note_mail_compose($args)
-	{
+	function pmn_preferences_sections_list($p) {
+		$p['list']['primitivenotes'] = array('id' => 'primitivenotes', 'section' => $this->gettext('notes'));
+		return $p;
+	}
+
+	function pmn_preferences_list($p) {
+		if ($p['section'] != 'primitivenotes') {
+			return $p;
+		}
+		
+		$rcmail = rcmail::get_instance();
+
+		$p['blocks']['main']['name'] = $this->gettext('mainoptions');
+
+		$field_id='default_format';
+		$select   = new html_select(array('name' => 'default_format', 'id' => $field_id));
+		foreach (array('html', 'md', 'txt') as $m) {$select->add($this->gettext('note_format'.$m), $m);}
+		$p['blocks']['main']['options']['default_format'] = array(
+														'title'=> html::label($field_id, $this->gettext('note_defaultformat')),
+														'content'=> $select->show($rcmail->config->get('default_format')));
+
+		$field_id='yaml_support';
+		$input = new html_checkbox(array(	'name'	=> 'yaml_support',
+											'id'	=> 'yaml_support',
+											'value' => 1));
+
+		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls')),
+															'content'=> $input->show(intval($rcmail->config->get('yaml_support'))));
+
+		return $p;
+	}
+	
+	function pmn_preferences_save($p) {
+		if ($p['section'] == 'primitivenotes') {
+			$p['prefs'] = array(
+				'default_format'	=> strval(rcube_utils::get_input_value('default_format', rcube_utils::INPUT_POST)),
+				'yaml_support'	=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST))
+				);
+		}
+		
+        return $p;
+	}
+
+	function note_mail_compose($args) {
 		$rcmail = rcmail::get_instance();
 		$filename = $args['param']['note_filename'];
 
@@ -89,8 +137,7 @@ class primitivenotes extends rcube_plugin
 		return $args;
 	}
 	
-	function action()
-	{
+	function action() {
 		$rcmail = rcmail::get_instance();	
 		
 		 $rcmail->output->add_handlers(array(
@@ -105,8 +152,7 @@ class primitivenotes extends rcube_plugin
 		$rcmail->output->send('primitivenotes.template');
 	}
 
-	function content($attrib)
-	{
+	function content($attrib) {
 		$rcmail = rcmail::get_instance();
 		$this->include_script('primitivenotes.js');
 

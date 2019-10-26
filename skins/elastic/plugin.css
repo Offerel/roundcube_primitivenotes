@@ -104,3 +104,6 @@
 .upl {
     display: none;
 }
+.listing.iconized tr.primitivenotes > td.section::before {
+	content: "\f249";
+}
