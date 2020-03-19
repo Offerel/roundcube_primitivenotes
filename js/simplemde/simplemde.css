@@ -669,6 +669,7 @@ span.CodeMirror-selectedtext {
 	overflow: hidden;
 	margin-left: auto;
 	margin-right: auto;
+	padding-right: 10px;
 }
 .editor-preview table td, .editor-preview table th, .editor-preview-side table td, .editor-preview-side table th {
     border: 1px solid #ddd;
@@ -727,4 +728,5 @@ span.CodeMirror-selectedtext {
 	scrollbar-width: thin;
 	margin-bottom: -5px;
 	user-select: all;
+	width: calc(100% - 10px);
 }
