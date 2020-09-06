@@ -1,5 +1,4 @@
 ﻿<?php
-
 $labels = array();
 $labels['notes'] = 'Notas';
 $labels['note_new'] = 'Nova';
@@ -17,5 +16,4 @@ $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Remarcar';
 $labels['note_formattxt'] = 'Texto puro';
 $labels['ariallabelnewoptions'] = 'Opções';
-
 ?>
