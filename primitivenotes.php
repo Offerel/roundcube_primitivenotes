@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.5
+ * @version 1.5.6
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -145,7 +145,8 @@ class primitivenotes extends rcube_plugin
             'tablink' => array($this, 'tablink'),
         ));
         
-        $rcmail->output->set_env('npath', $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false));
+		$rcmail->output->set_env('npath', $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false));
+		$rcmail->output->set_env('dformat', $rcmail->config->get('default_format', false));
 		
 		$rcmail->output->add_handlers(array('notescontent' => array($this, 'content'),));
 		$rcmail->output->set_pagetitle($this->gettext('notes'));

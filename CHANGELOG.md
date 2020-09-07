@@ -1,3 +1,7 @@
+### v1.5.6
+- Fix for searchbar css
+- Fix for not visible save button
+  
 ### v1.5.5
 - Added Preferences Page
 - Removed refresh when plugin is active

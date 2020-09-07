@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.5
+ * @version 1.5.6
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -22,7 +22,7 @@ function add_note() {
 }
 
 function new_note(a) {
-    format = a ? a : "";
+    format = a ? a : rcmail.env.dformat;
     $.ajax({
         type: "POST",
         url: "plugins/primitivenotes/notes.php",

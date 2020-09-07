@@ -118,7 +118,7 @@ object {
 	font-weight: normal;
 	background: #fff;
 	height: 21px;
-	background-image: url(./../../../../skins/larry/images/buttons.png);
+	background-image: url(./../../../skins/larry/images/buttons.png);
 	width: 100%;
 	padding: 0 4px 0 24px;
 	background-repeat: no-repeat;
