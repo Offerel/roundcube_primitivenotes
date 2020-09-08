@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.4
+ * @version 1.5.6
  * @author Offerel
  * @copyright Copyright (c) 2019, Offerel
  * @license GNU General Public License, version 3
@@ -451,7 +451,7 @@ function read_note($id, $filename, $mode, $format) {
 }
 
 function editTXT($note) {
-	return "<textarea id=\"txt\" name=\"editor1\">".$note['content']."</textarea>
+	return "<textarea id=\"txt\" data-set=\"txt\" name=\"editor1\">".$note['content']."</textarea>
 	<script>
 		document.getElementById('save_button').style.display = 'inline';
 	</script>";

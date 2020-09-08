@@ -16,4 +16,6 @@ $labels['note_formathtml'] = 'HTML заметка';
 $labels['note_formatmd'] = 'Простая заметка';
 $labels['note_formattxt'] = 'Текстовая заметка';
 $labels['ariallabelnewoptions'] = 'Параметры';
+$labels['note_defaultformat'] = 'Стандартный формат';
+$labels['note_yamls'] = 'Активировать YAML';
 ?>

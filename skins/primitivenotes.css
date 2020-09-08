@@ -88,6 +88,7 @@ object {
     height: 100%;
     position: absolute;
 }
+/*
 #sidebar .searchbox {
     background: url(./../../../../skins/larry/images/buttons.png) 0 -316px #fff no-repeat;
     width: calc(100% - 15px);
@@ -95,7 +96,11 @@ object {
     position: absolute;
     height: 18px;
     border-radius: 4px;
-}
+}*/
+#sidebar .searchbox {
+	position: absolute;
+	width: 350px;
+}/*
 #sidebar .searchbox input {
     font-weight: 700;
     font-size: 11px;
@@ -107,6 +112,18 @@ object {
     position: relative;
     width: calc(100% - 35px);
     height: 15px;
+}
+*/
+#sidebar .searchbox input {
+	font-weight: normal;
+	background: #fff;
+	height: 21px;
+	background-image: url(./../../../skins/larry/images/buttons.png);
+	width: 100%;
+	padding: 0 4px 0 24px;
+	background-repeat: no-repeat;
+	background-position: -7px -671px;
+	background-size: 36px;
 }
 #sidebar {
     width: 400px;

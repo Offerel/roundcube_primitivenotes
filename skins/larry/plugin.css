@@ -46,3 +46,9 @@
 .upl {
     display: none;
 }
+#sections-table #rcmrowprimitivenotes .section {
+	background-position: 4px -236px;
+}
+#sections-table #rcmrowprimitivenotes.selected .section {
+	background-position: 4px -261px;
+}
