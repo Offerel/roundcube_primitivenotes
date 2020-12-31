@@ -1,3 +1,6 @@
+### v1.5.7
+- Fix for #36
+  
 ### v1.5.6
 - Fix for searchbar css
 - Fix for not visible save button
