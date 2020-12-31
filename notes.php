@@ -130,7 +130,7 @@ if(isset($_POST['showHeader'])) {
 			if($rcmail->config->get('yaml_support', '') && stripos($filename,".md")) {
 				$contents = file_get_contents($notes_path.$filename);
 				$yhb_pos = strpos($contents, $yh_begin);
-				$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+				$yhe_pos = strlen($contents) >= strlen($yh_begin) ? 0 : strpos($contents, $yh_end, strlen($yh_begin));
 				if($yhb_pos == 0 && $yhe_pos > 0) {
 					$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 					foreach($yaml_arr as $line) {
@@ -167,7 +167,7 @@ if(isset($_POST['editHeader'])) {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			$contents = file_get_contents($notes_path.$filename);
 			$yhb_pos = strpos($contents, $yh_begin);
-			$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+			$yhe_pos = strlen($contents) >= strlen($yh_begin) ? 0 : strpos($contents, $yh_end, strlen($yh_begin));
 			if($yhb_pos == 0 && $yhe_pos > 0) {
 				$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 				foreach($yaml_arr as $line) {
@@ -251,7 +251,7 @@ if(isset($_POST['editor1'])) {
 	if($rcmail->config->get('yaml_support', '') && $note_type == "md") {
 		$tags_str = "tags: ".$tags_str;
 		$yhb_pos = strpos($note_content, $yh_begin);
-		$yhe_pos = strpos($note_content, $yh_end, strlen($yh_begin));
+		$yhe_pos = strlen($note_content) >= strlen($yh_begin) ? 0 : strpos($note_content, $yh_end, strlen($yh_begin));
 		$yaml_new = array();
 		$tagset = false;
 		
@@ -336,7 +336,7 @@ if (is_dir($notes_path)) {
 					if($rcmail->config->get('yaml_support', '') && stripos($file,".md")) {
 						$contents = file_get_contents($notes_path.$file);
 						$yhb_pos = strpos($contents, $yh_begin);
-						$yhe_pos = strpos($contents, $yh_end, strlen($yh_begin));
+						$yhe_pos = strlen($contents) >= strlen($yh_begin) ? 0 : strpos($contents, $yh_end, strlen($yh_begin));
 						if($yhb_pos == 0 && $yhe_pos > 0) {
 							$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 							foreach($yaml_arr as $line) {
@@ -407,7 +407,7 @@ function read_note($id, $filename, $mode, $format) {
 			$inhalt = preg_replace_callback($re, "parseLink", $content);
 			if($rcmail->config->get('yaml_support', '')) {
 				$yhb_pos = strpos($inhalt, $yh_begin);
-				$yhe_pos = strpos($inhalt, $yh_end, strlen($yh_begin));
+				$yhe_pos = strlen($inhalt) >= strlen($yh_begin) ? 0 : strpos($inhalt, $yh_end, strlen($yh_begin));
 				if($yhb_pos == 0 && $yhe_pos > 0) {
 					$inhalt = substr($inhalt,$yhe_pos + strlen($yh_end));
 				}
