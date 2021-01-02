@@ -1,8 +1,5 @@
 .text-core {
-	position: absolute;
-	left: 6px;
-	right: 7px;
-	margin-top: 5px;
+  position: relative;
 }
 .text-core .text-wrap {
   background: #fff;
@@ -29,5 +26,4 @@
   font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;
   line-height: 13px;
   height: auto;
-  border-radius: 4px;
 }

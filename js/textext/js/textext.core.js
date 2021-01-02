@@ -2,7 +2,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.1
+ * @version 1.3.2
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -258,6 +258,7 @@
 		 *         9   : 'tab',
 		 *         13  : 'enter!',
 		 *         27  : 'escape!',
+		 *         32  : 'space',
 		 *         37  : 'left',
 		 *         38  : 'up!',
 		 *         39  : 'right',
@@ -460,6 +461,7 @@
 				9   : 'tab',
 				13  : 'enter!',
 				27  : 'escape!',
+				32  : 'space',
 				37  : 'left',
 				38  : 'up!',
 				39  : 'right',
@@ -712,7 +714,8 @@
 		$.extend(true, itemManager, self.opts(OPT_EXT + '.item.manager'));
 		$.extend(true, self, self.opts(OPT_EXT + '.*'), self.opts(OPT_EXT + '.core'));
 		
-		self.originalWidth = input.outerWidth();
+		//self.originalWidth = input.outerWidth();
+		self.originalWidth = '100%'; //easier just wrap with other element to change width
 
 		self.invalidateBounds();
 
@@ -970,8 +973,8 @@
 			input     = self.input(),
 			wrap      = self.wrapElement(),
 			container = wrap.parent(),
-			//width     = self.originalWidth + 'px',
-			width     = '100%'
+			width     = self.originalWidth + 'px',
+			height
 			;
 
 		self.trigger(EVENT_PRE_INVALIDATE);
@@ -1142,7 +1145,10 @@
 	p.onSetFormData = function(e, data)
 	{
 		var self = this;
-		self.hiddenInput().val(self.serializeData(data));
+		if (self.hiddenInput().val() !== self.serializeData(data))
+		{
+			self.hiddenInput().val(self.serializeData(data)).change();
+		}
 	};
 
 	/**
