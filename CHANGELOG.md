@@ -1,3 +1,8 @@
+### v1.5.7
+- Fix for #36
+- Updated textext to 1.3.2 [textext Fork](https://github.com/gfunkmonk/jquery-textext)
+- Updated highlight to 10.5.0 [Highlight.js](https://www.npmjs.com/package/highlight.js)
+  
 ### v1.5.6
 - Fix for searchbar css
 - Fix for not visible save button
