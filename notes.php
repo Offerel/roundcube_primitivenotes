@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.7
+ * @version 1.5.8
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -493,39 +493,37 @@ function editHTML($note) {
 		</script>";
 	} else {
 		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
-		var inscybmde = new InscrybMDE({
-		element: document.getElementById('md')
-		,autoDownloadFontAwesome: false
-		,spellChecker: false
-		,autofocus: true
-		,status: false
-		,promptURLs: true
-		,renderingConfig: {
-			codeSyntaxHighlighting: true,
-		}
-		,toolbar: 	[{ name: 'Save',
-						action: saveFile,
-						className: 'fa fa-floppy-o',
-						title: 'Save',
-					}, '|',
-					'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
-					'code', 'quote', 'unordered-list', 'ordered-list', '|',
-					'link', 
-					{ name: 'Image',
-						action: uplInsertImage,
-						className: 'fa fa-picture-o',
-						title: 'Add image from URL',
-					},
-					{ name: 'Image',
-						action: uplLocalImage,
-						className: 'fa fa-file-image-o',
-						title: 'Upload and insert local image',
-					},
-					'table', '|',
-					'preview', 'side-by-side', 'fullscreen', '|'
-					
-					]
-	});
+		var mde = new EasyMDE({
+			element: document.getElementById('md'),
+			autoDownloadFontAwesome: false,
+			spellChecker: false,
+			autofocus: true,
+			status: false,
+			promptURLs: true,
+			renderingConfig: {
+				codeSyntaxHighlighting: true,
+			},
+			toolbar: 	[{ name: 'Save',
+							action: saveFile,
+							className: 'fa fa-floppy-o',
+							title: 'Save',
+						}, '|',
+						'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
+						'code', 'quote', 'unordered-list', 'ordered-list', '|',
+						'link', 
+						{ name: 'Image',
+							action: uplInsertImage,
+							className: 'fa fa-picture-o',
+							title: 'Add image from URL',
+						},
+						{ name: 'Image',
+							action: uplLocalImage,
+							className: 'fa fa-file-image-o',
+							title: 'Upload and insert local image',
+						},
+						'table', '|',
+						'preview', 'guide', '|'	]
+		});
 	
 	function simage() {
 		var allowed_extensions = new Array('jpg', 'jpeg', 'png');
@@ -548,9 +546,9 @@ function editHTML($note) {
 					,processData: false
 					,data: formData
 					,success: function(data){
-						pos = inscybmde.codemirror.getCursor();
-						inscybmde.codemirror.setSelection(pos, pos);
-						inscybmde.codemirror.replaceSelection('![](' + data + ')');
+						pos = mde.codemirror.getCursor();
+						mde.codemirror.setSelection(pos, pos);
+						mde.codemirror.replaceSelection('![](' + data + ')');
 					}
 				});
 				return true;
@@ -579,9 +577,9 @@ function editHTML($note) {
 					,'imageURL': imageURL
 				}
 				,success: function(data){
-					pos = inscybmde.codemirror.getCursor();
-					inscybmde.codemirror.setSelection(pos, pos);
-					inscybmde.codemirror.replaceSelection('![](' + data + ')');
+					pos = mde.codemirror.getCursor();
+					mde.codemirror.setSelection(pos, pos);
+					mde.codemirror.replaceSelection('![](' + data + ')');
 				}
 			});
 		} else
@@ -610,18 +608,17 @@ function showMARKDOWN($note) {
 	return "<textarea id=\"md\">".$note['content']."</textarea>
 	<script>
 	if (document.getElementById('md')) {
-			var inscybmde = new InscrybMDE({
-				element: document.getElementById('md')
-				,status: false
-				,toolbar: false
-				,autoDownloadFontAwesome: false
-				,spellChecker: false
-				,renderingConfig: {
+			var mde = new EasyMDE({
+				element: document.getElementById('md'),
+				status: false,
+				toolbar: false,
+				autoDownloadFontAwesome: false,
+				spellChecker: false,
+				renderingConfig: {
 					codeSyntaxHighlighting: true,
-					highlightingTheme: 'monokai',
-				}
+				},
 			});
-			inscybmde.togglePreview();
+			mde.togglePreview();
 		}
 		
 		$('.tlink').on('click', function(e) {
@@ -630,6 +627,8 @@ function showMARKDOWN($note) {
 			$('#main_area').html('<iframe src=\'' + content + '\' style=\'border: none; width: 100%; height: 100%\'></iframe>');
 		});
 		</script>";
+
+		
 }
 
 function human_filesize($bytes, $decimals = 2) {
@@ -650,12 +649,18 @@ function human_filesize($bytes, $decimals = 2) {
 		<script type="text/javascript" src="../../program/js/common.min.js"></script>
 		<script type="text/javascript" src="../../program/js/app.min.js"></script>
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
-		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-		<link rel="stylesheet" href="js/simplemde/simplemde.min.css">
+		
+		<!-- <link rel="stylesheet" href="js/simplemde/simplemde.min.css"> -->
+		<link rel="stylesheet" href="js/easymde/easymde.min.css">
+		
+		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
-		<script src="js/simplemde/inscrybmde.min.js"></script>
+		
+		<!-- <script src="js/simplemde/inscrybmde.min.js"></script> -->
+		<script src="js/easymde/easymde.min.js"></script>
+		
 		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css"><script src="../../program/js/tinymce/tinymce.min.js"></script>
 		<link rel="stylesheet" href="js/textext/css/textext.core.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.addon.tags.min.css" type="text/css" />

@@ -1,3 +1,7 @@
+### v1.5.8
+- Changed Markdown Editor to [EasyMD v2.13.0](https://github.com/ionaru/easy-markdown-editor)
+- Removed rarely used code styles
+  
 ### v1.5.7
 - Fix for #36
 - Updated textext to 1.3.2 [textext Fork](https://github.com/gfunkmonk/jquery-textext)
