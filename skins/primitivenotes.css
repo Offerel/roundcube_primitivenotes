@@ -88,32 +88,10 @@ object {
     height: 100%;
     position: absolute;
 }
-/*
-#sidebar .searchbox {
-    background: url(./../../../../skins/larry/images/buttons.png) 0 -316px #fff no-repeat;
-    width: calc(100% - 15px);
-    border: 1px solid #ababab;
-    position: absolute;
-    height: 18px;
-    border-radius: 4px;
-}*/
 #sidebar .searchbox {
 	position: absolute;
 	width: 350px;
-}/*
-#sidebar .searchbox input {
-    font-weight: 700;
-    font-size: 11px;
-    background: #fff;
-    border: none;
-    padding: 0 0 0 5px;
-    margin: 0 0 0 19px;
-    top: -3px;
-    position: relative;
-    width: calc(100% - 35px);
-    height: 15px;
 }
-*/
 #sidebar .searchbox input {
 	font-weight: normal;
 	background: #fff;
@@ -198,7 +176,7 @@ object {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     background: #fff;
-    background: #efefef;
+    overflow: auto;
 }
 .main_area textarea {
     border: 0;
@@ -294,4 +272,136 @@ object {
 .cke_editable {
     cursor: text;
     font-family: Helvetica Neue, Helvetica, Segoe UI, Arial, freesans, sans-serif;
+}
+/* --------------------- Markdown Editor CSS Overwrites --------------------- */
+.editor-preview blockquote, .editor-preview-side blockquote {
+	color: #3c763d;
+	background-color: rgba(66,185,131,.1);
+	padding: 0;
+	margin: 15px 0;
+	border-left: 4px solid #42b983;
+	margin-left: auto;
+	margin-right: auto;
+}
+.editor-preview blockquote p, .editor-preview-side blockquote p {
+	padding: 5px;
+}
+.editor-preview code {
+	overflow-x: auto;
+	scrollbar-width: thin;
+	margin: 0 0 -5px 0;
+	user-select: all;
+	width: unset;
+	background: #f8f8f8;
+	font-size: .92em;
+	font-family: Consolas, Monaco, monospace !important;
+	color: #e96900;
+	padding: 2px 4px;
+	border-radius: 2px;
+	display: inline-block;
+	white-space: pre;
+}
+.editor-preview a, .editor-preview-side a {
+	color: #42b983;
+	text-decoration: none;
+	font-style: normal;
+	font-size: 15px;
+	font-weight: 600;
+}
+.editor-preview pre, .editor-preview-side pre {
+	background: #f8f8f8;
+	margin-bottom: 10px;
+	padding: 7px;
+	font-size: 85%;
+	line-height: 1.45;
+	border-radius: 4px;
+	border: thin solid #dfe2e5;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	padding-right: 10px;
+}
+.editor-preview pre code {
+	color: unset;
+}
+.editor-preview {
+    background: #fff;
+    font-family: Helvetica Neue,Helvetica,Segoe UI,Arial,freesans,sans-serif;
+    color: #333;
+    background: #fff;
+}
+.editor-preview * {
+	max-width: 860px;
+	margin-left: auto;
+    margin-right: auto;
+}
+.editor-preview table, .editor-preview-side table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	text-shadow: 1px 1px 0 #fff;
+}
+.editor-preview table thead th, .editor-preview-side table thead th {
+	background-color: #e0e0e0;
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+.editor-preview table tr:nth-child(2n), .editor-preview-side table tr:nth-child(2n) {
+	background: linear-gradient(to bottom,#f8f8f8 0,#f6f6f6 100%);
+}
+.editor-preview table td, .editor-preview table th, .editor-preview-side table td, .editor-preview-side table th {
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+.editor-preview kbd, .editor-preview-side kbd {
+	font-family: Consolas,"Courier New",monospace;
+	display: inline-block;
+	border-radius: 5px;
+	padding: 0 4px;
+	margin: 2px;
+	font-size: .9em;
+	vertical-align: text-bottom;
+	background: #fff;
+	color: #555;
+	user-select: none;
+	border-width: 1px 3px 3px 1px;
+	border-color: #ccc #aaa #888 #bbb;
+	white-space: nowrap;
+	border-style: solid;
+}
+.EasyMDEContainer .CodeMirror {
+	position: inherit;
+}
+.editor-preview-full {
+	position: fixed;
+	left: 395px;
+	width: calc(100% - 396px);
+	top: 74px;
+	height: calc(100% - 74px);
+	padding-top: 20px;
+}
+.CodeMirror-vscrollbar {
+	overflow-y: hidden;
+}
+.editor-toolbar {
+	position: fixed;
+	width: calc(100% - 432px);
+	background: #efefef;
+	border: 0;
+	border-bottom: 1px solid;
+	border-color: #bbb;
+	z-index: 101;
+	border-radius: 0;
+}
+.EasyMDEContainer .CodeMirror-scroll {
+    padding-top: 30px;
+}
+.editor-toolbar::after {
+	margin-top: 2px;
+}
+.editor-toolbar::before {
+	margin-bottom: 2px;
+}
+.editor-toolbar button.active, .editor-toolbar button:hover {
+	background: #e3e3e3;
+	border-color: #95a5a6;
 }

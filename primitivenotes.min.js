@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.7
+ * @version 1.5.8
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
