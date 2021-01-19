@@ -16,4 +16,5 @@ $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Remarcar';
 $labels['note_formattxt'] = 'Texto puro';
 $labels['ariallabelnewoptions'] = 'Opções';
+$labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada com arquivos Markdown';
 ?>

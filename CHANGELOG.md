@@ -1,3 +1,6 @@
+### v1.5.9
+- Try to add option to remove media
+  
 ### v1.5.8
 - Changed Markdown Editor to [EasyMD v2.13.0](https://github.com/ionaru/easy-markdown-editor)
 - Removed rarely used code styles

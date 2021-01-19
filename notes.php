@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.8
+ * @version 1.5.9
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -313,6 +313,17 @@ if(isset($_POST['delNote'])) {
 	$file = $notes_path.$_POST["fileid"];
 
 	if(file_exists($file)) {
+		if(substr ($file, -3) == ".md" && boolval($rcmail->config->get('rm_md_media', false))) {
+			$fcontent = file_get_contents($file);
+			$mpath = dirname($file);
+			preg_match_all('/(?:!\[(.*?)\]\((.*?)\))/m', $fcontent, $mediaFiles, PREG_SET_ORDER, 0);
+			foreach($mediaFiles as $mKey => $mFile) {
+				if(!unlink($mpath.ltrim($mFile[2],'.'))) {
+					error_log('PrimitiveNotes: Couldn\'t delete media file. Please check your directory permissions.');
+				}
+			}
+		}
+
 		if(!unlink($file)) {
 			error_log('PrimitiveNotes: Couldn\'t delete note. Please check your directory permissions.');
 		}

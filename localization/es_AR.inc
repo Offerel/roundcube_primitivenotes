@@ -18,4 +18,5 @@ $labels['note_formattxt'] = 'Texto Plano';
 $labels['ariallabelnewoptions'] = 'Opciones';
 $labels['note_defaultformat'] = 'Formato estándar';
 $labels['note_yamls'] = 'Activa YAML';
+$labels['note_rmedia_md'] = 'Elimina automáticamente los medios incrustados con Markdown Files';
 ?>
