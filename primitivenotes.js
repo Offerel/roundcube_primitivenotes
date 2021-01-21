@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.8
+ * @version 1.5.9
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -12,7 +12,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
     rcmail.register_command("deletenote", delete_note, !0);
     rcmail.register_command("sendnote", send_note, !0);
     rcmail.register_command("addnote", add_note, !0);
-    rcmail.register_command("htmlnote", new_note, !0);
+    //rcmail.register_command("htmlnote", new_note, !0);
     rcmail.register_command("mdnote", new_note, !0);
     rcmail.register_command("txtnote", new_note, !0);
 });
@@ -62,7 +62,7 @@ function edit_note() {
             $("#notescontentframe").contents().find("div#main_header").html(a)
         }
     });
-    0 <= ["html", "txt", "md"].indexOf(b) && $.ajax({
+    0 <= ["txt", "md","html"].indexOf(b) && $.ajax({
         type: "POST",
         url: "plugins/primitivenotes/notes.php",
         data: {

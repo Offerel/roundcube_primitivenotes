@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.8
+ * @version 1.5.9
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -11,7 +11,6 @@ define('INSTALL_PATH', realpath(__DIR__ . '/../../') . '/');
 include INSTALL_PATH . 'program/include/iniset.php';
 $rcmail = rcmail::get_instance();
 
-// Login
 if (!empty($rcmail->user->ID)) {
 	if(substr($rcmail->config->get('notes_basepath', false), -1) != '/') {
 		error_log('PrimitiveNotes: check $config[\'notes_basepath\'] the path must end with a backslash.');
@@ -25,21 +24,18 @@ if (!empty($rcmail->user->ID)) {
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	$media_folder = $rcmail->config->get('media_folder', false);
-	$html_editor = $rcmail->config->get('html_editor', false);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
 	$yh_begin = $rcmail->config->get('yaml_start', '');
 	$yh_end = $rcmail->config->get('yaml_end', '');
 	
-	if (!is_dir($notes_path))
-	{
+	if (!is_dir($notes_path)) {
 		if(!mkdir($notes_path, 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) failed. Please check your directory permissions.');
 			die();
 		}
 	}
-}
-else {
+} else {
 	error_log('PrimitiveNotes: Login failed. User is not logged in.');
 	http_response_code(403);
 	header('location: ../../');
@@ -81,8 +77,7 @@ if(isset($_POST['uplImage'])) {
 	$fname = time().image_type_to_extension(exif_imagetype($imageURL));
 	$img = $notes_path.$media_folder.$fname;
 
-	if (!is_dir($notes_path.$media_folder))
-	{
+	if (!is_dir($notes_path.$media_folder)) {
 		if(!mkdir($notes_path.$media_folder, 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
@@ -94,14 +89,12 @@ if(isset($_POST['uplImage'])) {
 		error_log($message);
 		die($message);
 	}
-	
 	die($media_folder.$fname);
 }
 
 // Get local image and save to media folder
 if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
-	if (!is_dir($notes_path.$media_folder))
-	{
+	if (!is_dir($notes_path.$media_folder)) {
 		if(!mkdir($notes_path.$media_folder, 0774, true)) {
 			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
 			die();
@@ -115,7 +108,6 @@ if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
 		error_log($message);
 		die($message);
 	}
-
 	die($media_folder.$fname);
 }
 
@@ -162,8 +154,7 @@ if(isset($_POST['editHeader'])) {
 		if(stripos($filename, "[")) {
 			$note_name = substr($filename, 0, stripos($filename, "["));
 			$taglist = str_replace(" ", ", ", substr(substr($filename, 0, stripos($filename, "]")), stripos($filename, "[") +1));
-		} 
-		elseif($rcmail->config->get('yaml_support', '') && stripos($filename, ".md")) {
+		} elseif($rcmail->config->get('yaml_support', '') && stripos($filename, ".md")) {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			$contents = file_get_contents($notes_path.$filename);
 			$yhb_pos = strpos($contents, $yh_begin);
@@ -176,8 +167,7 @@ if(isset($_POST['editHeader'])) {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			$note_name = substr($filename, 0, stripos($filename, "."));
 			$taglist = "";
 		}
@@ -189,7 +179,7 @@ if(isset($_POST['editHeader'])) {
 		$note_header.= "<textarea id=\"note_tags\" name=\"note_tags\" class=\"example\" rows=\"1\"></textarea>";
 		$note_header.= "<input id=\"fname\" name=\"fname\" type=\"hidden\" value=\"$filename\" />";
 		$note_header.= "<script>tagsuggest('$taglist');</script>";
-		$save_allowed = array("txt", "md", "html");	
+		$save_allowed = array("txt", "md");	
 		if(!in_array($format,$save_allowed)) {
 			$note_header.= "<input type=\"hidden\" name=\"editor1\" value=\"e\" />";
 		}
@@ -217,32 +207,26 @@ if(isset($_POST['mode'])) {
 			if($rcmail->config->get('yaml_support', '') && $ext == "md") {
 				$tags_str = "tags: ".implode(" ",$tags_arr);
 				$newname = $newname.".".$ext;
-			}
-			else {
+			} else {
 				$tags_str = "[".implode(" ",$tags_arr)."]";
 				$newname = $newname.$tags_str.".".$ext;
 			}
-		}
-		else {
+		} else {
 			$tags_str = "";
 			$newname = $newname.".".$ext;
 		}
-		if($oldname != $newname)
-			rename($notes_path.$oldname, $notes_path.$newname);
+		if($oldname != $newname) rename($notes_path.$oldname, $notes_path.$newname);
 	}
-	
 }
 
 // Save a note, when its changed
 if(isset($_POST['editor1'])) {
 	$note_name = ($_POST['note_name'] != "") ? $_POST['note_name'] : "new_unknown_note";
 	$note_tags = explode(",",str_replace(['"', '[', ']'], '', $_POST['note_tags']));
-
 	$note_content = $_POST['editor1'];
 	$old_name = $_POST['fname'];
 	
-	if(!$note_type = $_POST['ftype'])
-		$note_type = ($default_format != '') ? $default_format : 'html';
+	if(!$note_type = $_POST['ftype']) $note_type = ($default_format != '') ? $default_format : 'txt';
 	
 	$note_tags = array_unique($note_tags);
 	$tags_arr = array_map('trim', $note_tags);		
@@ -261,19 +245,16 @@ if(isset($_POST['editor1'])) {
 				if(stripos($line,"tags: ") === 0) {
 					$yaml_new[] = $tags_str;
 					$tagset = true;
-				}
-				elseif(stripos($line,"title: ") === 0) {
+				} elseif(stripos($line,"title: ") === 0) {
 					$yaml_new[] = "title: ".$note_name;
-				}
-				else {
+				} else {
 					$yaml_new[] = $line;
 				}
 			}
 			
 			if(!$tagset && strlen($tags_str) > 6) array_splice($yaml_new, 1, 0, $tags_str);
 			$note_content = implode("\r\n", $yaml_new).substr($note_content,$yhe_pos + strlen(yh_end));
-		}
-		else {
+		} else {
 			$yaml_new[] = $yh_begin;
 			if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
 			$yaml_new[] = "title: ".$note_name;
@@ -282,10 +263,8 @@ if(isset($_POST['editor1'])) {
 			$yaml_new[] = $yh_end;
 			$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
 		}
-		
 		$new_name = $note_name.".".$note_type;
-	}
-	else {
+	} else {
 		$tags_str = ($tags_str != "") ? "[".$tags_str."]" : $tags_str;
 		$new_name = $note_name.$tags_str.".".$note_type;
 	}
@@ -297,10 +276,10 @@ if(isset($_POST['editor1'])) {
 			rename($notes_path.$old_name, $notes_path.$new_name);
 		}
 	} elseif ($old_name != "") {
-		error_log('PrimitiveNotes: Note not found, can`t save note.');
+		error_log('PrimitiveNotes: Note not found, can\`t save note.');
 	}
 
-	$save_allowed = array("txt", "md", "html");	
+	$save_allowed = array("txt", "md");	
 	if(in_array($note_type,$save_allowed)) {
 		$note_file = fopen ($notes_path.$new_name, "w");
 		$content = fwrite($note_file, $note_content);
@@ -327,12 +306,10 @@ if (is_dir($notes_path)) {
 			if (is_file($notes_path.$file)) {
 				$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
 				$ext = pathinfo($notes_path.$file,PATHINFO_EXTENSION);
-				
 				$supported_ext = array("md", "html", "txt", "pdf", "jpg", "png");	
 				if(in_array($ext,$supported_ext)) {				
 					$tags = null;
 					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
-					
 					if($rcmail->config->get('yaml_support', '') && stripos($file,".md")) {
 						$contents = file_get_contents($notes_path.$file);
 						$yhb_pos = strpos($contents, $yh_begin);
@@ -346,7 +323,7 @@ if (is_dir($notes_path)) {
 							}
 						}
 					}
-					
+
 					if(is_array($tags) && count($tags) > 0) {
 						$ttags = explode(" ", $tags[1]);
 						$taglist = array_merge($taglist,$ttags);
@@ -375,8 +352,7 @@ if (is_dir($notes_path)) {
 // sort the files array by lastmodified time
 if(is_array($files) && count($files) > 0) {
 	usort($files, function($a, $b) { return $b['time'] > $a['time']; });
-}
-else {
+} else {
 	error_log('PrimitiveNotes: No files found at configured path '.$notes_path.'. If thats not ok, please check your directory permissions and the configured path.');
 }
 
@@ -396,8 +372,7 @@ function parseLink($match) {
 function read_note($id, $filename, $mode, $format) {
 	global $rcmail, $notes_path, $yh_begin, $yh_end;
 	$file = $notes_path.$filename;
-	if($filename != '')
-		$format = substr($filename,strripos($filename, ".")+1);		
+	if($filename != '') $format = substr($filename,strripos($filename, ".")+1);		
 
 	if(file_exists($file)) {
 		$content = file_get_contents($file);
@@ -412,8 +387,7 @@ function read_note($id, $filename, $mode, $format) {
 					$inhalt = substr($inhalt,$yhe_pos + strlen($yh_end));
 				}
 			}
-		}
-		else
+		} else
 			$inhalt = $content;
 
 		$note = array(
@@ -428,14 +402,14 @@ function read_note($id, $filename, $mode, $format) {
 	} elseif($filename != "" ) {
 		error_log('PrimitiveNotes: Note not found');
 	}
-	
+
 	if($mode === 'edit') {
 		switch ($note['format']) {
 			case 'pdf':	$showNote = showBIN($note); break;
 			case 'jpg': $showNote = showBIN($note); break;
 			case 'png': $showNote = showBIN($note); break;
-			case 'txt': $showNote = editTXT($note); break;			
-			default:	$showNote = editHTML($note);
+			case 'md': $showNote = editMD($note); break;
+			default:	$showNote = editTXT($note);
 		}
 	} else {
 		switch ($note['format']) {
@@ -457,42 +431,16 @@ function editTXT($note) {
 	</script>";
 }
 
-function editHTML($note) {
-	global $html_editor, $language, $default_format, $yh_begin, $yh_end;
-
+function editMD($note) {
+	global $language, $default_format, $yh_begin, $yh_end;
 	$format = $note['format'];
-	
-	if($format == "")
-		$format = ($default_format != '') ? $default_format : 'html';
-
+	if($format == "") $format = ($default_format != '') ? $default_format : 'md';
 	$content = $note['content'];
 	$yhb_pos = strpos($content, $yh_begin);
-	if(strlen($content) > strlen($yh_begin))
-		$yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
-
+	if(strlen($content) > strlen($yh_begin)) $yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
 	$output = "<textarea name=\"editor1\" id=\"$format\">".substr($content, $yhe_pos + strlen($yh_end))."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
-
-	if($pos = strpos($language, '_')) {
-		$lang = substr($language, 0, $pos);
-		if(!file_exists(INSTALL_PATH."program/js/tinymce/langs/$lang.js")) {
-			$lang = 'en';
-		}
-	}
-
-	if($format == 'html') {
-		$output.="<script>
-			tinymce.init({
-				selector: '#html'
-				,plugins : 'fullscreen searchreplace media charmap textcolor directionality lists link image code contextmenu fullpage paste save searchreplace table toc'
-				,toolbar: 'save fullpage | undo redo pastetext | bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | forecolor backcolor | fontselect fontsizeselect | link unlink table image | code searchreplace fullscreen'
-				,paste_data_images: true
-				,menubar: false
-				,toolbar_items_size:'small'
-				,language: '$lang'
-		  });
-		</script>";
-	} else {
-		$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form><script>
+	$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form>
+	<script>
 		var mde = new EasyMDE({
 			element: document.getElementById('md'),
 			autoDownloadFontAwesome: false,
@@ -500,6 +448,7 @@ function editHTML($note) {
 			autofocus: true,
 			status: false,
 			promptURLs: true,
+			//sideBySideFullscreen: false,
 			renderingConfig: {
 				codeSyntaxHighlighting: true,
 			},
@@ -522,71 +471,70 @@ function editHTML($note) {
 							title: 'Upload and insert local image',
 						},
 						'table', '|',
-						'preview', 'guide', '|'	]
+						'preview', 'side-by-side', 'fullscreen', 'guide', '|'	],
+			
 		});
 	
-	function simage() {
-		var allowed_extensions = new Array('jpg', 'jpeg', 'png');
-		var file_extension = document.getElementById('localimg').value.split('.').pop().toLowerCase();
+		function simage() {
+			var allowed_extensions = new Array('jpg', 'jpeg', 'png');
+			var file_extension = document.getElementById('localimg').value.split('.').pop().toLowerCase();
 
-		for(var i = 0; i <= allowed_extensions.length; i++)
-		{
-			if(allowed_extensions[i]==file_extension)
-			{
-				var file_data = $('#localimg').prop('files')[0];
-				var formData = new FormData();
-				formData.append('localFile', file_data);
-				
+			for(var i = 0; i <= allowed_extensions.length; i++) {
+				if(allowed_extensions[i]==file_extension) {
+					var file_data = $('#localimg').prop('files')[0];
+					var formData = new FormData();
+					formData.append('localFile', file_data);
+					
+					$.ajax({
+						type: 'POST'
+						,url: 'notes.php'
+						,dataType: 'text'
+						,cache: false
+						,contentType: false
+						,processData: false
+						,data: formData
+						,success: function(data){
+							pos = mde.codemirror.getCursor();
+							mde.codemirror.setSelection(pos, pos);
+							mde.codemirror.replaceSelection('![](' + data + ')');
+						}
+					});
+					return true;
+				}
+			}
+			alert('Unsupported file format');
+			return false;
+		}
+	
+		function saveFile(editor) {
+			document.getElementById('metah').submit();
+		}
+	
+		function uplLocalImage() {
+			document.getElementById('localimg').click();
+		}
+	
+		function uplInsertImage() {
+			var imageURL = prompt('URL of the image', '');
+			if(imageURL) {
 				$.ajax({
 					type: 'POST'
 					,url: 'notes.php'
-					,dataType: 'text'
-					,cache: false
-					,contentType: false
-					,processData: false
-					,data: formData
+					,data: {
+						'uplImage': '1'
+						,'imageURL': imageURL
+					}
 					,success: function(data){
 						pos = mde.codemirror.getCursor();
 						mde.codemirror.setSelection(pos, pos);
 						mde.codemirror.replaceSelection('![](' + data + ')');
 					}
 				});
-				return true;
-			}
+			} else
+				return false;
 		}
-		alert('Unsupported file format');
-		return false;
-	}
-	
-	function saveFile(editor) {
-		document.getElementById('metah').submit();
-	}
-	
-	function uplLocalImage() {
-		document.getElementById('localimg').click();
-	}
-	
-	function uplInsertImage() {
-		var imageURL = prompt('URL of the image', '');
-		if(imageURL) {
-			$.ajax({
-				type: 'POST'
-				,url: 'notes.php'
-				,data: {
-					'uplImage': '1'
-					,'imageURL': imageURL
-				}
-				,success: function(data){
-					pos = mde.codemirror.getCursor();
-					mde.codemirror.setSelection(pos, pos);
-					mde.codemirror.replaceSelection('![](' + data + ')');
-				}
-			});
-		} else
-			return false;
-	}
 	</script>";
-	}
+	
 	return $output;
 }
 
@@ -651,17 +599,10 @@ function human_filesize($bytes, $decimals = 2) {
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-		
-		<!-- <link rel="stylesheet" href="js/simplemde/simplemde.min.css"> -->
 		<link rel="stylesheet" href="js/easymde/easymde.min.css">
-		
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<link rel="stylesheet" href="js/simplemde/font-awesome/css/font-awesome.min.css">
-		
-		<!-- <script src="js/simplemde/inscrybmde.min.js"></script> -->
 		<script src="js/easymde/easymde.min.js"></script>
-		
-		<link rel="stylesheet" href="../../program/js/tinymce/skins/lightgray/skin.min.css"><script src="../../program/js/tinymce/tinymce.min.js"></script>
 		<link rel="stylesheet" href="js/textext/css/textext.core.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.addon.tags.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/textext/css/textext.addon.autocomplete.min.css" type="text/css" />
@@ -693,7 +634,6 @@ function human_filesize($bytes, $decimals = 2) {
 					foreach ($files as $fentry) {
 						if(strlen($fentry['name']) > 0 ) {
 							$fsize = human_filesize($fentry['size'], 2);
-							
 							if(is_array($fentry['tags'])) {
 								$tlist = implode(" ",$fentry['tags']);
 								$tlist = "<span id=\"taglist\">$tlist</span>";

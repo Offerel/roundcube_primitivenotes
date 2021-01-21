@@ -292,12 +292,12 @@ object {
 	margin: 0 0 -5px 0;
 	user-select: all;
 	width: unset;
-	background: #f8f8f8;
+	background: #eed7d7;
 	font-size: .92em;
-	font-family: Consolas, Monaco, monospace !important;
-	color: #e96900;
+	font-family: Consolas,Monaco,monospace !important;
+	color: #e93700;
 	padding: 2px 4px;
-	border-radius: 2px;
+	border-radius: 5px;
 	display: inline-block;
 	white-space: pre;
 }
@@ -323,6 +323,7 @@ object {
 }
 .editor-preview pre code {
 	color: unset;
+	background: unset;
 }
 .editor-preview {
     background: #fff;
@@ -404,4 +405,7 @@ object {
 .editor-toolbar button.active, .editor-toolbar button:hover {
 	background: #e3e3e3;
 	border-color: #95a5a6;
+}
+.editor-toolbar.fullscreen {
+    background: #f4f4f4;
 }
