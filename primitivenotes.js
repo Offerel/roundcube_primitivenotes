@@ -89,6 +89,18 @@ function delete_note() {
                 fileid: a
             },
             success: function(a) {
+                var result = JSON.parse(a);
+                if(result.data != "") {
+                    if(confirm(result.message)) $.ajax({
+                        url: "plugins/primitivenotes/notes.php",
+                        type: "post",
+                        data: {
+                            delMedia: "1",
+                            files: JSON.stringify(result.data)
+                        }
+                    });
+                }
+
                 document.getElementById("notescontentframe").src = "plugins/primitivenotes/notes.php"
             }
         });

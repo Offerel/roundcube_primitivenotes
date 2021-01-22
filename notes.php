@@ -290,12 +290,50 @@ if(isset($_POST['editor1'])) {
 // Delete a note
 if(isset($_POST['delNote'])) {
 	$file = $notes_path.$_POST["fileid"];
-
 	if(file_exists($file)) {
+		if(substr ($file, -3) == ".md" && boolval($rcmail->config->get('rm_md_media', false))) {
+			$fcontent = file_get_contents($file);
+			preg_match_all('/(?:!\[(.*?)\]\((.*?)\))/m', $fcontent, $mediaFiles, PREG_SET_ORDER, 0);
+			$mfiles = [];
+			$mpath = $rcmail->config->get('media_folder', false);
+			foreach($mediaFiles as $mKey => $mFile) {
+				if(strpos($mFile[2], $mpath) !== false) $mfiles[] = basename($mFile[2]);
+			}
+		}
+		
 		if(!unlink($file)) {
-			error_log('PrimitiveNotes: Couldn\'t delete note. Please check your directory permissions.');
+			$message = 'Couldn\'t delete note. Please check your directory permissions.';
+			$mArr = array('message' => $message, 'data' => '');
+			error_log('PrimitiveNotes: '.$message);
+			die(json_encode($mArr));
+		} else {
+			if(count($mfiles) > 0) {
+				$message = 'Found '.count($mfiles).' local media files in the note. Do you want to delete them now?';
+				error_log('PrimitiveNotes: '.$message.' Send remove request.');
+				$mArr = array('message' => $message, 'data' => $mfiles);
+				die(json_encode($mArr));
+			}
+			else
+				error_log('PrimitiveNotes: No local media files found in removed note');
 		}
 	}
+}
+
+if(isset($_POST['delMedia'])) {
+	$files = json_decode($_POST['files']);
+	$mpath = $notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false).$rcmail->config->get('media_folder', false);
+	foreach($files as $key => $file) {
+		$rfile = filter_var($file, FILTER_SANITIZE_STRING);
+		$rfile = $mpath.$rfile;
+		error_log($rfile);
+		if(file_exists($rfile)) {
+			if(!unlink($rfile)) 
+				error_log("PrimitiveNotes: Media file $rfile not removed");
+		} else {
+			error_log("PrimitiveNotes: Media file $rfile does not exist");
+		}
+	}
+	die();
 }
 
 // Read the files in the notes folder put them in an array and sort by last edit date
