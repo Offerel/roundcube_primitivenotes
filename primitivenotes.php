@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.7
+ * @version 1.5.9
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -71,6 +71,14 @@ class primitivenotes extends rcube_plugin
 		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls')),
 															'content'=> $input->show(intval($rcmail->config->get('yaml_support'))));
 
+		$field_id='rm_md_media';
+		$input = new html_checkbox(array(	'name'	=> 'rm_md_media',
+											'id'	=> 'rm_md_media',
+											'value' => 1));
+
+		$p['blocks']['main']['options']['pn_rmed'] = array(	'title'=> html::label($field_id, $this->gettext('note_rmedia_md')),
+															'content'=> $input->show(intval($rcmail->config->get('rm_md_media'))));
+
 		return $p;
 	}
 	
@@ -78,7 +86,8 @@ class primitivenotes extends rcube_plugin
 		if ($p['section'] == 'primitivenotes') {
 			$p['prefs'] = array(
 				'default_format'	=> strval(rcube_utils::get_input_value('default_format', rcube_utils::INPUT_POST)),
-				'yaml_support'	=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST))
+				'yaml_support'		=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST)),
+				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST))
 				);
 		}
 		

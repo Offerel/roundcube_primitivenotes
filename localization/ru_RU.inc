@@ -18,4 +18,5 @@ $labels['note_formattxt'] = 'Текстовая заметка';
 $labels['ariallabelnewoptions'] = 'Параметры';
 $labels['note_defaultformat'] = 'Стандартный формат';
 $labels['note_yamls'] = 'Активировать YAML';
+$labels['note_rmedia_md'] = 'Автоматическое удаление встроенного мультимедиа с помощью файлов Markdown';
 ?>
