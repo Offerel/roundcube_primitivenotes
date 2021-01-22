@@ -18,5 +18,4 @@ $labels['note_formattxt'] = 'Pure Text';
 $labels['ariallabelnewoptions'] = 'Options';
 $labels['note_defaultformat'] = 'Default Format';
 $labels['note_yamls'] = 'Enable YAML';
-$labels['note_rmedia_md'] = 'Remove automatically embedded Media with Markdown Files';
 ?>
