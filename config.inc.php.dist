@@ -6,5 +6,4 @@ $config['default_format'] = 'md'; // default format, you can choose between 'htm
 $config['yaml_support'] = true;  // set to true, if you want enable yaml support
 $config['yaml_start'] = '---';  // the yaml header should starts as the first sign in a markdown note and is marked by default with '---'
 $config['yaml_end'] = '---';  // the signs which marks the end of the yaml header
-$config['rm_md_media'] = false;  // if set to yes, embedded media will be removed
 ?>

@@ -292,12 +292,12 @@ object {
 	margin: 0 0 -5px 0;
 	user-select: all;
 	width: unset;
-	background: #eed7d7;
+	background: #f8f8f8;
 	font-size: .92em;
-	font-family: Consolas,Monaco,monospace !important;
-	color: #e93700;
+	font-family: Consolas, Monaco, monospace !important;
+	color: #e96900;
 	padding: 2px 4px;
-	border-radius: 5px;
+	border-radius: 2px;
 	display: inline-block;
 	white-space: pre;
 }
@@ -323,7 +323,6 @@ object {
 }
 .editor-preview pre code {
 	color: unset;
-	background: unset;
 }
 .editor-preview {
     background: #fff;
