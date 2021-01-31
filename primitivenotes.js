@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 1.5.8
+ * @version 2.0.0
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -12,7 +12,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
     rcmail.register_command("deletenote", delete_note, !0);
     rcmail.register_command("sendnote", send_note, !0);
     rcmail.register_command("addnote", add_note, !0);
-    rcmail.register_command("htmlnote", new_note, !0);
     rcmail.register_command("mdnote", new_note, !0);
     rcmail.register_command("txtnote", new_note, !0);
 });
@@ -22,77 +21,77 @@ function add_note() {
 }
 
 function new_note(a) {
-    format = a ? a : rcmail.env.dformat;
-    $.ajax({
-        type: "POST",
-        url: "plugins/primitivenotes/notes.php",
-        data: {
-            editHeader: "1",
-            filename: ""
-        },
-        success: function(a) {
-            $("#notescontentframe").contents().find("div#main_header").html(a)
-        }
-    });
-    $.ajax({
-        type: "POST",
-        url: "plugins/primitivenotes/notes.php",
-        data: {
-            editNote: "1",
-            filename: "",
-            format: format
-        },
-        success: function(a) {
-            $("#notescontentframe").contents().find("div#main_area").html(a)
-        }
-    })
+	format = a ? a : rcmail.env.dformat;
+	let nname = document.createElement('input');
+	nname.id = 'note_name';
+	nname.name = nname.id;
+	nname.type = 'text';
+	nname.style = 'font-size: 2em';
+	nname.required = true;
+	nname.value = '';
+	$("#notescontentframe").contents().find("#headerTitle").replaceWith(nname);
+	$("#notescontentframe").contents().find("#note_name").replaceWith(nname);
+	$("#notescontentframe").contents().find("tags").addClass('edit');
+   
+    let tstate = {
+        tstate:false,
+        ttags:'',
+        editor:'new',
+    };
+    document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
+    $("#notescontentframe").contents().find("#note_name")[0].placeholder = rcmail.gettext("note_title", "primitivenotes");
 }
 
 function edit_note() {
-    var a = window.frames.notescontentframe.document.getElementById("fname").value,
-        b = a.substr(a.lastIndexOf(".") + 1);
-    $.ajax({
-        type: "POST",
-        url: "plugins/primitivenotes/notes.php",
-        data: {
-            editHeader: "1",
-            filename: a
-        },
-        success: function(a) {
-            $("#notescontentframe").contents().find("div#main_header").html(a)
-        }
-    });
-    0 <= ["html", "txt", "md"].indexOf(b) && $.ajax({
-        type: "POST",
-        url: "plugins/primitivenotes/notes.php",
-        data: {
-            editNote: "1",
-            filename: a
-        },
-        success: function(a) {
-            $("#notescontentframe").contents().find("div#main_area").html(a)
-        }
-    })
+	let nTitel = $("#notescontentframe").contents().find("#headerTitle");
+	let nname = document.createElement('input');
+	nname.id = 'note_name';
+	nname.name = nname.id;
+	nname.type = 'text';
+	nname.style = 'font-size: 2em';
+	nname.required = true;
+	nname.value = nTitel[0].innerText;
+	nTitel.replaceWith(nname);
+
+	let tstate = {
+		tstate:false,
+		editor:'edit',
+    };
+	document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
+	$("#notescontentframe").contents().find("tags").addClass('edit');
 }
 
 function delete_note() {
     var a = window.frames.notescontentframe.document.getElementById("fname").value,
-        b = window.frames.notescontentframe.document.getElementById("headerTitle").innerHTML,
+        b = window.frames.notescontentframe.document.getElementById("headerTitle").innerText,
         c = rcmail.gettext("note_del_note", "primitivenotes").replace("%note%", b);
     if (a && b)
-        if (confirm(c)) $.ajax({
-            url: "plugins/primitivenotes/notes.php",
-            type: "post",
-            data: {
-                delNote: "1",
-                mode: "delete",
-                fileid: a
-            },
-            success: function(a) {
-                document.getElementById("notescontentframe").src = "plugins/primitivenotes/notes.php"
-            }
-        });
-        else return !1
+		if (confirm(c)) 
+			$.ajax({
+				url: "plugins/primitivenotes/notes.php",
+				type: "post",
+				data: {
+					action: "delNote",
+					mode: "delete",
+					fileid: a
+				},
+				success: function(a) {
+					var result = JSON.parse(a);
+					if(result.data != "") {
+						if(confirm(result.message)) $.ajax({
+							url: "plugins/primitivenotes/notes.php",
+							type: "post",
+							data: {
+								action: "delMedia",
+								files: JSON.stringify(result.data)
+							}
+						});
+					}
+
+					document.getElementById("notescontentframe").src = "plugins/primitivenotes/notes.php"
+				}
+			});
+			else return !1
 }
 
 function send_note() {
