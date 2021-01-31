@@ -1,6 +1,9 @@
-### v1.5.9
+### v2.0.0
+- Added loader animation
+- Add option to remove media
+- Replaced tag library with [tagify v3.22.1](https://github.com/yairEO/tagify)
 - Removed HTML Format
-- Re-add option to remove media
+- Reduced http requests to speed up
   
 ### v1.5.8
 - Changed Markdown Editor to [EasyMD v2.13.0](https://github.com/ionaru/easy-markdown-editor)
