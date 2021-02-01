@@ -266,7 +266,7 @@ if(isset($_POST['action'])) {
 					error_log('PrimitiveNotes: '.$message);
 					die(json_encode($mArr));
 				} else {
-					if(count($mfiles) > 0) {
+					if($mfiles) {
 						$message = 'Found '.count($mfiles).' local media files in the note. Do you want to delete them now?';
 						error_log('PrimitiveNotes: '.$message.' Send remove request.');
 						$mArr = array('message' => $message, 'data' => $mfiles);
@@ -396,189 +396,9 @@ function read_note($id, $filename, $mode, $format) {
 	} elseif($filename != "" ) {
 		error_log('PrimitiveNotes: Error - Note not found. Please check your path configuration.');
 	}
-	/*
-	if($mode === 'edit') {
-		switch ($note['format']) {
-			case 'pdf':	$showNote = showBIN($note); break;
-			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;
-			case 'md': $showNote = editMD($note); break;
-			default:	$showNote = editTXT($note);
-		}
-	} else {
-		switch ($note['format']) {
-			case 'html':$showNote = showHTML($note); break;
-			case 'pdf':	$showNote = showBIN($note); break;
-			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;
-			case 'md':	$showNote = showMARKDOWN($note); break;		
-			default:	$showNote = showTXT($note);
-		}
-	}
-	*/
-	//die($showNote);
 	return $note;
 }
-/*
-function editTXT($note) {
-	return "<textarea id=\"txt\" data-set=\"txt\" name=\"editor1\">".$note['content']."</textarea>
-	<script>
-		document.getElementById('save_button').style.display = 'inline';
-	</script>";
-}
 
-function editMD($note) {
-	global $language, $default_format, $yh_begin, $yh_end;
-	$format = $note['format'];
-	if($format == "") $format = ($default_format != '') ? $default_format : 'md';
-	$content = $note['content'];
-	$yhb_pos = strpos($content, $yh_begin);
-	if(strlen($content) > strlen($yh_begin)) $yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
-	$output = "<textarea name=\"editor1\" id=\"$format\">".substr($content, $yhe_pos + strlen($yh_end))."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
-	$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form>
-	<script>
-		var mde = new EasyMDE({
-			element: document.getElementById('md'),
-			autoDownloadFontAwesome: false,
-			autofocus: true,
-			spellChecker: false,
-			autofocus: true,
-			status: false,
-			promptURLs: true,
-			//sideBySideFullscreen: false,
-			renderingConfig: {
-				codeSyntaxHighlighting: true,
-			},
-			toolbar: 	[{ name: 'Save',
-							action: saveFile,
-							className: 'fa fa-floppy-o',
-							title: 'Save',
-						}, '|',
-						'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
-						'code', 'quote', 'unordered-list', 'ordered-list', '|',
-						'link', 
-						{ name: 'Image',
-							action: uplInsertImage,
-							className: 'fa fa-picture-o',
-							title: 'Add image from URL',
-						},
-						{ name: 'Image',
-							action: uplLocalImage,
-							className: 'fa fa-file-image-o',
-							title: 'Upload and insert local image',
-						},
-						'table', '|',
-						'preview', 'side-by-side', 'fullscreen', 'guide', '|'	],
-			
-		});
-	
-		function simage() {
-			var allowed_extensions = new Array('jpg', 'jpeg', 'png');
-			var file_extension = document.getElementById('localimg').value.split('.').pop().toLowerCase();
-			for(var i = 0; i <= allowed_extensions.length; i++) {
-				if(allowed_extensions[i]==file_extension) {
-					var file_data = $('#localimg').prop('files')[0];
-					var formData = new FormData();
-					formData.append('localFile', file_data);
-					$.ajax({
-						type: 'POST'
-						,url: 'notes.php'
-						,dataType: 'text'
-						,cache: false
-						,contentType: false
-						,processData: false
-						,data: formData
-						,success: function(data){
-							pos = mde.codemirror.getCursor();
-							mde.codemirror.setSelection(pos, pos);
-							mde.codemirror.replaceSelection('![](' + data + ')');
-						}
-					});
-					return true;
-				}
-			}
-			alert('Unsupported file format');
-			return false;
-		}
-	
-		function saveFile(editor) {
-			document.getElementById('metah').submit();
-		}
-	
-		function uplLocalImage() {
-			document.getElementById('localimg').click();
-		}
-		
-		function uplInsertImage() {
-			var imageURL = prompt('URL of the image', '');
-			if(imageURL) {
-				$.ajax({
-					type: 'POST'
-					,url: 'notes.php'
-					,data: {
-						'uplImage': '1'
-						,'imageURL': imageURL
-					}
-					,success: function(data){
-						pos = mde.codemirror.getCursor();
-						mde.codemirror.setSelection(pos, pos);
-						mde.codemirror.replaceSelection('![](' + data + ')');
-					}
-				});
-			} else
-				return false;
-		}
-
-		document.onkeyup = function(e) {
-			if (e.which == 27) {
-				mde.togglePreview();
-			}
-			
-		};
-	</script>";
-	
-	return $output;
-}
-
-function showHTML($note) {
-	return "<div id=\"content\">".$note['content']."</div>";
-}
-
-function showBIN($note) {
-	$base64 = base64_encode($note['content']);
-	if($note['format']==='pdf') $pdf_style = "style=\"width: 100%; height: 100%;\"";
-	return "<input type=\"hidden\" name=\"ftype\" value=\"".$note['format']."\"><div style=\"overflow: auto; max-width: 100%; max-height: 100%\"><object $pdf_style data=\"data:".$note['mime_type'].";base64,$base64\" type=\"".$note['mime_type']."\" ></object></div>";
-}
-
-function showTXT($note) {
-	return "<textarea id=\"".$note['format']."\" readonly=\"readonly\">".$note['content']."</textarea>";
-}
-
-function showMARKDOWN($note) {
-	return "<textarea id=\"md\">".$note['content']."</textarea>
-	<script>
-	if (document.getElementById('md')) {
-			var mde = new EasyMDE({
-				element: document.getElementById('md'),
-				status: false,
-				toolbar: false,
-				autoDownloadFontAwesome: false,
-				spellChecker: false,
-				renderingConfig: {
-					codeSyntaxHighlighting: true,
-				},
-			});
-			mde.togglePreview();
-		}
-		
-		$('.tlink').on('click', function(e) {
-			e.preventDefault();
-			content = $(this).attr('href')
-			$('#main_area').html('<iframe src=\'' + content + '\' style=\'border: none; width: 100%; height: 100%\'></iframe>');
-		});
-		</script>";
-}
-*/
 function human_filesize($bytes, $decimals = 2) {
   $sz = 'BKMGTP';
   $factor = round((strlen($bytes) - 1) / 3);
@@ -619,7 +439,7 @@ function human_filesize($bytes, $decimals = 2) {
 			<div class="filelist" id="entrylist">
 				<ul id="filelist">
 				<?PHP
-				if(is_array($files) && count($files) > 0) {
+				if(is_array($files) && $files) {
 					foreach ($files as $fentry) {
 						if(strlen($fentry['name']) > 0 ) {
 							$fsize = human_filesize($fentry['size'], 2);

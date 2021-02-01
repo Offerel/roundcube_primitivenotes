@@ -37,8 +37,6 @@ $(document).ready(function(){
         element: document.getElementById('editor1'),
         autoDownloadFontAwesome: false,
 		autofocus: true,
-		//autosave: true,
-		//forceSync: true,
         spellChecker: false,
         autofocus: true,
         status: false,
@@ -119,17 +117,7 @@ $(document).ready(function(){
 					let bSeperator = document.createElement('i');
 					bSeperator.classList.add("separator");
 					toolbar.appendChild(bSeperator);
-/*
-					let bUndo = document.createElement('li');
-					bUndo.id = 'bUndo';
-					bUndo.classList.add("fa", "fa-undo");
-					toolbar.appendChild(bUndo);
 
-					let bRedo = document.createElement('li');
-					bRedo.id = 'bRedo';
-					bRedo.classList.add("fa", "fa-repeat", "fa-redo");
-					toolbar.appendChild(bRedo);
-*/
 					editor.parentNode.insertBefore(toolbar, editor);
 					document.querySelector('.EasyMDEContainer').style = 'display: none';
 					editor.style = 'display: block';
@@ -194,7 +182,7 @@ $(document).ready(function(){
     function showNote(id) {
 		document.querySelector('#main_area .editor-toolbar').style.display = 'none';
 		if(document.getElementById('atoolbar')) document.getElementById('atoolbar').remove();
-		
+
         let loader = document.createElement("div");
 		loader.classList.add("db-spinner");
 		loader.id = "db-spinner";
