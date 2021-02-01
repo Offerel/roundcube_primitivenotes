@@ -1,6 +1,7 @@
 ### v2.0.0
 - Added loader animation
-- Add option to remove media
+- Added option to remove media
+- Added Option to disable displayed formats
 - Replaced tag library with [tagify v3.22.1](https://github.com/yairEO/tagify)
 - Removed HTML Format
 - Reduced http requests to speed up

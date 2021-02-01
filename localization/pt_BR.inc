@@ -15,6 +15,12 @@ $labels['note_subject'] = 'Enviando por e-mail: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Remarcar';
 $labels['note_formattxt'] = 'Texto puro';
+$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Opções';
-$labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada com arquivos Markdown';
+$labels['note_defaultformat'] = 'Default Format';
+$labels['note_listformat'] = 'Displayed Formats';
+$labels['note_yamls'] = 'Enable YAML';
+$labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada';
 ?>

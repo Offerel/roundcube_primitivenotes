@@ -91,7 +91,7 @@ if(is_dir($notes_path) && !isset($_POST['action']) || $_POST['action'] == 'getTa
 			if (is_file($notes_path.$file)) {
 				$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
 				$ext = pathinfo($notes_path.$file,PATHINFO_EXTENSION);
-				$supported_ext = array("md", "html", "txt", "pdf", "jpg", "png");
+				$supported_ext = $rcmail->config->get('list_formats', false);
 				if(in_array($ext,$supported_ext)) {				
 					$tags = null;
 					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
@@ -444,7 +444,7 @@ function human_filesize($bytes, $decimals = 2) {
 						if(strlen($fentry['name']) > 0 ) {
 							$fsize = human_filesize($fentry['size'], 2);
 							if(is_array($fentry['tags'])) {
-								$tlist = implode(" ",$fentry['tags']);
+								$tlist = implode(", ",$fentry['tags']);
 								$tlist = "<span id=\"taglist\">$tlist</span>";
 							} else
 								$tlist = "";
