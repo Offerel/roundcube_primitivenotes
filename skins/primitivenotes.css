@@ -485,8 +485,8 @@ tags.edit:focus-within {
 	font-size: 0.8em;
 }
 .db-spinner {
-	width: 50px;
-	height: 50px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	background-color: transparent;
 	border: 10px solid #2229;
