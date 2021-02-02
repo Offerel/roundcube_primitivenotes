@@ -15,8 +15,12 @@ $labels['note_subject'] = 'Enviar por correo: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
 $labels['note_formattxt'] = 'Texto Plano';
+$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Opciones';
 $labels['note_defaultformat'] = 'Formato estándar';
+$labels['note_listformat'] = 'Formatos mostrados';
 $labels['note_yamls'] = 'Activa YAML';
-$labels['note_rmedia_md'] = 'Elimina automáticamente los medios incrustados con Markdown Files';
+$labels['note_rmedia_md'] = 'Elimina automáticamente los medios incrustados';
 ?>

@@ -60,6 +60,14 @@ class primitivenotes extends rcube_plugin
 		$p['blocks']['main']['options']['default_format'] = array(
 														'title'=> html::label($field_id, $this->gettext('note_defaultformat')),
 														'content'=> $select->show($rcmail->config->get('default_format')));
+
+		$field_id='list_formats';
+		$selectf   = new html_select(array('multiple' => true, 'name' => 'list_formats[]', 'id' => $field_id));
+		foreach (array('md', 'html', 'txt', 'pdf', 'jpg', 'png') as $mf) {$selectf->add($this->gettext('note_format'.$mf), $mf);}
+		$p['blocks']['main']['options']['list_formats'] = array(
+														'title'=> html::label($field_id, $this->gettext('note_listformat')),
+														'content'=> $selectf->show($rcmail->config->get('list_formats')));
+
 		$field_id='yaml_support';
 		$input = new html_checkbox(array(	'name'	=> 'yaml_support',
 											'id'	=> 'yaml_support',
@@ -81,6 +89,7 @@ class primitivenotes extends rcube_plugin
 		if ($p['section'] == 'primitivenotes') {
 			$p['prefs'] = array(
 				'default_format'	=> strval(rcube_utils::get_input_value('default_format', rcube_utils::INPUT_POST)),
+				'list_formats'		=> rcube_utils::get_input_value('list_formats', rcube_utils::INPUT_POST),
 				'yaml_support'		=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST)),
 				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST))
 				);

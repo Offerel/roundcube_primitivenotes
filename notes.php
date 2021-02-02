@@ -91,7 +91,7 @@ if(is_dir($notes_path) && !isset($_POST['action']) || $_POST['action'] == 'getTa
 			if (is_file($notes_path.$file)) {
 				$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
 				$ext = pathinfo($notes_path.$file,PATHINFO_EXTENSION);
-				$supported_ext = array("md", "html", "txt", "pdf", "jpg", "png");
+				$supported_ext = $rcmail->config->get('list_formats', false);
 				if(in_array($ext,$supported_ext)) {				
 					$tags = null;
 					$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
@@ -187,11 +187,7 @@ if(isset($_POST['action'])) {
 			break;
 		case 'editNote':
 			$note_name = ($_POST['note_name'] != "") ? filter_var($_POST['note_name'], FILTER_SANITIZE_STRING) : "new_unknown_note";
-			$tagp = json_decode($_POST['ntags'],true);
-			$note_tags = [];
-			foreach($tagp as $value) {
-				$note_tags[] = $value['value'];
-			}
+			$note_tags = $_POST['ntags'];
 			asort($note_tags, SORT_LOCALE_STRING | SORT_FLAG_CASE );
 			$note_content = $_POST['editor1'];
 			$old_name = filter_var($_POST['fname'], FILTER_SANITIZE_STRING);
@@ -235,17 +231,18 @@ if(isset($_POST['action'])) {
 			}
 			$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 			if(file_exists($notes_path.$old_name)) {
-				if($old_name != $new_name) rename($notes_path.$old_name, $notes_path.$new_name);
+				if($old_name != $new_name) 
+					if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
 			} elseif ($old_name != "") {
 				error_log('PrimitiveNotes: Note not found, can\`t save note.');
+				die('Note not found, can\`t save note.');
 			}
 
 			$save_allowed = array("txt", "md");	
 			if(in_array($note_type,$save_allowed)) {
-				$note_file = fopen ($notes_path.$new_name, "w");
-				$content = fwrite($note_file, $note_content);
-				fclose ($note_file);
+				if(!file_put_contents($notes_path.$new_name,$note_content,true)) die('Could not save note.');
 			}
+			die();
 			break;
 		case 'delNote':
 			$file = $notes_path.$_POST["fileid"];
@@ -266,7 +263,7 @@ if(isset($_POST['action'])) {
 					error_log('PrimitiveNotes: '.$message);
 					die(json_encode($mArr));
 				} else {
-					if(count($mfiles) > 0) {
+					if($mfiles) {
 						$message = 'Found '.count($mfiles).' local media files in the note. Do you want to delete them now?';
 						error_log('PrimitiveNotes: '.$message.' Send remove request.');
 						$mArr = array('message' => $message, 'data' => $mfiles);
@@ -377,16 +374,15 @@ function read_note($id, $filename, $mode, $format) {
 				$yhe_pos = strlen($scontent) >= strlen($yh_begin) ? strpos($scontent, $yh_end, strlen($yh_begin)) : 0;
 				if($yhb_pos == 0 && $yhe_pos > 0) $scontent = substr($scontent,$yhe_pos + strlen($yh_end));
 			}
-		} else
+		} else {
 			$scontent = $fcontent;
+		}
 
 		$mime_type = mime_content_type($file);
-
 		$scontent = (substr($mime_type, 0, 4) == 'text') ? $scontent:base64_encode($scontent);
-
 		$note = array(
 			'name'		=> substr($filename, 0, stripos($filename, "[")),
-			'content'	=> $scontent,
+			'content'	=> trim($scontent),
 			'format'	=> $format,
 			'id'		=> $id,
 			'mime_type'	=> $mime_type,
@@ -396,189 +392,9 @@ function read_note($id, $filename, $mode, $format) {
 	} elseif($filename != "" ) {
 		error_log('PrimitiveNotes: Error - Note not found. Please check your path configuration.');
 	}
-	/*
-	if($mode === 'edit') {
-		switch ($note['format']) {
-			case 'pdf':	$showNote = showBIN($note); break;
-			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;
-			case 'md': $showNote = editMD($note); break;
-			default:	$showNote = editTXT($note);
-		}
-	} else {
-		switch ($note['format']) {
-			case 'html':$showNote = showHTML($note); break;
-			case 'pdf':	$showNote = showBIN($note); break;
-			case 'jpg': $showNote = showBIN($note); break;
-			case 'png': $showNote = showBIN($note); break;
-			case 'md':	$showNote = showMARKDOWN($note); break;		
-			default:	$showNote = showTXT($note);
-		}
-	}
-	*/
-	//die($showNote);
 	return $note;
 }
-/*
-function editTXT($note) {
-	return "<textarea id=\"txt\" data-set=\"txt\" name=\"editor1\">".$note['content']."</textarea>
-	<script>
-		document.getElementById('save_button').style.display = 'inline';
-	</script>";
-}
 
-function editMD($note) {
-	global $language, $default_format, $yh_begin, $yh_end;
-	$format = $note['format'];
-	if($format == "") $format = ($default_format != '') ? $default_format : 'md';
-	$content = $note['content'];
-	$yhb_pos = strpos($content, $yh_begin);
-	if(strlen($content) > strlen($yh_begin)) $yhe_pos = strpos($content, $yh_end, strlen($yh_begin));
-	$output = "<textarea name=\"editor1\" id=\"$format\">".substr($content, $yhe_pos + strlen($yh_end))."</textarea><input id=\"ftype\" name=\"ftype\" type=\"hidden\" value=\"$format\" />";
-	$output.="<form id='imgFile' ><input type='file' id='localimg' name='localimg' style='display: none' onchange='simage();'></form>
-	<script>
-		var mde = new EasyMDE({
-			element: document.getElementById('md'),
-			autoDownloadFontAwesome: false,
-			autofocus: true,
-			spellChecker: false,
-			autofocus: true,
-			status: false,
-			promptURLs: true,
-			//sideBySideFullscreen: false,
-			renderingConfig: {
-				codeSyntaxHighlighting: true,
-			},
-			toolbar: 	[{ name: 'Save',
-							action: saveFile,
-							className: 'fa fa-floppy-o',
-							title: 'Save',
-						}, '|',
-						'undo', 'redo', '|', 'bold', 'italic', 'strikethrough','clean-block', '|', 'heading', 'heading-smaller', 'heading-bigger', '|',
-						'code', 'quote', 'unordered-list', 'ordered-list', '|',
-						'link', 
-						{ name: 'Image',
-							action: uplInsertImage,
-							className: 'fa fa-picture-o',
-							title: 'Add image from URL',
-						},
-						{ name: 'Image',
-							action: uplLocalImage,
-							className: 'fa fa-file-image-o',
-							title: 'Upload and insert local image',
-						},
-						'table', '|',
-						'preview', 'side-by-side', 'fullscreen', 'guide', '|'	],
-			
-		});
-	
-		function simage() {
-			var allowed_extensions = new Array('jpg', 'jpeg', 'png');
-			var file_extension = document.getElementById('localimg').value.split('.').pop().toLowerCase();
-			for(var i = 0; i <= allowed_extensions.length; i++) {
-				if(allowed_extensions[i]==file_extension) {
-					var file_data = $('#localimg').prop('files')[0];
-					var formData = new FormData();
-					formData.append('localFile', file_data);
-					$.ajax({
-						type: 'POST'
-						,url: 'notes.php'
-						,dataType: 'text'
-						,cache: false
-						,contentType: false
-						,processData: false
-						,data: formData
-						,success: function(data){
-							pos = mde.codemirror.getCursor();
-							mde.codemirror.setSelection(pos, pos);
-							mde.codemirror.replaceSelection('![](' + data + ')');
-						}
-					});
-					return true;
-				}
-			}
-			alert('Unsupported file format');
-			return false;
-		}
-	
-		function saveFile(editor) {
-			document.getElementById('metah').submit();
-		}
-	
-		function uplLocalImage() {
-			document.getElementById('localimg').click();
-		}
-		
-		function uplInsertImage() {
-			var imageURL = prompt('URL of the image', '');
-			if(imageURL) {
-				$.ajax({
-					type: 'POST'
-					,url: 'notes.php'
-					,data: {
-						'uplImage': '1'
-						,'imageURL': imageURL
-					}
-					,success: function(data){
-						pos = mde.codemirror.getCursor();
-						mde.codemirror.setSelection(pos, pos);
-						mde.codemirror.replaceSelection('![](' + data + ')');
-					}
-				});
-			} else
-				return false;
-		}
-
-		document.onkeyup = function(e) {
-			if (e.which == 27) {
-				mde.togglePreview();
-			}
-			
-		};
-	</script>";
-	
-	return $output;
-}
-
-function showHTML($note) {
-	return "<div id=\"content\">".$note['content']."</div>";
-}
-
-function showBIN($note) {
-	$base64 = base64_encode($note['content']);
-	if($note['format']==='pdf') $pdf_style = "style=\"width: 100%; height: 100%;\"";
-	return "<input type=\"hidden\" name=\"ftype\" value=\"".$note['format']."\"><div style=\"overflow: auto; max-width: 100%; max-height: 100%\"><object $pdf_style data=\"data:".$note['mime_type'].";base64,$base64\" type=\"".$note['mime_type']."\" ></object></div>";
-}
-
-function showTXT($note) {
-	return "<textarea id=\"".$note['format']."\" readonly=\"readonly\">".$note['content']."</textarea>";
-}
-
-function showMARKDOWN($note) {
-	return "<textarea id=\"md\">".$note['content']."</textarea>
-	<script>
-	if (document.getElementById('md')) {
-			var mde = new EasyMDE({
-				element: document.getElementById('md'),
-				status: false,
-				toolbar: false,
-				autoDownloadFontAwesome: false,
-				spellChecker: false,
-				renderingConfig: {
-					codeSyntaxHighlighting: true,
-				},
-			});
-			mde.togglePreview();
-		}
-		
-		$('.tlink').on('click', function(e) {
-			e.preventDefault();
-			content = $(this).attr('href')
-			$('#main_area').html('<iframe src=\'' + content + '\' style=\'border: none; width: 100%; height: 100%\'></iframe>');
-		});
-		</script>";
-}
-*/
 function human_filesize($bytes, $decimals = 2) {
   $sz = 'BKMGTP';
   $factor = round((strlen($bytes) - 1) / 3);
@@ -609,7 +425,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
-		<script src="notes.js" type="text/javascript" charset="utf-8"></script>
+		<script src="notes.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;">
 		<div id="sidebar" class="uibox listbox">
@@ -619,12 +435,12 @@ function human_filesize($bytes, $decimals = 2) {
 			<div class="filelist" id="entrylist">
 				<ul id="filelist">
 				<?PHP
-				if(is_array($files) && count($files) > 0) {
+				if(is_array($files) && $files) {
 					foreach ($files as $fentry) {
 						if(strlen($fentry['name']) > 0 ) {
 							$fsize = human_filesize($fentry['size'], 2);
 							if(is_array($fentry['tags'])) {
-								$tlist = implode(" ",$fentry['tags']);
+								$tlist = implode(", ",$fentry['tags']);
 								$tlist = "<span id=\"taglist\">$tlist</span>";
 							} else
 								$tlist = "";

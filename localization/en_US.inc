@@ -14,9 +14,13 @@ $labels['note_del_note'] = 'Do you really want to delete "%note%"?';
 $labels['note_subject'] = 'Send by e-mail: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
-$labels['note_formattxt'] = 'Pure Text';
+$labels['note_formattxt'] = 'Plain Text';
+$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Options';
 $labels['note_defaultformat'] = 'Default Format';
+$labels['note_listformat'] = 'Displayed Formats';
 $labels['note_yamls'] = 'Enable YAML';
-$labels['note_rmedia_md'] = 'Remove automatically embedded Media with Markdown Files';
+$labels['note_rmedia_md'] = 'Remove automatically embedded Media';
 ?>
