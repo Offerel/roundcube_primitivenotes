@@ -15,7 +15,12 @@ $labels['note_subject'] = 'Per E-Mail senden: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
 $labels['note_formattxt'] = 'Normaler Text';
+$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Optionen';
 $labels['note_defaultformat'] = 'Standard Format';
+$labels['note_listformat'] = 'Angezeigte Formate';
 $labels['note_yamls'] = 'Aktiviere YAML';
+$labels['note_rmedia_md'] = 'Eingbettete Medien automatisch löschen';
 ?>
