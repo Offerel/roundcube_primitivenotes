@@ -160,7 +160,7 @@ class primitivenotes extends rcube_plugin
 
 	function content($attrib) {
 		$rcmail = rcmail::get_instance();
-		$this->include_script('primitivenotes.js');
+		$this->include_script('js/primitivenotes.js');
 		$attrib['src'] = 'plugins/primitivenotes/notes.php';
 		if (empty($attrib['id'])) $attrib['id'] = 'rcmailnotescontent';
 		$attrib['name'] = $attrib['id'];
