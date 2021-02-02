@@ -187,11 +187,7 @@ if(isset($_POST['action'])) {
 			break;
 		case 'editNote':
 			$note_name = ($_POST['note_name'] != "") ? filter_var($_POST['note_name'], FILTER_SANITIZE_STRING) : "new_unknown_note";
-			$tagp = json_decode($_POST['ntags'],true);
-			$note_tags = [];
-			foreach($tagp as $value) {
-				$note_tags[] = $value['value'];
-			}
+			$note_tags = $_POST['ntags'];
 			asort($note_tags, SORT_LOCALE_STRING | SORT_FLAG_CASE );
 			$note_content = $_POST['editor1'];
 			$old_name = filter_var($_POST['fname'], FILTER_SANITIZE_STRING);
@@ -246,6 +242,7 @@ if(isset($_POST['action'])) {
 				$content = fwrite($note_file, $note_content);
 				fclose ($note_file);
 			}
+			die();
 			break;
 		case 'delNote':
 			$file = $notes_path.$_POST["fileid"];
@@ -377,16 +374,15 @@ function read_note($id, $filename, $mode, $format) {
 				$yhe_pos = strlen($scontent) >= strlen($yh_begin) ? strpos($scontent, $yh_end, strlen($yh_begin)) : 0;
 				if($yhb_pos == 0 && $yhe_pos > 0) $scontent = substr($scontent,$yhe_pos + strlen($yh_end));
 			}
-		} else
+		} else {
 			$scontent = $fcontent;
+		}
 
 		$mime_type = mime_content_type($file);
-
 		$scontent = (substr($mime_type, 0, 4) == 'text') ? $scontent:base64_encode($scontent);
-
 		$note = array(
 			'name'		=> substr($filename, 0, stripos($filename, "[")),
-			'content'	=> $scontent,
+			'content'	=> trim($scontent),
 			'format'	=> $format,
 			'id'		=> $id,
 			'mime_type'	=> $mime_type,

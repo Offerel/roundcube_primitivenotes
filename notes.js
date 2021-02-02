@@ -251,7 +251,6 @@ $(document).ready(function(){
 				document.querySelector('.EasyMDEContainer').style = 'display: block;';
 				document.getElementById('editor1').style = 'display none;';
 				mde.value(note.content);
-				
 				document.getElementById('editor1').value = note.content;
 				
 				if(note.mime_type.substr(0, 4) == 'text') {
@@ -346,9 +345,36 @@ $(document).ready(function(){
     }
 
     function saveFile(editor) {
-		document.getElementById('action').value = "editNote";
-		document.getElementById('metah').submit();
-		location.reload();
+		let fname = document.getElementById('fname').value;
+		let extb = fname.lastIndexOf('.') + 1;
+
+		let tags = tagify.value;
+		let tArr = [];
+		for (let tag in tags) {
+			tArr.push(tags[tag].value);
+		}
+		
+		$.ajax({
+			type: 'POST',
+			url: 'notes.php',
+			data: {
+				action: "editNote",
+				note_name: document.getElementById('note_name').value,
+				fname: fname,
+				ntags: tArr,
+				editor1: mde.value,
+				ftype: fname.substr(extb),
+			},
+			success: function(response){
+				if(response == '') {
+					console.log('Note saved successfully');
+					location.reload();
+				}
+				else
+					alert(response);
+			}
+		});
+		
     }
 
     function uplLocalImage() {

@@ -407,6 +407,13 @@ object {
 	white-space: nowrap;
 	border-style: solid;
 }
+.editor-preview img {
+	display: block;
+	max-width: 860px;
+}
+.editor-preview p > img {
+	display: initial;
+}
 .EasyMDEContainer .CodeMirror {
     position: inherit;
     border: 0;
