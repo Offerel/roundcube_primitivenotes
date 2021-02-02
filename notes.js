@@ -154,6 +154,13 @@ $(document).ready(function(){
 				mde.togglePreview();
 				document.querySelector('#main_area .editor-toolbar').style.display = 'none';
 				document.getElementById('estate').value = 's';
+				let headerTitle = document.createElement('span');
+				headerTitle.id = 'headerTitle';
+				headerTitle.classList.add('headerTitle');
+				headerTitle.innerText = document.getElementById('note_name').value;
+				document.querySelector('#main_header #note_name').replaceWith(headerTitle);
+				document.querySelector('tags').classList.remove('edit');
+				tagify.setReadonly(true);
 			}
 		}
 	});
