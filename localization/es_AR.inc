@@ -20,7 +20,7 @@ $labels['note_formatjpg'] = 'JPG';
 $labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Opciones';
 $labels['note_defaultformat'] = 'Formato estándar';
-$labels['note_listformat'] = 'Displayed Formats';
+$labels['note_listformat'] = 'Formatos mostrados';
 $labels['note_yamls'] = 'Activa YAML';
 $labels['note_rmedia_md'] = 'Elimina automáticamente los medios incrustados';
 ?>

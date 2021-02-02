@@ -19,8 +19,8 @@ $labels['note_formatpdf'] = 'Adobe PDF';
 $labels['note_formatjpg'] = 'JPG';
 $labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Opções';
-$labels['note_defaultformat'] = 'Default Format';
-$labels['note_listformat'] = 'Displayed Formats';
-$labels['note_yamls'] = 'Enable YAML';
+$labels['note_defaultformat'] = 'Formato Padrão';
+$labels['note_listformat'] = 'Formatos Exibidos';
+$labels['note_yamls'] = 'Habilitar YAML';
 $labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada';
 ?>

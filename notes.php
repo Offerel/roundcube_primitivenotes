@@ -231,16 +231,16 @@ if(isset($_POST['action'])) {
 			}
 			$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 			if(file_exists($notes_path.$old_name)) {
-				if($old_name != $new_name) rename($notes_path.$old_name, $notes_path.$new_name);
+				if($old_name != $new_name) 
+					if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
 			} elseif ($old_name != "") {
 				error_log('PrimitiveNotes: Note not found, can\`t save note.');
+				die('Note not found, can\`t save note.');
 			}
 
 			$save_allowed = array("txt", "md");	
 			if(in_array($note_type,$save_allowed)) {
-				$note_file = fopen ($notes_path.$new_name, "w");
-				$content = fwrite($note_file, $note_content);
-				fclose ($note_file);
+				if(!file_put_contents($notes_path.$new_name,$note_content,true)) die('Could not save note.');
 			}
 			die();
 			break;

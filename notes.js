@@ -210,8 +210,9 @@ $(document).ready(function(){
     function showNote(id) {
 		document.querySelector('#main_area .editor-toolbar').style.display = 'none';
 		if(document.getElementById('atoolbar')) document.getElementById('atoolbar').remove();
+		if(document.getElementById('tbutton')) document.getElementById('tbutton').remove();
 
-        let loader = document.createElement("div");
+		let loader = document.createElement("div");
 		loader.classList.add("db-spinner");
 		loader.id = "db-spinner";
 		document.getElementById("main").appendChild(loader);
@@ -352,6 +353,11 @@ $(document).ready(function(){
     }
 
     function saveFile(editor) {
+		let loader = document.createElement("div");
+		loader.classList.add("db-spinner");
+		loader.id = "db-spinner";
+		document.getElementById("main").appendChild(loader);
+
 		let fname = document.getElementById('fname').value;
 		let extb = fname.lastIndexOf('.') + 1;
 
@@ -376,9 +382,10 @@ $(document).ready(function(){
 				if(response == '') {
 					console.log('Note saved successfully');
 					location.reload();
-				}
-				else
+				} else
 					alert(response);
+
+				loader.remove();
 			}
 		});
 		
