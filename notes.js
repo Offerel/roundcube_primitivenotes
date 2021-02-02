@@ -32,28 +32,7 @@ $(document).ready(function(){
 			tagify.settings.whitelist = JSON.parse(data);
 		}
 	});
-/*
-	var renderer = new marked.Renderer();
-	var toc = [];
 
-	renderer.heading = function(text, level, raw) {
-		var anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-');
-		toc.push({
-			anchor: anchor,
-			level: level,
-			text: text
-		});
-		return '<h'
-			+ level
-			+ ' id="'
-			+ anchor
-			+ '">'
-			+ text
-			+ '</h'
-			+ level
-			+ '>\n';
-	};
-*/
     var mde = new EasyMDE({
         element: document.getElementById('editor1'),
         autoDownloadFontAwesome: false,
