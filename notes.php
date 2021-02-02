@@ -429,7 +429,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
-		<script src="notes.js" type="text/javascript" charset="utf-8"></script>
+		<script src="notes.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;">
 		<div id="sidebar" class="uibox listbox">

@@ -32,7 +32,28 @@ $(document).ready(function(){
 			tagify.settings.whitelist = JSON.parse(data);
 		}
 	});
+/*
+	var renderer = new marked.Renderer();
+	var toc = [];
 
+	renderer.heading = function(text, level, raw) {
+		var anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-');
+		toc.push({
+			anchor: anchor,
+			level: level,
+			text: text
+		});
+		return '<h'
+			+ level
+			+ ' id="'
+			+ anchor
+			+ '">'
+			+ text
+			+ '</h'
+			+ level
+			+ '>\n';
+	};
+*/
     var mde = new EasyMDE({
         element: document.getElementById('editor1'),
         autoDownloadFontAwesome: false,
@@ -41,9 +62,9 @@ $(document).ready(function(){
         autofocus: true,
         status: false,
         promptURLs: true,
-        //sideBySideFullscreen: false,
+		//sideBySideFullscreen: false,
         renderingConfig: {
-            codeSyntaxHighlighting: true,
+			codeSyntaxHighlighting: true,
         },
         toolbar: 	[{ name: 'Save',
                         action: saveFile,
@@ -212,6 +233,7 @@ $(document).ready(function(){
 
 				if(document.getElementById('bcontent')) document.getElementById('bcontent').remove();
 				document.querySelector('.EasyMDEContainer').classList.remove('EasyMDEContainerH');
+				if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 				
                 let headerTitle = document.createElement('span');
                 headerTitle.id = 'headerTitle';
@@ -236,7 +258,46 @@ $(document).ready(function(){
 					if(document.getElementById('estate').value == 'e') {
 						document.getElementById('estate').value = 's';
 						mde.togglePreview();
-					}					
+					}
+					var headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+					if(headings.length > 0) {
+						let tbutton = document.createElement('button');
+						tbutton.id = 'tbutton';
+						tbutton.innerText = 'ToC';
+						document.getElementById('main_header').appendChild(tbutton);
+
+						let tocdiv = document.createElement('div');
+						tocdiv.id = 'tocdiv';
+						let o = 0;
+						let a = 0;
+						let list = 'c%';
+						headings.forEach(function(element){
+							a = element.tagName.substr(1,1);
+							if(o < a) {
+								list = list.replace('c%','<li><ul><li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%</ul></li>');
+							} else if(o > a) {
+								list = list.replace('c%','</ul><li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%');
+							} else {
+								list = list.replace('c%','<li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%');
+							}
+							o = a;
+						});
+						list = list.replace('c%</ul>','');
+						tocdiv.innerHTML = list;
+
+						tbutton.addEventListener('click', function(e) {
+							e.preventDefault();
+							tocdiv.classList.toggle('tdhidden');
+						});
+
+						document.querySelector('.EasyMDEContainer').appendChild(tocdiv);
+
+						document.querySelectorAll('#tocdiv a').forEach(function(elem) {
+							elem.addEventListener('click', function(){
+								tocdiv.classList.toggle('tdhidden');
+							});
+						});
+					}
 				} else {
 					let bcontent = document.createElement('object');
 					bcontent.data = 'data:' + note.mime_type + ';base64,' + note.content;
@@ -286,7 +347,8 @@ $(document).ready(function(){
 
     function saveFile(editor) {
 		document.getElementById('action').value = "editNote";
-        document.getElementById('metah').submit();
+		document.getElementById('metah').submit();
+		location.reload();
     }
 
     function uplLocalImage() {

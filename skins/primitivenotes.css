@@ -517,3 +517,56 @@ tags.edit:focus-within {
         transform: rotate(360deg);
     }
 }
+#tocdiv {
+	position: fixed;
+	z-index: 10;
+	background: #efefef;
+	width: 300px;
+	top: 77px;
+	right: -310px;
+	white-space: nowrap;
+	padding: 10px 0;
+	box-shadow: 1px 3px 3px 0 rgba(50,50,50,.3);
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border: 1px solid #bbb;
+	border-top: 0;
+	overflow: auto;
+	max-height: calc(100% - 140px);
+}
+#tocdiv.tdhidden {
+	right: 26px;
+}
+#tbutton {
+	position: absolute;
+	z-index: 100;
+	top: 15px;
+	right: 10px;
+	background: #f4f4f4;
+	border: 1px solid #ced4da;
+	border-radius: 5px;
+	cursor: pointer;
+	color: #535252;
+	font-size: .8em;
+	padding: 3px;
+	outline: 0;
+	box-shadow: revert;
+}
+#tocdiv ul {
+	margin: 0;
+	padding-left: 20px;
+}
+#tocdiv li {
+	list-style: none;
+	padding-right: 10px;
+}
+#tocdiv a {
+	color: #42b983;
+	text-decoration: none;
+	font-weight: bolder;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 100%;
+	display: inline-block;
+	font-size: 0.9em;
+}

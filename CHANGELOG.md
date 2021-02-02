@@ -2,6 +2,7 @@
 - Added loader animation
 - Added option to remove media
 - Added Option to disable displayed formats
+- Added automatic ToC creation
 - Replaced tag library with [tagify v3.22.1](https://github.com/yairEO/tagify)
 - Removed HTML Format
 - Reduced http requests to speed up
