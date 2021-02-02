@@ -32,6 +32,7 @@ function new_note(a) {
 	$("#notescontentframe").contents().find("#headerTitle").replaceWith(nname);
 	$("#notescontentframe").contents().find("#note_name").replaceWith(nname);
 	$("#notescontentframe").contents().find("tags").addClass('edit');
+	$("#notescontentframe").contents().find("#tbutton").remove();
    
     let tstate = {
         tstate:false,
@@ -44,6 +45,7 @@ function new_note(a) {
 
 function edit_note() {
 	let nTitel = $("#notescontentframe").contents().find("#headerTitle");
+	$("#notescontentframe").contents().find("#tbutton").remove();
 	let nname = document.createElement('input');
 	nname.id = 'note_name';
 	nname.name = nname.id;
