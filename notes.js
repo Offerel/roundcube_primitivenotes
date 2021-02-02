@@ -369,7 +369,7 @@ $(document).ready(function(){
 				note_name: document.getElementById('note_name').value,
 				fname: fname,
 				ntags: tArr,
-				editor1: mde.value,
+				editor1: mde.value(),
 				ftype: fname.substr(extb),
 			},
 			success: function(response){
