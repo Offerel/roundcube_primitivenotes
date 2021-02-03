@@ -1,6 +1,6 @@
 ### v2.0.1
 - Remove ToC button in edit mode
-- Fix for creating new notes
+- Fix for creating new notes	s
   
 ### v2.0.0
 - Added loader animation
