@@ -13,7 +13,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
     rcmail.register_command("sendnote", send_note, !0);
     rcmail.register_command("addnote", add_note, !0);
     rcmail.register_command("mdnote", new_note, !0);
-	rcmail.register_command("txtnote", new_note, !0);
+	  rcmail.register_command("txtnote", new_note, !0);
 	document.getElementById('upl').addEventListener('change', sform, false );
 });
 
@@ -38,8 +38,8 @@ function new_note(a) {
     let tstate = {
         tstate:false,
         ttags:'',
-		editor:'new',
-		format:format,
+		    editor:'new',
+		    format:format,
     };
     document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
 	$("#notescontentframe").contents().find("#note_name")[0].placeholder = rcmail.gettext("note_title", "primitivenotes");
