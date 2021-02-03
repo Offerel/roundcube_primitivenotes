@@ -3,36 +3,29 @@
 <h1 class="voice"><roundcube:label name="primitivenotes.notes" /></h1>
 <div id="content" class="content selected" role="main">
 	<div class="header">
-		<a class="button icon menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
-		<div id="notestoolbar" class="toolbar" role="toolbar">
-			<span class="dropbutton">
-				<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
-				<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
+		<ul class="menu toolbar listing iconized">
+			<li role="menuitem">
+				<span class="dropbutton active">
+					<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
+					<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
 				</a>
-			</span>
-			<roundcube:button innerclass="inner" id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
-			<roundcube:button innerclass="inner" id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
-			<roundcube:button innerclass="inner" id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
-			<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
-			<form id="upl_form" method="POST" enctype="multipart/form-data"><input name="path" value="<roundcube:var name="env:npath" />" type="hidden" /><input type="file" id="upl" class="upl" name="files" onchange="javascript:sform(this.value);" /></form>
-			<script>
-			function sform(fileName) {
-				var allowed_extensions = new Array('html', 'pdf', 'jpg', 'png', 'md', 'txt');
-				var file_extension = fileName.split('.').pop().toLowerCase(); 
-
-				for(var i = 0; i <= allowed_extensions.length; i++)
-				{
-					if(allowed_extensions[i]==file_extension)
-					{
-						document.getElementById("upl_form").submit();
-						return true;
-					}
-				}
-				alert('<roundcube:label name="primitivenotes.note_inv_format" />');
-				return false;
-			}
-			</script>
-		</div>
+				</span>
+			</li>
+			<li role="menuitem">
+				<roundcube:button innerclass="inner" id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
+			</li>
+			<li>
+				<roundcube:button innerclass="inner" id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
+			</li>
+			<li>
+				<roundcube:button innerclass="inner" id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
+			</li>
+			<li>
+				<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
+			</li>
+			<form id="upl_form" method="POST" enctype="multipart/form-data"><input name="path" value="<roundcube:var name="env:npath" />" type="hidden" /><input type="file" id="upl" class="upl" name="files" /></form>
+		</ul>
+		<a class="button icon menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
 	</div>
 	<div class="iframe-wrapper">
 		<div id="pluginbody" class="offset">
@@ -42,7 +35,6 @@
 		</div>
 		<div id="newmenu" class="popupmenu" aria-hidden="true">
 			<ul id="newmenu-menu" class="toolbarmenu listing" role="menu">
-				<roundcube:button type="link-menuitem" command="htmlnote" class="menuentry" label="primitivenotes.note_formathtml" prop="html" />
 				<roundcube:button type="link-menuitem" command="mdnote" class="menuentry" label="primitivenotes.note_formatmd" prop="md" />
 				<roundcube:button type="link-menuitem" command="txtnote" class="menuentry" label="primitivenotes.note_formattxt" prop="txt" />
 				<roundcube:container name="newmenu" id="newmenu-menu" />

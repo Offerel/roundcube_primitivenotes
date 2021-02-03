@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -160,7 +160,7 @@ class primitivenotes extends rcube_plugin
 
 	function content($attrib) {
 		$rcmail = rcmail::get_instance();
-		$this->include_script('js/primitivenotes.js');
+		$this->include_script('js/primitivenotes.min.js');
 		$attrib['src'] = 'plugins/primitivenotes/notes.php';
 		if (empty($attrib['id'])) $attrib['id'] = 'rcmailnotescontent';
 		$attrib['name'] = $attrib['id'];
