@@ -93,7 +93,11 @@
     text-align: center;
     text-overflow: ellipsis;
     overflow-x: hidden;
-    line-height: 2.5;
+	line-height: 2.5;
+	outline: 0;
+}
+#newmenulink:before {
+    line-height: 40px;
 }
 .toolbar a.button::before {
 	display: block;

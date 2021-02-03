@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -83,9 +83,32 @@ $(document).ready(function(){
             if(estate.value == 's') {
                 mde.togglePreview();
 				estate.value = 'e';
-                document.querySelector('#main_area .editor-toolbar').style.display = 'block';
             }
-            mde.value("");
+			mde.value("");
+			document.getElementById('fname').value = '';
+			let editor1 = document.getElementById('editor1');
+			editor1.value = '';
+
+			if(e.data.format == 'md') {
+				document.querySelector('#main_area .editor-toolbar').style.display = 'block';
+				document.querySelector('.EasyMDEContainer').style = 'display: block';
+				mde.value('');
+			} else {
+				let toolbar = document.createElement('div');
+				toolbar.id = 'atoolbar';
+				let bSave = document.createElement('li');
+				bSave.id = 'bSave';
+				bSave.classList.add("fa", "fa-floppy-o");
+				bSave.addEventListener('click', sbfile, false);
+				toolbar.appendChild(bSave);
+				let bSeperator = document.createElement('i');
+				bSeperator.classList.add("separator");
+				toolbar.appendChild(bSeperator);
+
+				editor1.parentNode.insertBefore(toolbar, editor1);
+				document.querySelector('.EasyMDEContainer').style = 'display: none';
+				editor1.style = 'display: block';
+			}
 		}
 		if('editor' in e.data && e.data.editor == 'edit') {
             if(estate.value == 's') {
@@ -107,13 +130,11 @@ $(document).ready(function(){
 					let toolbar = document.createElement('div');
 					let editor = document.getElementById('editor1');
 					toolbar.id = 'atoolbar';
-
 					let bSave = document.createElement('li');
 					bSave.id = 'bSave';
 					bSave.classList.add("fa", "fa-floppy-o");
 					bSave.addEventListener('click', sbfile, false);
 					toolbar.appendChild(bSave);
-
 					let bSeperator = document.createElement('i');
 					bSeperator.classList.add("separator");
 					toolbar.appendChild(bSeperator);

@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.0
+ * @version 2.0.1
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -13,7 +13,8 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
     rcmail.register_command("sendnote", send_note, !0);
     rcmail.register_command("addnote", add_note, !0);
     rcmail.register_command("mdnote", new_note, !0);
-    rcmail.register_command("txtnote", new_note, !0);
+	rcmail.register_command("txtnote", new_note, !0);
+	document.getElementById('upl').addEventListener('change', sform, false );
 });
 
 function add_note() {
@@ -37,10 +38,14 @@ function new_note(a) {
     let tstate = {
         tstate:false,
         ttags:'',
-        editor:'new',
+		editor:'new',
+		format:format,
     };
     document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
-    $("#notescontentframe").contents().find("#note_name")[0].placeholder = rcmail.gettext("note_title", "primitivenotes");
+	$("#notescontentframe").contents().find("#note_name")[0].placeholder = rcmail.gettext("note_title", "primitivenotes");
+	document.getElementById('editnote').classList.add('disabled');
+	document.getElementById('deletenote').classList.add('disabled');
+	document.getElementById('sendnote').classList.add('disabled');
 }
 
 function edit_note() {
@@ -105,3 +110,17 @@ function send_note() {
         _note_filename: a
     }, !0) : alert(rcmail.gettext("note_inv_format", "primitivenotes"))
 };
+
+function sform() {
+	fileName = this.value;
+	var allowed_extensions = new Array('html', 'pdf', 'jpg', 'png', 'md', 'txt');
+	var file_extension = fileName.split('.').pop().toLowerCase(); 
+	for(var i = 0; i <= allowed_extensions.length; i++) {
+		if(allowed_extensions[i]==file_extension) {
+			document.getElementById("upl_form").submit();
+			return true;
+		}
+	}
+	alert('<roundcube:label name=\"primitivenotes.note_inv_format\" />');
+	return false;
+}
