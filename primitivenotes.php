@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.1
+ * @version 2.0.2
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -15,7 +15,8 @@ class primitivenotes extends rcube_plugin
 		$rcmail = rcmail::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		$this->include_stylesheet($this->local_skin_path() . '/plugin.css');
+		$this->include_stylesheet($this->local_skin_path() . '/plugin.min.css');
+		$this->include_script('js/primitivenotes.min.js');
 		$this->register_task('notes');
 		
 		$this->add_button(array(

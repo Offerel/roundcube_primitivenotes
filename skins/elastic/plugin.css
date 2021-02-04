@@ -9,6 +9,24 @@
 	display: block;
 	text-align: center;
 }
+#pnoptions::before {
+	content: "\f1de";
+	display: block;
+	text-align: center;
+}
+#pnsettings {
+	position: absolute;
+	z-index: 100;
+	width: 400px;
+	height: auto;
+	background: #fff;
+	box-shadow: 3px 3px 5px 0 rgba(50,50,50,.75);
+	padding: 10px;
+	border-radius: 5px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
 #notestoolbar a {
 	font-family: "Icons";
 	font-size: 1.35rem;
@@ -110,4 +128,9 @@
 }
 .listing.iconized tr.primitivenotes > td.section::before {
 	content: "\f249";
+}
+.pnlisth {
+	width: 395px;
+	float: left;
+	border-right: 1px solid #d4dbde;
 }

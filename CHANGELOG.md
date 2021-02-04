@@ -1,3 +1,6 @@
+### v2.0.2
+- Added option button to jump directly to plugin options (thanks to Aleksander Machniak)
+
 ### v2.0.1
 - Remove ToC button in edit mode
 - Fix for creating new notes	s
