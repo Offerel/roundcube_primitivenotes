@@ -1,13 +1,13 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.1
+ * @version 2.0.2
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
  */
 $(document).ready(function(){
-    var tagify = new Tagify(document.querySelector('#ntags'), {
+	var tagify = new Tagify(document.querySelector('#ntags'), {
 		whitelist:[],
         dropdown : {
             classname     : "color-blue",
@@ -40,7 +40,9 @@ $(document).ready(function(){
         spellChecker: false,
         autofocus: true,
         status: false,
-        promptURLs: true,
+		promptURLs: true,
+		inputStyle: 'contenteditable',
+		nativeSpellcheck: true,
 		//sideBySideFullscreen: false,
         renderingConfig: {
 			codeSyntaxHighlighting: true,
@@ -65,8 +67,7 @@ $(document).ready(function(){
                     },
                     'table', '|',
                     'preview', 'side-by-side', 'fullscreen', 'guide', '|'	],
-        
-    });
+	});
 
     document.querySelectorAll('#filelist li a').forEach(function(note){
         note.addEventListener('click',function(){
@@ -81,7 +82,7 @@ $(document).ready(function(){
         if('ttags' in e.data && e.data.ttags == '') tagify.removeAllTags();
         if('editor' in e.data && e.data.editor == 'new') {
             if(estate.value == 's') {
-                mde.togglePreview();
+				mde.togglePreview();
 				estate.value = 'e';
             }
 			mde.value("");
@@ -93,6 +94,11 @@ $(document).ready(function(){
 				document.querySelector('#main_area .editor-toolbar').style.display = 'block';
 				document.querySelector('.EasyMDEContainer').style = 'display: block';
 				mde.value('');
+				editor1.style = 'display: none;'
+				document.getElementById('author').value = '';
+				document.getElementById('date').value = '';
+				document.getElementById('source').value = '';
+				document.querySelector('#main_area .EasyMDEContainer').addEventListener('paste', pasteParse, false);
 			} else {
 				let toolbar = document.createElement('div');
 				toolbar.id = 'atoolbar';
@@ -112,7 +118,7 @@ $(document).ready(function(){
 		}
 		if('editor' in e.data && e.data.editor == 'edit') {
             if(estate.value == 's') {
-                mde.togglePreview();
+				mde.togglePreview();
                 estate.value = 'e';
 			}
 
@@ -174,6 +180,45 @@ $(document).ready(function(){
 	document.getElementById('localimg').addEventListener('change', simage, false);
 
 	new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:250, size:12 }).init();
+
+	function pasteParse(event) {
+		const pastedText = event.clipboardData.getData('text');
+		const pastedHTML = event.clipboardData.getData('text/html');
+		let textArr = pastedText.split('\n');
+		if(textArr[0] == '---') {
+			let cstart = pastedText.indexOf('---',4) + 3;
+			for(var i = 1; i < 10; i++) {
+				if(textArr[i] == '---') break;
+				console.log(textArr[i]);
+				let yentry = textArr[i].split(':');
+				if(yentry[0] == 'title') document.getElementById('note_name').value = yentry[1].trim();
+				if(yentry[0] == 'tags') tagify.addTags(yentry[1]);
+				if(yentry[0] == 'author') document.getElementById('author').value = yentry[1].trim();
+				if(yentry[0] == 'date') document.getElementById('date').value = yentry.slice(1).join(':').trim();
+				if(yentry[0] == 'source') document.getElementById('source').value = yentry.slice(1).join(':').trim();
+			}
+			mde.value(pastedText.substr(cstart).trim());
+		}
+
+		if(pastedHTML) {
+			var options = {
+				headingStyle: 'atx',
+				hr: '-',
+				bulletListMarker: '-',
+				codeBlockStyle: 'fenced',
+				fence: '```',
+				emDelimiter: '*',
+				strongDelimiter: '**',
+				linkStyle: 'inlined',
+				linkReferenceStyle: 'full',
+				collapseMultipleWhitespaces: true,
+				preformattedCode: true,
+				};
+			var turndownService = new window.TurndownService(options);
+			turndownService.keep(['kbd', 'ins']);
+			mde.value(turndownService.turndown(pastedHTML));
+		}
+	}
 
     function firstNote() {
         showNote(document.getElementById('filelist').firstElementChild.classList[0]);
@@ -238,7 +283,6 @@ $(document).ready(function(){
             },
             success: function(data){
 				var note = JSON.parse(data);
-
 				if(document.getElementById('bcontent')) document.getElementById('bcontent').remove();
 				document.querySelector('.EasyMDEContainer').classList.remove('EasyMDEContainerH');
 				if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
@@ -251,6 +295,9 @@ $(document).ready(function(){
 
                 document.getElementById('headerTitle').innerText = note.notename;
 				document.getElementById('fname').value = note.filename;
+				document.getElementById('author').value = note.author;
+				document.getElementById('date').value = note.date;
+				document.getElementById('source').value = note.source;
 				
                 tagify.setReadonly(true);
                 tagify.removeAllTags();
@@ -377,6 +424,9 @@ $(document).ready(function(){
 				ntags: tArr,
 				editor1: mde.value(),
 				ftype: fname.substr(extb),
+				author: document.getElementById('author').value,
+				date: document.getElementById('date').value,
+				source: document.getElementById('source').value,
 			},
 			success: function(response){
 				if(response == '') {

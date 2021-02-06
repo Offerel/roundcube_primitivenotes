@@ -159,6 +159,9 @@ if(isset($_POST['action'])) {
 						$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 						foreach($yaml_arr as $line) {
 							if(strpos($line,"tags:") === 0) $taglist = str_replace(" ", ", ", substr($line,6));
+							if(strpos($line,"author:") === 0) $author = substr($line,8);
+							if(strpos($line,"date:") === 0) $date = substr($line,6);
+							if(strpos($line,"source:") === 0) $source = substr($line,8);
 						}
 					}
 				} else {
@@ -174,6 +177,9 @@ if(isset($_POST['action'])) {
 				'mime_type'	=> $note['mime_type'],
 				'tags'		=> $taglist,
 				'content'	=> $note['content'],
+				'author'	=> $author,
+				'date'		=> $date,
+				'source'	=> $source,
 			];
 			die(json_encode($noteArr));
 			break;
@@ -188,6 +194,9 @@ if(isset($_POST['action'])) {
 		case 'editNote':
 			$note_name = ($_POST['note_name'] != "") ? filter_var($_POST['note_name'], FILTER_SANITIZE_STRING) : "new_unknown_note";
 			$note_tags = $_POST['ntags'];
+			$ndate = ($_POST['date'] != "") ? filter_var($_POST['date'], FILTER_SANITIZE_STRING) : strftime('%x %X');
+			$nauthor = ($_POST['author'] != "") ? filter_var($_POST['author'], FILTER_SANITIZE_STRING) : $rcmail->user->get_username();
+			$nsource = ($_POST['source'] != "") ? filter_var($_POST['source'], FILTER_SANITIZE_STRING) : '';
 			asort($note_tags, SORT_LOCALE_STRING | SORT_FLAG_CASE );
 			$note_content = $_POST['editor1'];
 			$old_name = filter_var($_POST['fname'], FILTER_SANITIZE_STRING);
@@ -218,9 +227,10 @@ if(isset($_POST['action'])) {
 				} else {
 					$yaml_new[] = $yh_begin;
 					if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
-					$yaml_new[] = "title: ".$note_name;
-					$yaml_new[] = "date: ".strftime('%x %X');
-					$yaml_new[] = "author: ".$rcmail->user->get_username();
+					if(strlen($note_name) > 3) $yaml_new[] = "title: ".$note_name;
+					if(strlen($ndate) > 3) $yaml_new[] = "date: ".$ndate;
+					if(strlen($nauthor) > 3) $yaml_new[] = "author: ".$nauthor;
+					if(strlen($nsource) > 3) $yaml_new[] = "source: ".$nsource;
 					$yaml_new[] = $yh_end;
 					$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
 				}
@@ -230,9 +240,8 @@ if(isset($_POST['action'])) {
 				$new_name = $note_name.$tags_str.".".$note_type;
 			}
 			$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
-			if(file_exists($notes_path.$old_name)) {
-				if($old_name != $new_name) 
-					if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
+			if(file_exists($notes_path.$old_name && $old_name != '')) {
+				if($old_name != $new_name) if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
 			} elseif ($old_name != "") {
 				error_log('PrimitiveNotes: Note not found, can\`t save note.');
 				die('Note not found, can\`t save note.');
@@ -421,11 +430,13 @@ function human_filesize($bytes, $decimals = 2) {
 		<link rel="stylesheet" href="js/easymde/easymde.min.css">
 		<script src="js/easymde/easymde.min.js"></script>
 
+		<script src="js/turndown/turndown.min.js"></script>
+
 		<link rel="stylesheet" href="js/tagify/tagify.css" type="text/css" />
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
-		<script src="js/notes.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/notes.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;">
 		<div id="sidebar" class="uibox listbox">
@@ -457,21 +468,25 @@ function human_filesize($bytes, $decimals = 2) {
 			</div>
 		</div>
 		<div id="main" class="main uibox contentbox">
-		<form method="POST" id="metah">
-		<div id="main_header" class="main_header">
-			<span id="headerTitle" class="headerTitle"></span><br />
-			<input id="fname" name="fname" type="hidden">
+			<form method="POST" id="metah">
+				<div id="main_header" class="main_header">
+					<span id="headerTitle" class="headerTitle"></span><br />
+					<input id="fname" name="fname" type="hidden">
+				</div>
+				<input id="ntags" name="ntags">
+				<div id="save_button" class="save_button">
+					<a href="#"></a>
+				</div>
+				<div class="main_area" id="main_area">
+					<input id="estate" type="hidden" value="e" />
+					<input type="hidden" id="action" name="action">
+					<input id="author" name="author" type="hidden" />
+					<input id="date" name="date" type="hidden" />
+					<input id="source" name="source" type="hidden" />
+					<textarea id="editor1" name="editor1"></textarea>
+					<input type="file" id="localimg" name="localimg" style="display: none" />
+				</div>
+			</form>
 		</div>
-			<input id="ntags" name="ntags">
-		<div id="save_button" class="save_button">
-			<a href="#"></a>
-		</div>
-		<div class="main_area" id="main_area">
-			<input id="estate" type="hidden" value="e" /><input type="hidden" id="action" name="action">
-			<textarea id="editor1" name="editor1"></textarea>
-			<input type="file" id="localimg" name="localimg" style="display: none" />
-		</div>
-		</div>
-		</form>
 	</body>
 </html>
