@@ -1,6 +1,12 @@
+### v2.0.2
+- Added option button to jump directly to plugin options (thanks to Aleksander Machniak)
+- Added function to paste selected text from browser, converted automatically to Markdown with [Turndown](https://github.com/domchristie/turndown)
+- Added support for Markdownload [Browser Extension](https://github.com/deathau/markdownload)
+  - YAML header autofills all supported fields (title, author, date, source and more)
+
 ### v2.0.1
 - Remove ToC button in edit mode
-- Fix for creating new notes
+- Fix for creating new notes	s
   
 ### v2.0.0
 - Added loader animation

@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.1
+ * @version 2.0.2
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -13,9 +13,15 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
     rcmail.register_command("sendnote", send_note, !0);
     rcmail.register_command("addnote", add_note, !0);
     rcmail.register_command("mdnote", new_note, !0);
-	  rcmail.register_command("txtnote", new_note, !0);
-	document.getElementById('upl').addEventListener('change', sform, false );
+	rcmail.register_command("txtnote", new_note, !0);
+	rcmail.register_command("pnoptions", pnoptions, !0);
+	if(document.getElementById('upl')) document.getElementById('upl').addEventListener('change', sform, false );
+	if(window.location.hash == '#pnotes')rcmail.sections_list.select_row('primitivenotes');	
 });
+
+function pnoptions() {
+	location.href = window.location.origin + window.location.pathname + '?_task=settings&_action=preferences#pnotes';
+}
 
 function add_note() {
     document.getElementById("upl").click()
