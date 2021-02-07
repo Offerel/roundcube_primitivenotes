@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.2
+ * @version 2.0.3
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -33,19 +33,32 @@ $(document).ready(function(){
 		}
 	});
 
+	let cookiesArr = document.cookie.split(';');
+	var media_folder;
+	cookiesArr.forEach(function(element){
+		let cookie = element.split('=');
+		if(cookie[0].indexOf('pn_') > 0) media_folder = JSON.parse(decodeURIComponent(cookie[1]));
+	});
+	
     var mde = new EasyMDE({
         element: document.getElementById('editor1'),
         autoDownloadFontAwesome: false,
 		autofocus: true,
+		previewImagesInEditor: false,
         spellChecker: false,
         autofocus: true,
         status: false,
 		promptURLs: true,
 		inputStyle: 'contenteditable',
 		nativeSpellcheck: true,
+		forceSync: true,
 		//sideBySideFullscreen: false,
         renderingConfig: {
 			codeSyntaxHighlighting: true,
+			sanitizerFunction: function(renderedHTML) {
+				let output = renderedHTML.replaceAll(media_folder,'notes.php?blink=');
+				return output;
+			},
         },
         toolbar: 	[{ name: 'Save',
                         action: saveFile,
@@ -189,7 +202,6 @@ $(document).ready(function(){
 			let cstart = pastedText.indexOf('---',4) + 3;
 			for(var i = 1; i < 10; i++) {
 				if(textArr[i] == '---') break;
-				console.log(textArr[i]);
 				let yentry = textArr[i].split(':');
 				if(yentry[0] == 'title') document.getElementById('note_name').value = yentry[1].trim();
 				if(yentry[0] == 'tags') tagify.addTags(yentry[1]);
@@ -305,13 +317,15 @@ $(document).ready(function(){
 
 				document.querySelector('.EasyMDEContainer').style = 'display: block;';
 				document.getElementById('editor1').style = 'display none;';
-				mde.value(note.content);
+				
 				document.getElementById('editor1').value = note.content;
+				mde.value(note.content);
 				
 				if(note.mime_type.substr(0, 4) == 'text') {
 					if(document.getElementById('estate').value == 'e') {
 						document.getElementById('estate').value = 's';
 						mde.togglePreview();
+						//if(mde.isPreviewActive()) mde.togglePreview();
 					}
 					var headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
 					if(headings.length > 0) {

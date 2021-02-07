@@ -1,3 +1,6 @@
+### v2.0.3
+- Fixed an issue, where links are converted wrong
+
 ### v2.0.2
 - Added option button to jump directly to plugin options (thanks to Aleksander Machniak)
 - Added function to paste selected text from browser, converted automatically to Markdown with [Turndown](https://github.com/domchristie/turndown)

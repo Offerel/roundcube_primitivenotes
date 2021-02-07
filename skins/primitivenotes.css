@@ -364,6 +364,7 @@ object {
 .editor-preview pre code {
 	color: unset;
 	background: unset;
+	display: block;
 }
 .editor-preview {
     background: #fff;
@@ -412,9 +413,6 @@ object {
 .editor-preview img {
 	display: block;
 	max-width: 860px;
-}
-.editor-preview p > img {
-	display: initial;
 }
 .EasyMDEContainer {
 	top: 0;
@@ -586,4 +584,15 @@ tags.edit:focus-within {
 	width: 100%;
 	display: inline-block;
 	font-size: 0.9em;
+}
+.editor-preview code::-webkit-scrollbar {
+    height: 6px;
+    background: #dee2e6;
+}
+.editor-preview code::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 6px;
+}
+.editor-preview code::-webkit-scrollbar-thumb:hover {
+    background: #737677;
 }
