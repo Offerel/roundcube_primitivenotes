@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.2
+ * @version 2.0.3
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -24,6 +24,7 @@ if (!empty($rcmail->user->ID)) {
 	
 	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 	$media_folder = $rcmail->config->get('media_folder', false);
+	setcookie('pn_', json_encode($media_folder), 0, parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '.'.$_SERVER['HTTP_HOST'], true);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
 	$yh_begin = $rcmail->config->get('yaml_start', '');
@@ -44,26 +45,12 @@ if (!empty($rcmail->user->ID)) {
 
 if(isset($_GET['blink'])) {
 	$file = urldecode($_GET['blink']);
-	$type = $_GET['t'];
 	if(file_exists($notes_path.$media_folder.$file)) {
 		$fileh = file_get_contents($notes_path.$media_folder.$file);
-		if($type == 'i') {
-			$imagev = imagecreatefromstring($fileh);
-			list($width, $height, $type, $attr) = getimagesizefromstring($fileh);
-			if($width > 860) {
-				$imagev = imagescale($imagev, 860);
-			}
-			header("Content-Type: image/jpeg");
-			header("Content-Disposition: inline; filename=\"".pathinfo($file)['filename'].".jpg\"");
-			imagejpeg($imagev);
-			imagedestroy($imagev);
-		}
-		elseif($type == 'l') {
-			$mime = mime_content_type($notes_path.$media_folder.$file);
-			header("Content-type: $mime");
-			header("Content-Disposition: inline; filename=\"$file\"");
-			echo $fileh;
-		}
+		$mime_type = mime_content_type($notes_path.$media_folder.$file);
+		header("Content-type: $mime_type");
+		header("Content-Disposition: inline; filename=\"$file\"");
+		echo $fileh;
 	}
 	die();
 }
@@ -181,6 +168,7 @@ if(isset($_POST['action'])) {
 				'date'		=> $date,
 				'source'	=> $source,
 			];
+
 			die(json_encode($noteArr));
 			break;
 		case 'getTags':
@@ -375,23 +363,19 @@ function read_note($id, $filename, $mode, $format) {
 
 	if(file_exists($file)) {
 		$fcontent = file_get_contents($file);
-		$re = '/(?:[!]?\[(.*?)\]\((.*?)\))/m';
 		if($mode != 'edit') {
-			$scontent = preg_replace_callback($re, "parseLink", $fcontent);
 			if($rcmail->config->get('yaml_support', '')) {
-				$yhb_pos = strpos($scontent, $yh_begin);
-				$yhe_pos = strlen($scontent) >= strlen($yh_begin) ? strpos($scontent, $yh_end, strlen($yh_begin)) : 0;
-				if($yhb_pos == 0 && $yhe_pos > 0) $scontent = substr($scontent,$yhe_pos + strlen($yh_end));
+				$yhb_pos = strpos($fcontent, $yh_begin);
+				$yhe_pos = strlen($fcontent) >= strlen($yh_begin) ? strpos($fcontent, $yh_end, strlen($yh_begin)) : 0;
+				if($yhb_pos == 0 && $yhe_pos > 0) $fcontent = substr($fcontent,$yhe_pos + strlen($yh_end));
 			}
-		} else {
-			$scontent = $fcontent;
 		}
 
 		$mime_type = mime_content_type($file);
-		$scontent = (substr($mime_type, 0, 4) == 'text') ? $scontent:base64_encode($scontent);
+		$fcontent = (substr($mime_type, 0, 4) == 'text') ? $fcontent:base64_encode($fcontent);
 		$note = array(
 			'name'		=> substr($filename, 0, stripos($filename, "[")),
-			'content'	=> trim($scontent),
+			'content'	=> trim($fcontent),
 			'format'	=> $format,
 			'id'		=> $id,
 			'mime_type'	=> $mime_type,
