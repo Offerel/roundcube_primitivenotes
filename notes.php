@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.3
+ * @version 2.0.4
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -228,7 +228,8 @@ if(isset($_POST['action'])) {
 				$new_name = $note_name.$tags_str.".".$note_type;
 			}
 			$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
-			if(file_exists($notes_path.$old_name && $old_name != '')) {
+
+			if(file_exists($notes_path.$old_name) && $old_name != '') {
 				if($old_name != $new_name) if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
 			} elseif ($old_name != "") {
 				error_log('PrimitiveNotes: Note not found, can\`t save note.');
@@ -401,6 +402,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<title><?PHP echo $note['name'] ?></title>
 		<meta charset='utf-8'>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
+
 		<script type="text/javascript" src="../../program/js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../skins/larry/ui.min.js"></script>
 		<script type="text/javascript" src="../../program/js/common.min.js"></script>
@@ -420,7 +422,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
-		<script src="js/notes.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/notes.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body style="margin: 0; padding: 0;">
 		<div id="sidebar" class="uibox listbox">

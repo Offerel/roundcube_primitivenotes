@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.3
+ * @version 2.0.4
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -23,7 +23,9 @@ $(document).ready(function(){
         delimiters: ',|;| ',
         placeholder: 'Tags'
 	});
-	
+
+	var editor1 = document.getElementById("editor1");
+
 	$.ajax({
 		'type': "POST",
 		'url': "notes.php",
@@ -39,9 +41,9 @@ $(document).ready(function(){
 		let cookie = element.split('=');
 		if(cookie[0].indexOf('pn_') > 0) media_folder = JSON.parse(decodeURIComponent(cookie[1]));
 	});
-	
+
     var mde = new EasyMDE({
-        element: document.getElementById('editor1'),
+        element: editor1,
         autoDownloadFontAwesome: false,
 		autofocus: true,
 		previewImagesInEditor: false,
@@ -51,8 +53,8 @@ $(document).ready(function(){
 		promptURLs: true,
 		inputStyle: 'contenteditable',
 		nativeSpellcheck: true,
-		forceSync: true,
-		//sideBySideFullscreen: false,
+		forceSync: false,
+		sideBySideFullscreen: true,
         renderingConfig: {
 			codeSyntaxHighlighting: true,
 			sanitizerFunction: function(renderedHTML) {
@@ -61,7 +63,7 @@ $(document).ready(function(){
 			},
         },
         toolbar: 	[{ name: 'Save',
-                        action: saveFile,
+						action: saveFile,
                         className: 'fa fa-floppy-o',
                         title: 'Save',
                     }, '|',
@@ -69,12 +71,12 @@ $(document).ready(function(){
                     'code', 'quote', 'unordered-list', 'ordered-list', '|',
                     'link', 
                     { name: 'Image',
-                        action: uplInsertImage,
+						action: uplInsertImage,
                         className: 'fa fa-picture-o',
                         title: 'Add image from URL',
                     },
                     { name: 'Image',
-                        action: uplLocalImage,
+						action: uplLocalImage,
                         className: 'fa fa-file-image-o',
                         title: 'Upload and insert local image',
                     },
@@ -111,7 +113,6 @@ $(document).ready(function(){
 				document.getElementById('author').value = '';
 				document.getElementById('date').value = '';
 				document.getElementById('source').value = '';
-				document.querySelector('#main_area .EasyMDEContainer').addEventListener('paste', pasteParse, false);
 			} else {
 				let toolbar = document.createElement('div');
 				toolbar.id = 'atoolbar';
@@ -166,7 +167,7 @@ $(document).ready(function(){
 			}
         }
 	});
-	
+
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
 			if(document.getElementById('estate').value == 'e') {
@@ -185,7 +186,6 @@ $(document).ready(function(){
 	});
 
 	document.getElementById('notesearch').addEventListener('keyup', searchList, false);
-
 	document.getElementById('save_button').addEventListener('click', function() {
 		document.getElementById('metah').submit();
 	});
@@ -194,42 +194,104 @@ $(document).ready(function(){
 
 	new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:250, size:12 }).init();
 
+	document.querySelector('.EasyMDEContainer').addEventListener('paste', pasteParse, true);
+
 	function pasteParse(event) {
-		const pastedText = event.clipboardData.getData('text');
-		const pastedHTML = event.clipboardData.getData('text/html');
-		let textArr = pastedText.split('\n');
-		if(textArr[0] == '---') {
-			let cstart = pastedText.indexOf('---',4) + 3;
-			for(var i = 1; i < 10; i++) {
-				if(textArr[i] == '---') break;
-				let yentry = textArr[i].split(':');
+		event.preventDefault();
+		event.stopPropagation();
+		
+		const pastedString = event.clipboardData.getData('text/html') || event.clipboardData.getData('text/plain');
+
+		for (var i = 0; i < event.clipboardData.items.length ; i++) {
+			let item = event.clipboardData.items[i];
+			if(item.type.indexOf("image") != -1) {
+				let imageT = event.clipboardData.getData('text/html');
+				if(imageT.indexOf('alt="') >= 0) {
+					let altS = imageT.indexOf('alt="') + 5;
+					let altE = imageT.indexOf('"',altS);
+					var alt = imageT.substr(altS, altE - altS);
+				} else var alt = '';
+
+				if(imageT.indexOf('title="') >= 0) {
+					let titleS = imageT.indexOf('title="') + 7;
+					let titleE = imageT.indexOf('"',titleS);
+					var title = imageT.substr(titleS, titleE - titleS);
+				} else var title = '';
+				let loader = document.createElement("div");
+
+				loader.classList.add("db-spinner");
+				loader.id = "db-spinner";
+				document.getElementById("main").appendChild(loader);
+
+				uploadFile(item.getAsFile(), alt, title);
+				return false;
+			}
+		}
+
+		function uploadFile(file, alt, title) {
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function() {
+				if (xhr.status == 200) {
+					if(title) title = ' "'+title+'"';
+					mde.codemirror.replaceSelection('!['+alt+']('+xhr.responseText+title+')');
+					document.getElementById("db-spinner").remove();
+				} else {
+					console.log("Error! Upload failed");
+				}
+			};
+		
+			xhr.onerror = function() {
+				console.log("Error! Upload failed. Can not connect to server.");
+			};
+		
+			var formData = new FormData();
+			formData.append("localFile", file);
+			xhr.open('POST', 'notes.php', true);
+			xhr.send(formData);
+		}
+
+		let options = {
+			headingStyle: 'atx',
+			hr: '-',
+			bulletListMarker: '-',
+			codeBlockStyle: 'fenced',
+			fence: '```',
+			emDelimiter: '*',
+			strongDelimiter: '**',
+			linkStyle: 'inlined',
+			linkReferenceStyle: 'full',
+			collapseMultipleWhitespaces: true,
+			preformattedCode: true,
+		};
+
+		let turndownService = new window.TurndownService(options);
+
+		turndownService.addRule('kbd',{
+			filter:['kbd'],
+			replacement: function(content) {
+				return '<kbd>' + content + '</kbd>';
+			}
+		});
+
+		let markdownString = pastedString.startsWith('<html>') ? turndownService.turndown(pastedString) : pastedString;
+
+		if(markdownString.startsWith('---')) {
+			let mdArr = markdownString.split('\n');
+			let cstart = markdownString.indexOf('---',4) + 3;
+			for(let i = 1; i < 10; i++) {
+				if(mdArr[i] == '---') break;
+				let yentry = mdArr[i].split(':');
 				if(yentry[0] == 'title') document.getElementById('note_name').value = yentry[1].trim();
 				if(yentry[0] == 'tags') tagify.addTags(yentry[1]);
 				if(yentry[0] == 'author') document.getElementById('author').value = yentry[1].trim();
 				if(yentry[0] == 'date') document.getElementById('date').value = yentry.slice(1).join(':').trim();
+				if(yentry[0] == 'updated') document.getElementById('updated').value = yentry.slice(1).join(':').trim();
 				if(yentry[0] == 'source') document.getElementById('source').value = yentry.slice(1).join(':').trim();
 			}
-			mde.value(pastedText.substr(cstart).trim());
+			markdownString = markdownString.substr(cstart).trim();
 		}
-
-		if(pastedHTML) {
-			var options = {
-				headingStyle: 'atx',
-				hr: '-',
-				bulletListMarker: '-',
-				codeBlockStyle: 'fenced',
-				fence: '```',
-				emDelimiter: '*',
-				strongDelimiter: '**',
-				linkStyle: 'inlined',
-				linkReferenceStyle: 'full',
-				collapseMultipleWhitespaces: true,
-				preformattedCode: true,
-				};
-			var turndownService = new window.TurndownService(options);
-			turndownService.keep(['kbd', 'ins']);
-			mde.value(turndownService.turndown(pastedHTML));
-		}
+		
+		mde.codemirror.replaceSelection(markdownString);
 	}
 
     function firstNote() {
