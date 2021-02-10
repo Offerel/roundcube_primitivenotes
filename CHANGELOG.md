@@ -1,3 +1,7 @@
+### v2.0.4
+- Fix pasting markdown and html
+- Add pasting of images (with autoupload)
+
 ### v2.0.3
 - Fixed an issue, where links are converted wrong
 
