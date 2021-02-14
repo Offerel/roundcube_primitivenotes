@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.4
+ * @version 2.0.5
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -149,6 +149,7 @@ if(isset($_POST['action'])) {
 							if(strpos($line,"author:") === 0) $author = substr($line,8);
 							if(strpos($line,"date:") === 0) $date = substr($line,6);
 							if(strpos($line,"source:") === 0) $source = substr($line,8);
+							if(strpos($line,"updated:") === 0) $updated = substr($line,9);
 						}
 					}
 				} else {
@@ -167,6 +168,7 @@ if(isset($_POST['action'])) {
 				'author'	=> $author,
 				'date'		=> $date,
 				'source'	=> $source,
+				'updated'	=> $updated,
 			];
 
 			die(json_encode($noteArr));
@@ -217,6 +219,7 @@ if(isset($_POST['action'])) {
 					if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
 					if(strlen($note_name) > 3) $yaml_new[] = "title: ".$note_name;
 					if(strlen($ndate) > 3) $yaml_new[] = "date: ".$ndate;
+					$yaml_new[] = "updated: ".strftime('%x %X');
 					if(strlen($nauthor) > 3) $yaml_new[] = "author: ".$nauthor;
 					if(strlen($nsource) > 3) $yaml_new[] = "source: ".$nsource;
 					$yaml_new[] = $yh_end;
@@ -458,17 +461,22 @@ function human_filesize($bytes, $decimals = 2) {
 				<div id="main_header" class="main_header">
 					<span id="headerTitle" class="headerTitle"></span><br />
 					<input id="fname" name="fname" type="hidden">
+					<!-- <button id="ibutton" class="fa fa-info-circle"></button> -->
 				</div>
 				<input id="ntags" name="ntags">
 				<div id="save_button" class="save_button">
 					<a href="#"></a>
 				</div>
+				<fieldset id="ndata">
+					<span></span>
+					<div><label for="author">Author</label><input id="author" name="author" type="text" disabled="true" /></div>
+					<div><label for="date">Created</label><input id="date" name="date" type="text" disabled="true" /></div>
+					<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" disabled="true" /></div>
+					<div><label for="source">Source</label><input id="source" name="source" type="text" disabled="true" /></div>
+				</fieldset>
 				<div class="main_area" id="main_area">
 					<input id="estate" type="hidden" value="e" />
 					<input type="hidden" id="action" name="action">
-					<input id="author" name="author" type="hidden" />
-					<input id="date" name="date" type="hidden" />
-					<input id="source" name="source" type="hidden" />
 					<textarea id="editor1" name="editor1"></textarea>
 					<input type="file" id="localimg" name="localimg" style="display: none" />
 				</div>

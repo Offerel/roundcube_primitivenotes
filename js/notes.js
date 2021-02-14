@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.4
+ * @version 2.0.5
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -81,7 +81,12 @@ $(document).ready(function(){
                         title: 'Upload and insert local image',
                     },
                     'table', '|',
-                    'preview', 'side-by-side', 'fullscreen', 'guide', '|'	],
+                    'preview', 'side-by-side', 'fullscreen', 'guide', 
+					{ name: 'Meta',
+						action: togglemData,
+						className: 'fa fa-info-circle',
+						title: 'Display Metadata',
+					}, '|'	],
 	});
 
     document.querySelectorAll('#filelist li a').forEach(function(note){
@@ -94,7 +99,15 @@ $(document).ready(function(){
     window.addEventListener('message', (e) => {
         let estate = document.getElementById('estate');
 		if('tstate' in e.data) tagify.setReadonly(e.data.tstate);
-        if('ttags' in e.data && e.data.ttags == '') tagify.removeAllTags();
+        if('ttags' in e.data && e.data.ttags == '') tagify.removeAllTags({
+			withoutChangeEvent: true
+		 });
+
+		document.getElementById('author').removeAttribute('disabled');
+		document.getElementById('source').removeAttribute('disabled');
+		document.getElementById('ndata').style = "top: 21px;";
+		if(document.getElementById('ibutton')) document.getElementById('ibutton').style = "display: none";
+
         if('editor' in e.data && e.data.editor == 'new') {
             if(estate.value == 's') {
 				mde.togglePreview();
@@ -124,8 +137,6 @@ $(document).ready(function(){
 				let bSeperator = document.createElement('i');
 				bSeperator.classList.add("separator");
 				toolbar.appendChild(bSeperator);
-
-				editor1.parentNode.insertBefore(toolbar, editor1);
 				document.querySelector('.EasyMDEContainer').style = 'display: none';
 				editor1.style = 'display: block';
 			}
@@ -159,7 +170,13 @@ $(document).ready(function(){
 					bSeperator.classList.add("separator");
 					toolbar.appendChild(bSeperator);
 
-					editor.parentNode.insertBefore(toolbar, editor);
+					if(document.getElementById('cdiv')) 
+						document.getElementById('cdiv').appendChild(toolbar);
+					else {
+						toolbar.style = 'top: 88px;';
+						document.getElementById('main_area').parentNode.insertBefore(toolbar,  document.getElementById('main_area'));
+					}
+
 					document.querySelector('.EasyMDEContainer').style = 'display: none';
 					editor.style = 'display: block';
 
@@ -195,6 +212,11 @@ $(document).ready(function(){
 	new rcube_splitter({ id:'notessplitter', p1:'#sidebar', p2:'#main', orientation:'v', relative:true, start:400, min:250, size:12 }).init();
 
 	document.querySelector('.EasyMDEContainer').addEventListener('paste', pasteParse, true);
+	if(document.getElementById('ibutton')) document.getElementById('ibutton').addEventListener('click', function(event){
+		console.log("test");
+		event.preventDefault();
+		document.getElementById('ndata').classList.toggle('mtoggle');
+	});
 
 	function pasteParse(event) {
 		event.preventDefault();
@@ -297,6 +319,10 @@ $(document).ready(function(){
     function firstNote() {
         showNote(document.getElementById('filelist').firstElementChild.classList[0]);
 	}
+
+	function togglemData() {
+		document.getElementById('ndata').classList.toggle('mtoggle');
+	}
 	
 	function sbfile() {
 		let tags = tagify.value;
@@ -329,7 +355,14 @@ $(document).ready(function(){
     function showNote(id) {
 		document.querySelector('#main_area .editor-toolbar').style.display = 'none';
 		if(document.getElementById('atoolbar')) document.getElementById('atoolbar').remove();
+		if(document.getElementById('cdiv')) document.getElementById('cdiv').remove();
 		if(document.getElementById('tbutton')) document.getElementById('tbutton').remove();
+		if(document.getElementById('ibutton')) document.getElementById('ibutton').remove();
+		document.getElementById('ndata').classList.remove('mtoggle');
+		document.getElementById('author').setAttribute('disabled', true);
+		document.getElementById('date').setAttribute('disabled', true);
+		document.getElementById('source').setAttribute('disabled', true);
+		document.getElementById('ndata').style = "top: -22px;";
 
 		let loader = document.createElement("div");
 		loader.classList.add("db-spinner");
@@ -372,10 +405,25 @@ $(document).ready(function(){
 				document.getElementById('author').value = note.author;
 				document.getElementById('date').value = note.date;
 				document.getElementById('source').value = note.source;
+				document.getElementById('updated').value = note.updated;
 				
-                tagify.setReadonly(true);
-                tagify.removeAllTags();
+				tagify.setReadonly(true);
+				tagify.removeAllTags({
+					withoutChangeEvent: true
+				 });
 				tagify.addTags(note.tags);
+
+				if(note.filename.endsWith('.md')) {
+					let ibutton = document.createElement('button');
+					ibutton.id = 'ibutton';
+					ibutton.classList.add('fa', 'fa-info-circle');
+					ibutton.addEventListener('click', function(event) {
+						event.preventDefault();
+						document.getElementById('ndata').classList.toggle('mtoggle');
+					});
+					document.getElementById('main_header').appendChild(ibutton);
+					document.getElementById('ibutton').style = "display: block";
+				}
 
 				document.querySelector('.EasyMDEContainer').style = 'display: block;';
 				document.getElementById('editor1').style = 'display none;';
@@ -435,8 +483,12 @@ $(document).ready(function(){
 					bcontent.id = 'bcontent';
 					if(note.mime_type.includes('pdf')) bcontent.style = 'width: 100%; height: 100%;';
 
+					let cdiv = document.createElement('div');
+					cdiv.id = 'cdiv';
+					cdiv.appendChild(bcontent);
+
 					document.querySelector('.EasyMDEContainer').classList.add('EasyMDEContainerH');
-					document.getElementById('main_area').appendChild(bcontent);
+					document.getElementById('main_area').appendChild(cdiv);
 					document.getElementById('editor1').style = 'display: none';
 					if(document.getElementById('atoolbar')) document.getElementById('atoolbar').remove();
 				}	
