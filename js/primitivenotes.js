@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.4
+ * @version 2.0.5
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -72,6 +72,7 @@ function edit_note() {
     };
 	document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
 	$("#notescontentframe").contents().find("tags").addClass('edit');
+	document.getElementById('editnote').classList.add('disabled');
 }
 
 function delete_note() {

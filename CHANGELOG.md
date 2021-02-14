@@ -1,3 +1,8 @@
+### v2.0.5
+- Added function to change YAML metadata
+- YAML holds now date(created) and updated dates
+- Updated tagify to v3.22.2
+
 ### v2.0.4
 - Fix pasting markdown and html
 - Add pasting of images (with autoupload)
