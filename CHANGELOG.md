@@ -1,3 +1,12 @@
+### v2.0.6
+- Added contextmenu
+- Updated easyMDE to v2.14.0
+- Updated tagify to v3.22.3
+- Fixed tag tooltips
+- Fixed error message with empty noteslist
+- Removed fontawesome
+- Simplified path configuration
+
 ### v2.0.5
 - Added function to change YAML metadata
 - YAML holds now date(created) and updated dates

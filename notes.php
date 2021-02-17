@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.5
+ * @version 2.0.6
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -12,27 +12,21 @@ include INSTALL_PATH . 'program/include/iniset.php';
 $rcmail = rcmail::get_instance();
 
 if (!empty($rcmail->user->ID)) {
-	if(substr($rcmail->config->get('notes_basepath', false), -1) != '/') {
-		error_log('PrimitiveNotes: check $config[\'notes_basepath\'] the path must end with a backslash.');
-		die();
-	}
-	
-	if(substr($rcmail->config->get('notes_folder', false), -1) != '/') {
-		error_log('PrimitiveNotes: check $config[\'notes_folder\'] the path must end with a backslash.');
-		die();
-	}
-	
-	$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
+	$notes_path = $rcmail->config->get('notes_path', false);
+	$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+	$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+
 	$media_folder = $rcmail->config->get('media_folder', false);
+	$media_folder = ($media_folder[-1] != '/') ? $media_folder.'/':$media_folder;
 	setcookie('pn_', json_encode($media_folder), 0, parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '.'.$_SERVER['HTTP_HOST'], true);
 	$default_format = $rcmail->config->get('default_format', false);
 	$language = $rcmail->get_user_language();
-	$yh_begin = $rcmail->config->get('yaml_start', '');
-	$yh_end = $rcmail->config->get('yaml_end', '');
+	$yh_begin = '---';
+	$yh_end = '---';
 	
 	if (!is_dir($notes_path)) {
 		if(!mkdir($notes_path, 0774, true)) {
-			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) failed. Please check your directory permissions.');
+			error_log('PrimitiveNotes: Check notes folder ($config[\'notes_path\']) failed. Please check directory permissions.');
 			die();
 		}
 	}
@@ -58,7 +52,7 @@ if(isset($_GET['blink'])) {
 if($_FILES['localFile'] && $_FILES['localFile']['error'] == 0 ) {
 	if (!is_dir($notes_path.$media_folder)) {
 		if(!mkdir($notes_path.$media_folder, 0774, true)) {
-			error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
+			error_log('PrimitiveNotes: Check media folder ($config[\'media_folder\']) failed. Please check directory permissions.');
 			die();
 		}
 	}
@@ -230,7 +224,6 @@ if(isset($_POST['action'])) {
 				$tags_str = ($tags_str != "") ? "[".$tags_str."]" : $tags_str;
 				$new_name = $note_name.$tags_str.".".$note_type;
 			}
-			$notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false);
 
 			if(file_exists($notes_path.$old_name) && $old_name != '') {
 				if($old_name != $new_name) if(!rename($notes_path.$old_name, $notes_path.$new_name)) die('Could not rename file.');
@@ -276,7 +269,8 @@ if(isset($_POST['action'])) {
 			break;
 		case 'delMedia':
 			$files = json_decode($_POST['files']);
-			$mpath = $notes_path = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false).$rcmail->config->get('media_folder', false);
+			$mpath = $notes_path.$rcmail->config->get('media_folder', false);
+			$mpath = ($mpath[-1] != '/') ? $mpath.'/':$mpath;
 			foreach($files as $key => $file) {
 				$rfile = filter_var($file, FILTER_SANITIZE_STRING);
 				$rfile = $mpath.$rfile;
@@ -295,7 +289,7 @@ if(isset($_POST['action'])) {
 			$img = $notes_path.$media_folder.$fname;
 			if (!is_dir($notes_path.$media_folder)) {
 				if(!mkdir($notes_path.$media_folder, 0774, true)) {
-					error_log('PrimitiveNotes: Subfolders for $config[\'notes_basepath\'] ($config[\'notes_folder\']) (media) failed. Please check your directory permissions.');
+					error_log('PrimitiveNotes: Check media folders failed. Please check your directory permissions.');
 					die();
 				}
 			}
@@ -411,19 +405,13 @@ function human_filesize($bytes, $decimals = 2) {
 		<script type="text/javascript" src="../../program/js/common.min.js"></script>
 		<script type="text/javascript" src="../../program/js/app.min.js"></script>
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
-
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-
-		<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 		<link rel="stylesheet" href="js/easymde/easymde.min.css">
 		<script src="js/easymde/easymde.min.js"></script>
-
 		<script src="js/turndown/turndown.min.js"></script>
-
-		<link rel="stylesheet" href="js/tagify/tagify.css" type="text/css" />
+		<link rel="stylesheet" href="js/tagify/tagify.min.css" type="text/css" />
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
-
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<script src="js/notes.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
@@ -441,7 +429,7 @@ function human_filesize($bytes, $decimals = 2) {
 							$fsize = human_filesize($fentry['size'], 2);
 							if(is_array($fentry['tags'])) {
 								$tlist = implode(", ",$fentry['tags']);
-								$tlist = "<span id=\"taglist\">$tlist</span>";
+								$tlist = "<span class=\"taglist\">$tlist</span>";
 							} else
 								$tlist = "";
 							
@@ -461,18 +449,17 @@ function human_filesize($bytes, $decimals = 2) {
 				<div id="main_header" class="main_header">
 					<span id="headerTitle" class="headerTitle"></span><br />
 					<input id="fname" name="fname" type="hidden">
-					<!-- <button id="ibutton" class="fa fa-info-circle"></button> -->
 				</div>
 				<input id="ntags" name="ntags">
 				<div id="save_button" class="save_button">
 					<a href="#"></a>
 				</div>
+				<div id="hd"></div>
 				<fieldset id="ndata">
-					<span></span>
-					<div><label for="author">Author</label><input id="author" name="author" type="text" disabled="true" /></div>
-					<div><label for="date">Created</label><input id="date" name="date" type="text" disabled="true" /></div>
-					<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" disabled="true" /></div>
-					<div><label for="source">Source</label><input id="source" name="source" type="text" disabled="true" /></div>
+					<div><label for="author">Author</label><input id="author" name="author" type="text" readonly="true" /></div>
+					<div><label for="date">Created</label><input id="date" name="date" type="text" readonly="true" /></div>
+					<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" readonly="true" /></div>
+					<div><label for="source">Source</label><input id="source" name="source" type="text" readonly="true" /></div>
 				</fieldset>
 				<div class="main_area" id="main_area">
 					<input id="estate" type="hidden" value="e" />

@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.5
+ * @version 2.0.6
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -16,7 +16,18 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	rcmail.register_command("txtnote", new_note, !0);
 	rcmail.register_command("pnoptions", pnoptions, !0);
 	if(document.getElementById('upl')) document.getElementById('upl').addEventListener('change', sform, false );
-	if(window.location.hash == '#pnotes')rcmail.sections_list.select_row('primitivenotes');	
+	if(window.location.hash == '#pnotes')rcmail.sections_list.select_row('primitivenotes');
+	
+	if(rcmail.env.contextmenu) {
+		let pnotescmenu = rcmail.contextmenu.init({menu_name: 'pnotescmenu', menu_source: '#nmenu'});
+		$("#notescontentframe").on("load", function() {
+			$('#notescontentframe').contents().find('#filelist li').each(function() {
+				$(this).on("contextmenu", function(e) {
+					rcmail.contextmenu.show_one(e, this, this.firstChild.attributes.value, pnotescmenu);
+				});
+			});
+		});
+	}
 });
 
 function pnoptions() {

@@ -5,7 +5,7 @@
 	"homepage": "https://github.com/Offerel/roundcube_primitivenotes",
 	"type": "roundcube-plugin",
 	"license": "AGPL-3.0",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"authors": [
 	{
 		"name": "Offerel",
@@ -17,6 +17,18 @@
 		{
 			"type": "composer",
 			"url": "https://plugins.roundcube.net"
+		},
+		{
+			"type": "package",
+			"name":	"tagify",
+			"version":	"v3.22.3",
+			"source":	"https://github.com/yairEO/tagify"
+		},
+		{
+			"type": "package",
+			"name":	"turndown",
+			"version":	"v7.0.1",
+			"source":	"https://github.com/domchristie/turndown"
 		}
 	],
 	"require": {

@@ -5,19 +5,21 @@
 	<div class="header pnlisth">
 		<ul class="menu toolbar listing iconized">
 			<li role="menuitem">
+				<span class="dropbutton active">
+					<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
+					<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0"></a>
+				</span>
+			</li>
+			<li>
+				<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
+			</li>
+			<li role="menuitem">
 				<roundcube:button innerclass="inner" id="pnoptions" command="pnoptions" type="link" class="button pnoptions" label="options" title="options" />
 			</li>
 		</ul>
 	</div>
 	<div class="header">
-		<ul class="menu toolbar listing iconized">
-			<li role="menuitem">
-				<span class="dropbutton active">
-					<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
-					<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0">
-				</a>
-				</span>
-			</li>
+		<ul id="nmenu" class="menu toolbar listing iconized">
 			<li role="menuitem">
 				<roundcube:button innerclass="inner" id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
 			</li>
@@ -26,9 +28,6 @@
 			</li>
 			<li>
 				<roundcube:button innerclass="inner" id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
-			</li>
-			<li>
-				<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
 			</li>
 			<form id="upl_form" method="POST" enctype="multipart/form-data"><input name="path" value="<roundcube:var name="env:npath" />" type="hidden" /><input type="file" id="upl" class="upl" name="files" /></form>
 		</ul>

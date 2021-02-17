@@ -16,6 +16,7 @@ body {
 	border: 0;
 	background: 0 0;
 	box-shadow: unset;
+	height: 24px;
 }
 .editor-toolbar button:hover {
     background: lightgray;
@@ -136,7 +137,7 @@ object {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-#taglist {
+.taglist {
     display: none;
 }
 #note_tags {
@@ -221,12 +222,19 @@ object {
 #atoolbar li {
 	border-radius: 4px;
 	cursor: pointer;
-	margin: 4px 3px;
-	padding: 5px;
+	margin: 5px 3px;
+	padding: 3px;
 	color: #525252;
+	list-style: none;
+	float: left;
 }
-#atoolbar li:hover {
+#atoolbar li:not(.separator):hover {
 	background: #e3e3e3;
+}
+li.separator {
+	cursor: auto !important;
+	margin: 4px 0 !important;
+	padding: 5px 0 !important;
 }
 #atoolbar i.separator {
 	display: inline;
@@ -256,24 +264,24 @@ object {
 	padding: 3px 5px 2px 40px;
 	font-weight: 700;
 	color: #2c363a;
+	border: 1px solid transparent;
 	border-bottom: 1px solid #f1f3f4;
 	font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
 	font-size: 12px;
 	height: 35px;
 }
-.filelist a:hover span#taglist {
-    display: block;
-    background: #000!important;
-    z-index: 10;
-    position: absolute;
-    max-width: 300px;
-    border-radius: 5px;
-    padding: 5px;
-    color: #fff;
-    white-space: normal;
-    margin-top: -55px;
-    box-shadow: 1px 1px 3px gray;
-    left: 10px;
+.filelist a:hover span.taglist {
+	display: block !important;
+	background: rgb(255,250,230);
+	z-index: 105;
+	position: fixed;
+	max-width: 300px;
+	border-radius: 5px;
+	padding: 5px;
+	color: rgb(95,60,0);
+	white-space: normal;
+	box-shadow: 1px 1px 3px gray;
+	border: 1px solid rgb(255,210,130);
 }
 .filelist li.pdf {
     background: #fff url(images/pdf-icon.png) 5px 7px/27px no-repeat;
@@ -292,8 +300,9 @@ object {
 }
 .filelist li {
     background: #fff url(images/unknown-icon.png) 5px 7px/27px no-repeat;
+	cursor: pointer;
 }
-.selected, .selected a, .selected span {
+.selected, .selected a, .selected span:not(.taglist) {
 	background-color: #ebf9ff !important;
 }
 .selected span.fsize {
@@ -302,6 +311,7 @@ object {
 .filelist li:hover {
     background-color: #e8eaf6;
     text-decoration: none!important;
+	border: 1px solid darkgray;
 }
 .filelist a > span {
     color: #666;
@@ -455,7 +465,8 @@ object {
 	border-color: #bbb;
 	z-index: 101;
 	border-radius: 0;
-	top: 86px;
+	top: 81px;
+	box-shadow: 0 4px 3px 0 rgba(50,50,50,.4);
 }
 .editor-toolbar::after {
 	margin-top: 2px;
@@ -473,6 +484,9 @@ object {
 }
 .CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like {
 	font-size: smaller;
+}
+.EasyMDEContainer .CodeMirror-sided.sided--no-fullscreen {
+	float: left;
 }
 .tagify {
 	--tags-border-color: transparent !important;
@@ -605,26 +619,18 @@ tags.edit:focus-within {
     background: #737677;
 }
 #ndata {
-	width: 100%;
+	width: 90%;
 	z-index: -1;
 	position: relative;
 	background: #d4dbde;
-	margin: 0;
+	margin: 0 auto;
 	padding: 5px 0 10px 0;
 	top: -20px;
 	border: 0;
 	border-bottom: 1px solid #a9a9a9;
-	box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
-}
-#ndata span {
-	width: 100%;
-	height: 32px;
-	display: block;
-	box-shadow: 0 4px 3px 0 rgba(50,50,50,.4);
-	position: absolute;
-	top: -30px;
-	border-bottom: 1px solid #a9a9a9;
-	background: #efefef;
+	box-shadow: 0 3px 5px 0 rgba(0,0,0,.75);
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 .mtoggle {
 	z-index: 1 !important;
@@ -661,6 +667,23 @@ tags.edit:focus-within {
 	outline: 0;
 	box-shadow: revert;
 }
-#source:disabled {
-	cursor: pointer;
+#hd {
+	width: 100%;
+	height: 5px;
+	background: #efefef;
+	z-index: 100;
+	position: absolute;
+	top: 75px;
+	box-shadow: 0 4px 4px 0 rgba(0,0,0,.3);
+	border-bottom: 1px solid #d4dbde;
+}
+#ndata input:read-only {
+	background: lavender;
+	color: dimgray;
+	box-shadow: unset;
+	border: 1px solid darkgray;
+}
+#source:hover {
+	color: darkslateblue !important;
+	text-decoration: underline;
 }
