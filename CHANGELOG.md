@@ -1,10 +1,11 @@
 ### v2.0.6
-- Removed fontawesome
+- Added contextmenu
 - Updated easyMDE to v2.14.0
 - Updated tagify to v3.22.3
-- Added contextmenu
 - Fixed tag tooltips
 - Fixed error message with empty noteslist
+- Removed fontawesome
+- Simplified path configuration
 
 ### v2.0.5
 - Added function to change YAML metadata

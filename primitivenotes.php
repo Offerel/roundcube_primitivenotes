@@ -114,7 +114,10 @@ class primitivenotes extends rcube_plugin
 				$subject = substr($subject,0,47)."...";
 			}
 		}
-		$note_file = $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false).$filename;
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$note_file = $notes_path.$filename;
 		if(file_exists($note_file)) {
 			$handle = fopen ($note_file, "r");
 			$note_content = fread($handle, filesize($note_file));
@@ -152,7 +155,10 @@ class primitivenotes extends rcube_plugin
         	'tablink' => array($this, 'tablink'),
         ));
 
-		$rcmail->output->set_env('npath', $rcmail->config->get('notes_basepath', false).$rcmail->user->get_username().$rcmail->config->get('notes_folder', false));
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$rcmail->output->set_env('npath', $notes_path);
 		$rcmail->output->set_env('dformat', $rcmail->config->get('default_format', false));
 		$rcmail->output->add_handlers(array('notescontent' => array($this, 'content'),));
 		$rcmail->output->set_pagetitle($this->gettext('notes'));
