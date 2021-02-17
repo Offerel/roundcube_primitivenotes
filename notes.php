@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.5
+ * @version 2.0.6
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -411,19 +411,13 @@ function human_filesize($bytes, $decimals = 2) {
 		<script type="text/javascript" src="../../program/js/common.min.js"></script>
 		<script type="text/javascript" src="../../program/js/app.min.js"></script>
 		<link rel="stylesheet" href="../../skins/larry/styles.min.css" />
-
 		<link rel="stylesheet" href="js/highlight/styles/vs.min.css">
 		<script src="js/highlight/highlight.pack.js"></script>
-
-		<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 		<link rel="stylesheet" href="js/easymde/easymde.min.css">
 		<script src="js/easymde/easymde.min.js"></script>
-
 		<script src="js/turndown/turndown.min.js"></script>
-
 		<link rel="stylesheet" href="js/tagify/tagify.css" type="text/css" />
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
-
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<script src="js/notes.min.js" type="text/javascript" charset="utf-8"></script>
 	</head>
@@ -441,7 +435,7 @@ function human_filesize($bytes, $decimals = 2) {
 							$fsize = human_filesize($fentry['size'], 2);
 							if(is_array($fentry['tags'])) {
 								$tlist = implode(", ",$fentry['tags']);
-								$tlist = "<span id=\"taglist\">$tlist</span>";
+								$tlist = "<span class=\"taglist\">$tlist</span>";
 							} else
 								$tlist = "";
 							
@@ -461,18 +455,17 @@ function human_filesize($bytes, $decimals = 2) {
 				<div id="main_header" class="main_header">
 					<span id="headerTitle" class="headerTitle"></span><br />
 					<input id="fname" name="fname" type="hidden">
-					<!-- <button id="ibutton" class="fa fa-info-circle"></button> -->
 				</div>
 				<input id="ntags" name="ntags">
 				<div id="save_button" class="save_button">
 					<a href="#"></a>
 				</div>
+				<div id="hd"></div>
 				<fieldset id="ndata">
-					<span></span>
-					<div><label for="author">Author</label><input id="author" name="author" type="text" disabled="true" /></div>
-					<div><label for="date">Created</label><input id="date" name="date" type="text" disabled="true" /></div>
-					<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" disabled="true" /></div>
-					<div><label for="source">Source</label><input id="source" name="source" type="text" disabled="true" /></div>
+					<div><label for="author">Author</label><input id="author" name="author" type="text" readonly="true" /></div>
+					<div><label for="date">Created</label><input id="date" name="date" type="text" readonly="true" /></div>
+					<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" readonly="true" /></div>
+					<div><label for="source">Source</label><input id="source" name="source" type="text" readonly="true" /></div>
 				</fieldset>
 				<div class="main_area" id="main_area">
 					<input id="estate" type="hidden" value="e" />

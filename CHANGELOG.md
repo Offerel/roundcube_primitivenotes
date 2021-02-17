@@ -1,3 +1,10 @@
+### v2.0.6
+- Removed fontawesome
+- Updated easyMDE to v2.14.0
+- Added contextmenu
+- Fixed tag tooltips
+- Fixed error message with empty noteslist
+
 ### v2.0.5
 - Added function to change YAML metadata
 - YAML holds now date(created) and updated dates
