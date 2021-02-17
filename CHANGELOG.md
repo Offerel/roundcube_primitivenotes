@@ -1,6 +1,7 @@
 ### v2.0.6
 - Removed fontawesome
 - Updated easyMDE to v2.14.0
+- Updated tagify to v3.22.3
 - Added contextmenu
 - Fixed tag tooltips
 - Fixed error message with empty noteslist

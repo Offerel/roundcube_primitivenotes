@@ -416,7 +416,7 @@ function human_filesize($bytes, $decimals = 2) {
 		<link rel="stylesheet" href="js/easymde/easymde.min.css">
 		<script src="js/easymde/easymde.min.js"></script>
 		<script src="js/turndown/turndown.min.js"></script>
-		<link rel="stylesheet" href="js/tagify/tagify.css" type="text/css" />
+		<link rel="stylesheet" href="js/tagify/tagify.min.css" type="text/css" />
 		<script src="js/tagify/tagify.min.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="skins/primitivenotes.min.css" />
 		<script src="js/notes.min.js" type="text/javascript" charset="utf-8"></script>
