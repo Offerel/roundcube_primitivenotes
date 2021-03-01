@@ -1,3 +1,6 @@
+### v2.0.7
+- Added markdown linebreak in YAML
+
 ### v2.0.6
 - Added contextmenu
 - Updated easyMDE to v2.14.0

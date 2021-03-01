@@ -140,10 +140,10 @@ if(isset($_POST['action'])) {
 						$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_end)));
 						foreach($yaml_arr as $line) {
 							if(strpos($line,"tags:") === 0) $taglist = str_replace(" ", ", ", substr($line,6));
-							if(strpos($line,"author:") === 0) $author = substr($line,8);
-							if(strpos($line,"date:") === 0) $date = substr($line,6);
-							if(strpos($line,"source:") === 0) $source = substr($line,8);
-							if(strpos($line,"updated:") === 0) $updated = substr($line,9);
+							if(strpos($line,"author:") === 0) $author = trim(substr($line,8));
+							if(strpos($line,"date:") === 0) $date = trim(substr($line,6));
+							if(strpos($line,"updated:") === 0) $updated = trim(substr($line,9));
+							if(strpos($line,"source:") === 0) $source = trim(substr($line,8));
 						}
 					}
 				} else {
@@ -210,12 +210,12 @@ if(isset($_POST['action'])) {
 					$note_content = implode("\r\n", $yaml_new).substr($note_content,$yhe_pos + strlen(yh_end));
 				} else {
 					$yaml_new[] = $yh_begin;
-					if(strlen($tags_str) > 6) $yaml_new[] = $tags_str;
-					if(strlen($note_name) > 3) $yaml_new[] = "title: ".$note_name;
-					if(strlen($ndate) > 3) $yaml_new[] = "date: ".$ndate;
-					$yaml_new[] = "updated: ".strftime('%x %X');
-					if(strlen($nauthor) > 3) $yaml_new[] = "author: ".$nauthor;
-					if(strlen($nsource) > 3) $yaml_new[] = "source: ".$nsource;
+					if(strlen($tags_str) > 6) $yaml_new[] = trim($tags_str).'  ';
+					if(strlen($note_name) > 3) $yaml_new[] = trim("title: ".$note_name).'  ';
+					if(strlen($ndate) > 3) $yaml_new[] = trim("date: ".$ndate).'  ';
+					$yaml_new[] = trim("updated: ".strftime('%x %X')).'  ';
+					if(strlen($nauthor) > 3) $yaml_new[] = trim("author: ".$nauthor).'  ';
+					if(strlen($nsource) > 3) $yaml_new[] = trim("source: ".$nsource).'  ';
 					$yaml_new[] = $yh_end;
 					$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
 				}
