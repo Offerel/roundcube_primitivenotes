@@ -1,0 +1,26 @@
+﻿<?php
+$labels = array();
+$labels['notes'] = 'Poznámky';
+$labels['note_new'] = 'Nová';
+$labels['note_edit'] = 'Upravit';
+$labels['note_rename'] = 'Přejmenovat';
+$labels['note_del'] = 'Smazat';
+$labels['note_send'] = 'Odeslat';
+$labels['note_upload'] = 'Nahrát';
+$labels['note_title'] = 'Název poznámky';
+$labels['note_tags'] = 'Text oddělený čárkou (CSV)';
+$labels['note_inv_format'] = 'Nepodporovaný formát poznámky!';
+$labels['note_del_note'] = 'Opravdu chcete smazat "%note%"?';
+$labels['note_subject'] = 'Odeslat e-mailem: ';
+$labels['note_formathtml'] = 'HTML';
+$labels['note_formatmd'] = 'Markdown';
+$labels['note_formattxt'] = 'Čistý text';
+$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
+$labels['ariallabelnewoptions'] = 'Předvolby';
+$labels['note_defaultformat'] = 'Výchozí formát';
+$labels['note_listformat'] = 'Zobrazované formáty';
+$labels['note_yamls'] = 'Povolit YAML';
+$labels['note_rmedia_md'] = 'Odstranit automaticky vložená média';
+?>
