@@ -1,18 +1,18 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.6
+ * @version 2.0.7
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
  */
 window.rcmail && rcmail.addEventListener("init", function(a) {
-    rcmail.register_command("newnote", new_note, !0);
-    rcmail.register_command("editnote", edit_note, !0);
-    rcmail.register_command("deletenote", delete_note, !0);
-    rcmail.register_command("sendnote", send_note, !0);
-    rcmail.register_command("addnote", add_note, !0);
-    rcmail.register_command("mdnote", new_note, !0);
+	rcmail.register_command("newnote", new_note, !0);
+	rcmail.register_command("editnote", edit_note, !0);
+	rcmail.register_command("deletenote", delete_note, !0);
+	rcmail.register_command("sendnote", send_note, !0);
+	rcmail.register_command("addnote", add_note, !0);
+	rcmail.register_command("mdnote", new_note, !0);
 	rcmail.register_command("txtnote", new_note, !0);
 	rcmail.register_command("pnoptions", pnoptions, !0);
 	if(document.getElementById('upl')) document.getElementById('upl').addEventListener('change', sform, false );
@@ -35,7 +35,7 @@ function pnoptions() {
 }
 
 function add_note() {
-    document.getElementById("upl").click()
+	document.getElementById("upl").click()
 }
 
 function new_note(a) {
@@ -52,13 +52,13 @@ function new_note(a) {
 	$("#notescontentframe").contents().find("tags").addClass('edit');
 	$("#notescontentframe").contents().find("#tbutton").remove();
    
-    let tstate = {
-        tstate:false,
-        ttags:'',
-		    editor:'new',
-		    format:format,
-    };
-    document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
+	let tstate = {
+		tstate:false,
+		ttags:'',
+		editor:'new',
+		format:format,
+	};
+	document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
 	$("#notescontentframe").contents().find("#note_name")[0].placeholder = rcmail.gettext("note_title", "primitivenotes");
 	document.getElementById('editnote').classList.add('disabled');
 	document.getElementById('deletenote').classList.add('disabled');
@@ -80,17 +80,17 @@ function edit_note() {
 	let tstate = {
 		tstate:false,
 		editor:'edit',
-    };
+	};
 	document.getElementById('notescontentframe').contentWindow.postMessage(tstate, location.href);
 	$("#notescontentframe").contents().find("tags").addClass('edit');
 	document.getElementById('editnote').classList.add('disabled');
 }
 
 function delete_note() {
-    var a = window.frames.notescontentframe.document.getElementById("fname").value,
-        b = window.frames.notescontentframe.document.getElementById("headerTitle").innerText,
-        c = rcmail.gettext("note_del_note", "primitivenotes").replace("%note%", b);
-    if (a && b)
+	var a = window.frames.notescontentframe.document.getElementById("fname").value,
+		b = window.frames.notescontentframe.document.getElementById("headerTitle").innerText,
+		c = rcmail.gettext("note_del_note", "primitivenotes").replace("%note%", b);
+	if (a && b)
 		if (confirm(c)) 
 			$.ajax({
 				url: "plugins/primitivenotes/notes.php",
@@ -122,11 +122,11 @@ function delete_note() {
 }
 
 function send_note() {
-    var a = window.frames.notescontentframe.document.getElementById("fname").value,
-        b = a.substring(a.lastIndexOf(".") + 1); - 1 < "html pdf jpg png md txt".split(" ").indexOf(b) ? rcmail.goto_url("mail/compose", {
-        _note_type: b,
-        _note_filename: a
-    }, !0) : alert(rcmail.gettext("note_inv_format", "primitivenotes"))
+	var a = window.frames.notescontentframe.document.getElementById("fname").value,
+		b = a.substring(a.lastIndexOf(".") + 1); - 1 < "html pdf jpg png md txt".split(" ").indexOf(b) ? rcmail.goto_url("mail/compose", {
+		_note_type: b,
+		_note_filename: a
+	}, !0) : alert(rcmail.gettext("note_inv_format", "primitivenotes"))
 };
 
 function sform() {

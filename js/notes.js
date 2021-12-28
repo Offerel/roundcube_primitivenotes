@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.6
+ * @version 2.0.7
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -65,19 +65,9 @@ $(document).ready(function(){
         toolbar: 	[{ name: 'Save',
 						action: saveFile,
                         title: 'Save',
-						icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"></path></svg>',
+						icon: '<svg viewBox="0 0 24 24" style="width: 18px"><path fill="currentColor" d="M15 9H5V5h10m-3 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3m5-16H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4Z"></path></svg>',
                     }, '|',
-                    {
-						name: 'Undo',
-						action: EasyMDE.undo,
-						title: 'Undo',
-						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5,7A6.5,6.5 0 0,1 20,13.5A6.5,6.5 0 0,1 13.5,20H10V18H13.5C16,18 18,16 18,13.5C18,11 16,9 13.5,9H7.83L10.91,12.09L9.5,13.5L4,8L9.5,2.5L10.92,3.91L7.83,7H13.5M6,18H8V20H6V18Z"></path></svg>'
-					}, {
-						name: 'Redo',
-						action: EasyMDE.redo,
-						title: 'Redo',
-						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M10.5,7A6.5,6.5 0 0,0 4,13.5A6.5,6.5 0 0,0 10.5,20H14V18H10.5C8,18 6,16 6,13.5C6,11 8,9 10.5,9H16.17L13.09,12.09L14.5,13.5L20,8L14.5,2.5L13.08,3.91L16.17,7H10.5M18,18H16V20H18V18Z"></path></svg>'
-					}, '|', {
+					{
 						name: 'Bold',
 						action: EasyMDE.toggleBold,
 						title: 'Bold',
@@ -119,17 +109,25 @@ $(document).ready(function(){
 						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z"></path></svg>'
 					}, 
 					{
-						name: 'Generic List',
-						title: 'Generic List',
+						name: 'List',
+						title: 'List',
 						action: EasyMDE.toggleUnorderedList,
-						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z"></path></svg>'
+						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z"></path></svg>',
+						children: [
+							{
+								name: 'Generic List',
+								title: 'Generic List',
+								action: EasyMDE.toggleUnorderedList,
+								icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z"></path></svg>'
+							},{
+								name: 'Numbered List',
+								title: 'Numbered List',
+								action: EasyMDE.toggleOrderedList,
+								icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7,13V11H21V13H7M7,19V17H21V19H7M7,7V5H21V7H7M3,8V5H2V4H4V8H3M2,17V16H5V20H2V19H4V18.5H3V17.5H4V17H2M4.25,10A0.75,0.75 0 0,1 5,10.75C5,10.95 4.92,11.14 4.79,11.27L3.12,13H5V14H2V13.08L4,11H2V10H4.25Z"></path></svg>'
+							}
+						]
 					},
-					{
-						name: 'Numbered List',
-						title: 'Numbered List',
-						action: EasyMDE.toggleOrderedList,
-						icon: '<svg style="width: 20px;height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M7,13V11H21V13H7M7,19V17H21V19H7M7,7V5H21V7H7M3,8V5H2V4H4V8H3M2,17V16H5V20H2V19H4V18.5H3V17.5H4V17H2M4.25,10A0.75,0.75 0 0,1 5,10.75C5,10.95 4.92,11.14 4.79,11.27L3.12,13H5V14H2V13.08L4,11H2V10H4.25Z"></path></svg>'
-					}, '|',
+					'|',
                     {
 						name: 'Link',
 						title: 'Create Link',
@@ -137,16 +135,23 @@ $(document).ready(function(){
 						icon: '<svg style="width:20px;height:20px" viewBox="0 0 24 24"><path fill="currentColor" d="M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z" /></svg>'
 					}, 
                     { 
-						name: 'RImage',
-						title: 'Add image from URL',
-						action: uplInsertImage,
-                        icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z"></path></svg>'
-                    },
-                    { 
-						name: 'LImage',
-						title: 'Upload and insert local image',
-						action: uplLocalImage,
-						icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"></path></svg>'
+						name: 'Image',
+						title: 'Image',
+                        icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z"></path></svg>',
+						children: [
+							{
+								name: 'RImage',
+								title: 'Add image from URL',
+								action: uplInsertImage,
+								icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z"></path></svg>',
+							},
+							{
+								name: 'LImage',
+								title: 'Upload and insert local image',
+								action: uplLocalImage,
+								icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"></path></svg>'
+							}
+						]
                     },
                     {
 						name: 'Table',
@@ -166,12 +171,6 @@ $(document).ready(function(){
 						action: EasyMDE.toggleSideBySide,
 						icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px"><path d="M-74 29h48v48h-48V29zM0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none"></path><path d="M13 12h7v1.5h-7zm0-2.5h7V11h-7zm0 5h7V16h-7zM21 4H3c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 15h-9V6h9v13z"></path></svg>'
 					},
-					{
-						name: 'Fullscreen',
-						title: 'Toggle Fullscreen',
-						action: EasyMDE.toggleFullScreen,
-						icon: '<svg style="width: 24px;height: 24px;" viewBox="0 0 24 24"><path fill="currentColor" d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z"></path></svg>'
-					}, 
 					{
 						name: 'Guide',
 						title: 'Markdown Guide',
@@ -458,8 +457,20 @@ $(document).ready(function(){
 	}
 
     function firstNote() {
-		let nlist = document.getElementById('filelist');
-		(nlist.childElementCount > 0) ? showNote(nlist.firstElementChild.classList[0]):document.querySelector('.EasyMDEContainer').style.display = 'none';
+		document.querySelector('tags').classList.add('edit');
+
+		let nname = document.createElement('input');
+		nname.id = 'note_name';
+		nname.name = nname.id;
+		nname.type = 'text';
+		nname.style = 'font-size: 2em';
+		nname.required = true;
+		nname.value = '';
+
+		document.getElementById("headerTitle").replaceWith(nname);
+		document.getElementById("note_name").replaceWith(nname);
+		document.getElementById('hd').style = 'display: none;';
+		document.getElementById("note_name").placeholder = "Enter title";
 	}
 
 	function togglemData() {
@@ -523,27 +534,25 @@ $(document).ready(function(){
         window.parent.document.getElementById("sendnote").classList.remove('disabled');
         var fname = document.getElementById('entry' + id).value;
 
-        $.ajax({
-			type: "POST",
-            url: "notes.php",
-            data: {
-                "action": "showNote",
-                "filename": fname,
-                "id": id
-            },
-            success: function(data){
+		let xhr = new XMLHttpRequest();
+		let formData = 'action=showNote&filename='+fname+'&id='+id;
+		xhr.open('POST', 'notes.php', true);
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = function() {
+			if (xhr.status == 200) {
+				let data = xhr.responseText;
 				var note = JSON.parse(data);
 				if(document.getElementById('bcontent')) document.getElementById('bcontent').remove();
 				document.querySelector('.EasyMDEContainer').classList.remove('EasyMDEContainerH');
 				if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 				
-                let headerTitle = document.createElement('span');
-                headerTitle.id = 'headerTitle';
-                headerTitle.classList.add('headerTitle');
-                if(document.querySelector('#main_header #note_name')) document.querySelector('#main_header #note_name').replaceWith(headerTitle);
-                document.querySelector('tags').classList.remove('edit');
+				let headerTitle = document.createElement('span');
+				headerTitle.id = 'headerTitle';
+				headerTitle.classList.add('headerTitle');
+				if(document.querySelector('#main_header #note_name')) document.querySelector('#main_header #note_name').replaceWith(headerTitle);
+				document.querySelector('tags').classList.remove('edit');
 
-                document.getElementById('headerTitle').innerText = note.notename;
+				document.getElementById('headerTitle').innerText = note.notename;
 				document.getElementById('fname').value = note.filename;
 				document.getElementById('author').value = note.author;
 				document.getElementById('date').value = note.date;
@@ -623,11 +632,14 @@ $(document).ready(function(){
 					document.getElementById('main_area').appendChild(cdiv);
 					document.getElementById('editor1').style = 'display: none';
 					if(document.getElementById('atoolbar')) document.getElementById('atoolbar').remove();
-				}	
-
+				}
 				document.getElementById("db-spinner").parentNode.removeChild(loader);
-            }
-        });
+			}
+		};
+		xhr.onerror = function(e) {
+			console.error("Error! Unable to connect to server" + e);
+		};
+		xhr.send(formData);
     }
 
     function simage() {

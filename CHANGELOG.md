@@ -1,6 +1,10 @@
 ### v2.0.7
 - Added markdown linebreak in YAML
-
+- set JSON response header
+- Fix searchbox css
+- Rewwork toolbar
+- Empty start note
+ 
 ### v2.0.6
 - Added contextmenu
 - Updated easyMDE to v2.14.0

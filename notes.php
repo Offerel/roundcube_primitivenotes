@@ -2,13 +2,14 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.6
+ * @version 2.0.7
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
  */
 define('INSTALL_PATH', realpath(__DIR__ . '/../../') . '/');
 include INSTALL_PATH . 'program/include/iniset.php';
+
 $rcmail = rcmail::get_instance();
 
 if (!empty($rcmail->user->ID)) {
@@ -88,13 +89,14 @@ if(is_dir($notes_path) && !isset($_POST['action']) || $_POST['action'] == 'getTa
 							}
 						}
 					}
-
+					
 					if(is_array($tags) && count($tags) > 0) {
 						$ttags = explode(" ", $tags[1]);
 						$taglist = array_merge($taglist,$ttags);
 					} else {
 						$ttags = "";
 					}
+					
 
 					$files[] = array(
 						'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
@@ -163,8 +165,9 @@ if(isset($_POST['action'])) {
 				'source'	=> $source,
 				'updated'	=> $updated,
 			];
-
-			die(json_encode($noteArr));
+			$ndata = json_encode($noteArr);
+			header('Content-Type: application/json');
+			die($ndata);
 			break;
 		case 'getTags':
 			$tlist = [];
@@ -417,7 +420,7 @@ function human_filesize($bytes, $decimals = 2) {
 	<body style="margin: 0; padding: 0;">
 		<div id="sidebar" class="uibox listbox">
 			<div id="filelist_header">
-				<span class="searchbox" style="background: url(./../../skins/larry/images/buttons.png) 0 -316px white no-repeat;"><input type="text" id="notesearch" name="notesearch" /></span>				
+				<span class="searchbox"><input type="text" id="notesearch" name="notesearch" placeholder="Search..." /></span>	
 			</div>
 			<div class="filelist" id="entrylist">
 				<ul id="filelist">

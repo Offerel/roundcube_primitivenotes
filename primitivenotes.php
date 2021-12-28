@@ -2,21 +2,19 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.6
+ * @version 2.0.7
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
  */
-class primitivenotes extends rcube_plugin
-{
+class primitivenotes extends rcube_plugin{
 	public $task = '?(?!login|logout).*';
 	
 	public function init() {
 		$rcmail = rcmail::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		$this->include_stylesheet($this->local_skin_path() . '/plugin.min.css');
-		$this->include_script('js/primitivenotes.min.js');
+		$this->include_stylesheet($this->local_skin_path() . '/plugin.css');
 		$this->register_task('notes');
 		
 		$this->add_button(array(
@@ -30,6 +28,7 @@ class primitivenotes extends rcube_plugin
 		), 'taskbar');
 
 		if ($rcmail->task == 'notes') {
+			$this->include_script('js/primitivenotes.js');
 			$this->register_action('index', array($this, 'action'));
 			$rcmail->output->set_env('refresh_interval', 0);
 		}
@@ -176,12 +175,12 @@ class primitivenotes extends rcube_plugin
 }
 
 if ($_FILES) {
-		$test_name = $_FILES['files']['name'];
-		$ext_pos = strripos($test_name,".");
-		$fname = substr($test_name,0,$ext_pos);
-		$ext = substr(strrchr($test_name, "."), 1);
-		if(strlen($fname) > 225) $fname = substr($fname, 0, 225 );
-		if(file_exists($_POST['path'].$fname.".".$ext)) $fname = $fname."-".time();
-		move_uploaded_file($_FILES['files']['tmp_name'], $_POST['path'].$fname.".".$ext);
+	$test_name = $_FILES['files']['name'];
+	$ext_pos = strripos($test_name,".");
+	$fname = substr($test_name,0,$ext_pos);
+	$ext = substr(strrchr($test_name, "."), 1);
+	if(strlen($fname) > 225) $fname = substr($fname, 0, 225 );
+	if(file_exists($_POST['path'].$fname.".".$ext)) $fname = $fname."-".time();
+	move_uploaded_file($_FILES['files']['tmp_name'], $_POST['path'].$fname.".".$ext);
 }
 ?>
