@@ -4,6 +4,7 @@
 - Fix searchbox css
 - Rewwork toolbar
 - Empty start note
+- Added empty line between YAML and body
  
 ### v2.0.6
 - Added contextmenu

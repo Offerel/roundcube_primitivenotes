@@ -219,7 +219,7 @@ if(isset($_POST['action'])) {
 					if(strlen($nauthor) > 3) $yaml_new[] = trim("author: ".$nauthor).'  ';
 					if(strlen($nsource) > 3) $yaml_new[] = trim("source: ".$nsource).'  ';
 					$yaml_new[] = $yh_be;
-					$note_content = implode("\r\n", $yaml_new)."\r\n".$note_content;
+					$note_content = implode("\r\n", $yaml_new)."\r\n\r\n".$note_content;
 				}
 				$new_name = $note_name.".".$note_type;
 			} else {
