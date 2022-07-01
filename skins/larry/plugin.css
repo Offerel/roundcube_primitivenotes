@@ -1,54 +1,86 @@
-#taskbar a.button-notes span.button-inner {
-    background: url(images/notes002.png) no-repeat;
-    background-position: 0 0;
-    display: inline-block;
+#layout-list {
+	width: 300px;
+	float: left;
 }
-#taskbar a.button-notes:hover span.button-inner, #taskbar a.button-notes.button-selected span.button-inner {
-    background-position: 0 -24px;
+#notes-list {
+	width: 300px;
 }
-.menuentry {
-    color: #fff!important;
+#layout-content {
+	margin-left: 310px;
+	height: 100%;
 }
-.menuentry:hover {
-    background: #0883d0;
+#tocdiv li:not(.ul)::before {
+	color: #0069a6;
 }
 #notestoolbar {
-    top: -6px;
-    position: absolute;
+	top: -50px;
+	position: absolute;
+	height: 40px;
+	width: 100%;
 }
-.toolbar a.button:focus {
-    color: #fff;
-    background-color: rgba(30, 150, 192, 0.5)!important;
-    border-radius: 3px;
+.EasyMDEContainer .CodeMirror {
+	height: calc(100vh - 255px) !important;
 }
-#notestoolbar a.button.edit {
-    background: url(images/button_edit.png) 18px 2px no-repeat transparent;
+.notessearch {
+	position: relative;
+	float: right;
 }
-#notestoolbar a.button.rename {
-    background: url(images/button_rename.png) 18px 2px no-repeat transparent;
+.notessearch::before {
+	content: ' ';
+	background: url(../../../../skins/larry/images/buttons.png) -2px -317px no-repeat;
+	position: absolute;
+	z-index: 1;
+	width: 15px;
+	height: 18px;
+	margin-top: 3px;
+	margin-left: 5px;
 }
-#notestoolbar a.button.delete {
-    background: url(images/button_del.png) 14px 2px no-repeat transparent;
+#notessearchform {
+	padding-left: 25px;
 }
-#notestoolbar a.button.send {
-    background: url(images/button_send.png) 14px 2px no-repeat transparent;
+#notesviewsplitter {
+	top: 100px;
+	margin-left: 300px;
+	width: 10px;
+	background: #cad2d9;
+	position: fixed;
+	display: block;
+	z-index: 1000;
+	bottom: 15px;
+}
+.scroller {
+	top: 0 !important;
 }
 #notestoolbar a.button.new {
-    background: url(images/button_new.png) 7px 2px no-repeat transparent;
+    background: url(images/button_new.png) 15px 2px no-repeat transparent;
     margin-left: 10px;
 }
 #notestoolbar a.button.upload {
     background: url(images/button_upload.png) 14px 2px no-repeat transparent;
 }
-#notestoolbar .disabled {
-    pointer-events: none;
+.listing li a {
+	height: 30px;
+	line-height: 16px;
 }
-.upl {
-    display: none;
+.size {
+	margin-top: -15px !important;
 }
-#sections-table #rcmrowprimitivenotes .section {
-	background-position: 4px -236px;
+.subject {
+	width: calc(100% - 4em);
 }
-#sections-table #rcmrowprimitivenotes.selected .section {
-	background-position: 4px -261px;
+#headerTitle {
+	width: calc(100% - 40px) !important;
+}
+.tagify {
+	width: calc(100% - 30px);
+}
+.editor-toolbar {
+	padding-left: 20px !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+#taskbar a.button-notes span.button-inner {
+    background: url(images/notes002.png) no-repeat;
+    background-position: 0 0;
+    display: inline-block;
 }

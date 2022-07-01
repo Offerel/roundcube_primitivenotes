@@ -14,7 +14,13 @@ class primitivenotes extends rcube_plugin{
 		$rcmail = rcmail::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		$this->include_stylesheet($this->local_skin_path() . '/plugin.css');
+		$this->include_stylesheet($this->local_skin_path().'/plugin.css');
+		$this->include_stylesheet('skins/primitivenotes.css');
+		$this->include_stylesheet('js/highlight/styles/monokai.css');
+		$this->include_stylesheet('js/easymde/easymde.min.css');
+		$this->include_stylesheet('js/easymde/font-awesome.min.css');
+		$this->include_stylesheet('js/tagify/tagify.css');
+
 		$this->register_task('notes');
 		
 		$this->add_button(array(
@@ -29,7 +35,19 @@ class primitivenotes extends rcube_plugin{
 
 		if ($rcmail->task == 'notes') {
 			$this->include_script('js/primitivenotes.js');
+			$this->include_script('js/highlight/highlight.min.js');
+			$this->include_script('js/easymde/easymde.min.js');
+			$this->include_script('js/tagify/tagify.min.js');
+			$this->include_script('js/turndown/turndown.min.js');
 			$this->register_action('index', array($this, 'action'));
+			$this->register_action('displayNote', array($this, 'showNote'));
+			$this->register_action('saveNote', array($this, 'editNote'));
+			$this->register_action('getNote', array($this, 'getNote'));
+			$this->register_action('delNote', array($this, 'deleteNote'));
+			$this->register_action('delMedia', array($this, 'deleteMedia'));
+			$this->register_action('uplMedia', array($this, 'uploadMedia'));
+			$this->register_action('uplNote', array($this, 'uploadNote'));
+			$this->register_action('blink', array($this, 'getMedia'));
 			$rcmail->output->set_env('refresh_interval', 0);
 		}
 
@@ -40,6 +58,219 @@ class primitivenotes extends rcube_plugin{
 		}
 
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
+		$this->register_handler('plugin.notes_list', array($this, 'notes_list'));
+
+
+	}
+	
+	function getMedia() {
+		$rcmail = rcmail::get_instance();
+		$mfile = rcube_utils::get_input_value('_file', rcube_utils::INPUT_GET, false);
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$media_path = $notes_path.$rcmail->config->get('media_folder', false);
+		$media_path = ($media_path[-1] != '/') ? $media_path.'/':$media_path;
+		$media_path.= $mfile;
+		
+		if(file_exists($media_path)) {
+			$file = file_get_contents($media_path);
+			$hash = sha1($media_path);
+			$mime_type = mime_content_type($media_path);
+			header("Content-Disposition: inline;filename=\"$mfile\"");
+			header("Content-type: $mime_type");
+			header("ETag: $hash");
+			header("Last-Modified: ".gmdate('D, d M Y H:i:s T', filemtime($media_path)));
+			header('Content-Length: '.filesize($media_path));
+			echo($file);
+		}
+		
+		die();
+	}
+	
+	function uploadMedia() {
+		$rcmail = rcmail::get_instance();
+		$oname = $_FILES['dropFile']['name'];
+		$path_parts = pathinfo($oname);
+
+		$filename = time().'.'.$path_parts['extension'];
+
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		
+		$media_path = $rcmail->config->get('media_folder', false);
+		$media_path = ($media_path[-1] != '/') ? $media_path.'/':$media_path;
+		
+		if(move_uploaded_file($_FILES['dropFile']['tmp_name'], $notes_path.$media_path.$filename)) {
+			echo($media_path.$filename);
+		} else {
+			echo('Media Upload failure. Check server...');
+		}
+		die();
+	}
+	
+	function uploadNote() {
+		$rcmail = rcmail::get_instance();
+		$oname = $_FILES['dropFile']['name'];
+		$path_parts = pathinfo($oname);
+
+		$filename = (strlen($path_parts['filename']) > 225) ? substr($path_parts['filename'], 0, 225):$path_parts['filename'];
+
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$notes_path = $notes_path.$filename.'.'.$path_parts['extension'];
+
+		move_uploaded_file($_FILES['dropFile']['tmp_name'], $notes_path);
+		echo $this->notes_list();
+		$rcmail->output->send('primitivenotes.template');
+	}
+
+	function notes_list() {
+		$rcmail = rcmail::get_instance();
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$taglist = array();
+		$yh_be = '---';
+
+		if(is_dir($notes_path) && !isset($_POST['action']) || $_POST['action'] == 'getTags') {
+			$taglist = array();
+			if ($handle = opendir($notes_path)) {
+				while (($file = readdir($handle)) !== false) {
+					if (is_file($notes_path.$file)) {
+						$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
+						$ext = pathinfo($notes_path.$file,PATHINFO_EXTENSION);
+						$supported_ext = $rcmail->config->get('list_formats', false);
+						if(in_array($ext,$supported_ext)) {				
+							$tags = null;
+							$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
+							if($rcmail->config->get('yaml_support', '') && stripos($file,".md")) {
+								$contents = file_get_contents($notes_path.$file);
+								$yhb_pos = strpos($contents, $yh_be);
+								$yhe_pos = strlen($contents) >= strlen($yh_be) ? strpos($contents, $yh_be, strlen($yh_be)) : 0;
+								if($yhb_pos == 0 && $yhe_pos > 0) {
+									$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_be)));
+									foreach($yaml_arr as $line) {
+										if(strpos($line,"tags:") === 0) {
+											$tags[1] = substr($line,6);								
+										}
+									}
+								}
+							}
+							
+							if(is_array($tags) && count($tags) > 0) {
+								$delm = (strpos($tags[1], ', ') === false) ? ' ':', ';
+								$ttags = explode($delm, $tags[1]);
+								$taglist = array_merge($taglist,$ttags);
+							} else {
+								$ttags = "";
+							}
+							
+							$files[] = array(
+								'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
+								'filename' => $name,
+								'size' => filesize($notes_path.$file),
+								'type' => $ext,
+								'time' => filemtime($notes_path.$file),
+								'tags' => $ttags,
+								'id' => $id
+								);
+							}	
+						$id++;
+						}
+					}
+				closedir($handle);
+			}
+			$taglist = array_unique($taglist);
+		}
+		
+		if(is_array($files) && count($files) > 0  && !isset($_POST['action'])) {
+			usort($files, function($a, $b) { return $b['time'] > $a['time']; });
+		}
+
+		if(is_array($files) && $files) {
+			foreach ($files as $fentry) {
+				if(strlen($fentry['name']) > 0 ) {
+					$fsize = $this->human_filesize($fentry['size'], 2);
+					if(is_array($fentry['tags'])) {
+						$tlist = implode(", ",$fentry['tags']);
+					} else
+						$tlist = "";
+					
+					$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
+					$filename = $fentry['filename'];
+					$format = $fentry['type'];
+					$pnlist.="<li id='$id' class='$id $format' data-tags='$tlist' data-name='$filename'>
+								<a id='note_$id' title='".$fentry['name']."' >
+									<div class='subject'>".$fentry['name']."</div>
+									<div class='size'>$fsize</div>
+									<div class='date'>".date("d.m.y H:i",$fentry['time'])."</div>
+								</a>
+							</li>";
+				}
+			}
+			
+			asort($taglist, SORT_LOCALE_STRING | SORT_FLAG_CASE );
+			$rcmail->output->set_env('taglist', json_encode(array_values($taglist)));
+			return html::div(array('id' => 'pnlist', 'class' => 'listing nlist treelist'), $pnlist);
+		} else {
+			$rcmail->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
+		}
+    }
+
+	function getNote() {
+		$rcmail = rcmail::get_instance();
+		$file = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$notes_path = $notes_path.$file;
+		$note = file_get_contents($notes_path);
+		$rcmail->output->command('plugin.getNote', array('message' => 'done', 'file' => $file, 'type' => mime_content_type($notes_path), 'note' => $note));
+	}
+
+	function deleteNote() {
+		$rcmail = rcmail::get_instance();
+		$file = rcube_utils::get_input_value('_file', rcube_utils::INPUT_POST, false);
+		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$notes_path = $notes_path.$file;
+		
+		if(file_exists($notes_path)) {
+			if(substr ($file, -3) == ".md" && boolval($rcmail->config->get('rm_md_media', false))) {
+				$fcontent = file_get_contents($notes_path);
+				preg_match_all('/(?:!\[(.*?)\]\((.*?)\))/m', $fcontent, $mediaFiles, PREG_SET_ORDER, 0);
+				$mfiles = [];
+				$mpath = $rcmail->config->get('media_folder', false);
+				foreach($mediaFiles as $mKey => $mFile) {
+					if(strpos($mFile[2], $mpath) !== false) $mfiles[] = basename($mFile[2]);
+				}
+			}
+			
+			if(!unlink($notes_path)) {
+				$rcmail->output->show_message("Could not delete '$name'. Please check path and permissions.","error");
+			} else {
+				if($mfiles) {
+					$org = array("%count%", "%note%");
+					$rpl = array(count($mfiles), "'$name'");
+					$message = str_replace($org, $rpl, $this->gettext('note_media_del'));
+					$mArr = [
+					    "message" => $message,
+					    "files" => $mfiles,
+					];
+					
+					$rcmail->output->command('plugin.savedNote', array('message' => 'done', 'list' => $this->notes_list(), 'mfiles' => $mArr));
+				} else {
+					$rcmail->output->command('plugin.savedNote', array('message' => 'done', 'list' => $this->notes_list()));
+				}
+			}
+		} else {
+			$rcmail->output->show_message("'$name' not found. Please check your path settings","error");
+		}
 	}
 
 	function pmn_preferences_sections_list($p) {
@@ -100,11 +331,13 @@ class primitivenotes extends rcube_plugin{
 	function note_mail_compose($args) {
 		$rcmail = rcmail::get_instance();
 		$filename = $args['param']['note_filename'];
+
 		if(stripos($filename, "[")) {
 			$name = substr($filename, 0, stripos($filename, "["));
 		} else {
 			$name = substr($filename, 0, stripos($filename, "."));
 		}
+
 		$type = substr($filename,stripos($filename, ".")+1);
 		if(strlen($name) > 0) {
 			$subject = $this->gettext('note_subject').$name;
@@ -117,12 +350,13 @@ class primitivenotes extends rcube_plugin{
 		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
 		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
 		$note_file = $notes_path.$filename;
+
 		if(file_exists($note_file)) {
 			$handle = fopen ($note_file, "r");
 			$note_content = fread($handle, filesize($note_file));
 			fclose ($handle);
 		} else {
-			error_log("PrimitiveNotes: Note not found. Attach the note to the mail failed.");
+			$rcmail->output->show_message("Note not found. Attach the note to the mail failed.","error");
 		}
 		if($type != "") {
 			switch ($type) {
@@ -132,7 +366,7 @@ class primitivenotes extends rcube_plugin{
 				case 'png': $mimetype = mime_content_type($note_file); break;
 				case 'md': $mimetype = mime_content_type($note_file); break;
 				case 'txt': $mimetype = mime_content_type($note_file); break;
-				default: error_log("PrimitiveNotes: Unsupported file format ($type). Attach the note to the mail failed."); return false;
+				default: $rcmail->output->show_message("Unsupported file format ($type). Attach the note to the mail failed.","error"); return false;
 			}
 		}
 		
@@ -146,41 +380,176 @@ class primitivenotes extends rcube_plugin{
 		$args['param']['subject'] = $subject;
 		return $args;
 	}
-	
-	function action() {
-		$rcmail = rcmail::get_instance();	
-		$rcmail->output->add_handlers(array(
-        	'notescontent' => array($this, 'content'),
-        	'tablink' => array($this, 'tablink'),
-        ));
 
+	function action() {
+		$rcmail = rcmail::get_instance();
 		$notes_path = $rcmail->config->get('notes_path', false);
 		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
 		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
-		$rcmail->output->set_env('npath', $notes_path);
 		$rcmail->output->set_env('dformat', $rcmail->config->get('default_format', false));
-		$rcmail->output->add_handlers(array('notescontent' => array($this, 'content'),));
+		$rcmail->output->set_env('aformat', $rcmail->config->get('list_formats', false));
+		$rcmail->output->set_env('mfolder', $rcmail->config->get('media_folder', false));
 		$rcmail->output->set_pagetitle($this->gettext('notes'));
 		$rcmail->output->send('primitivenotes.template');
 	}
 
-	function content($attrib) {
+	function showNote() {
 		$rcmail = rcmail::get_instance();
-		$this->include_script('js/primitivenotes.min.js');
-		$attrib['src'] = 'plugins/primitivenotes/notes.php';
-		if (empty($attrib['id'])) $attrib['id'] = 'rcmailnotescontent';
-		$attrib['name'] = $attrib['id'];
-		return $rcmail->output->frame($attrib);
-	}
-}
+		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
+		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$note = $notes_path.$nname;
 
-if ($_FILES) {
-	$test_name = $_FILES['files']['name'];
-	$ext_pos = strripos($test_name,".");
-	$fname = substr($test_name,0,$ext_pos);
-	$ext = substr(strrchr($test_name, "."), 1);
-	if(strlen($fname) > 225) $fname = substr($fname, 0, 225 );
-	if(file_exists($_POST['path'].$fname.".".$ext)) $fname = $fname."-".time();
-	move_uploaded_file($_FILES['files']['tmp_name'], $_POST['path'].$fname.".".$ext);
+		if(file_exists($note)) {
+			$fcontent = file_get_contents($note);
+			$yh_be = '---';
+
+			if($rcmail->config->get('yaml_support', '')) {
+				$yhb_pos = strpos($fcontent, $yh_be);
+				$yhe_pos = strlen($fcontent) >= strlen($yh_be) ? strpos($fcontent, $yh_be, strlen($yh_be)):0;
+				if($yhb_pos == 0 && $yhe_pos > 0) {
+					$yaml = substr($fcontent, 0, $yhe_pos);
+					$fcontent = substr($fcontent,$yhe_pos + strlen($yh_be));
+				}
+			}
+
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $yaml) as $line){
+				if(strpos($line, 'tags:') === 0) {
+					$res = explode(': ', $line);
+					$delm = (strpos($res[1], ', ') === false) ? ' ':', ';
+					$ytags = explode($delm, $res[1]);
+				}
+
+				if(strpos($line, 'author:') === 0) {
+					$author = explode(': ', $line)[1];
+				}
+
+				if(strpos($line, 'date:') === 0) {
+					//$date = explode(': ', $line)[1];
+					$date = strtotime(explode(': ', $line)[1]);
+				}
+
+				if(strpos($line, 'updated:') === 0) {
+					//$updated = explode(': ', $line)[1];
+					$updated = strtotime(explode(': ', $line)[1]);
+				}
+
+				if(strpos($line, 'source:') === 0) {
+					$source = explode(': ', $line)[1];
+				}
+			}
+
+			$path_parts = pathinfo($note);
+			$mime_type = mime_content_type($note);
+			$fcontent = (substr($mime_type, 0, 4) === 'text') ? $fcontent:base64_encode($fcontent);
+
+			$tagString = substr($filename, stripos($filename, "["), stripos($filename, "]"));
+			$tagA = explode(' ', $tagString);
+
+			if(is_array($ytags)) {
+				$TagsArray = array_unique(array_merge($tagA, $ytags));
+				$TagsArray = array_filter($TagsArray);
+				sort($TagsArray, SORT_STRING);
+			}
+
+			$notea = array(
+				'name'		=> substr($nname,0, (stripos($nname,'[')) ? stripos($nname,'['):stripos($nname,'.')),
+				'content'	=> (stripos($mime_type, 'text') === 0) ? trim($fcontent):"data:$mime_type;base64,".$fcontent,
+				'format'	=> $path_parts['extension'],
+				'author'	=> $author,
+				'date'		=> $date,
+				'updated'	=> $updated,
+				'source'	=> $source,
+				'id'		=> $id,
+				'mime_type'	=> $mime_type,
+				'filename'	=> $nname,
+				'tags'		=> $TagsArray
+				);
+			$rcmail->output->command('plugin.loadNote', array('message' => 'done.','note' => $notea, 'mode' => $mode));
+			return true;
+		} elseif($filename != "" ) {
+			$rcmail->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
+			return false;
+		}
+	}
+
+	function editNote() {
+		$rcmail = rcmail::get_instance();
+		$oname = rcube_utils::get_input_value('_oname', rcube_utils::INPUT_POST, false);
+		$nname = rcube_utils::get_input_value('_title', rcube_utils::INPUT_POST, false);
+		$content = rcube_utils::get_input_value('_content', rcube_utils::INPUT_POST, true);
+		$tags = implode(', ', rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false));
+		$author = rcube_utils::get_input_value('_author', rcube_utils::INPUT_POST, false);
+		$created = rcube_utils::get_input_value('_date', rcube_utils::INPUT_POST, false);
+		$updated = rcube_utils::get_input_value('_updated', rcube_utils::INPUT_POST, false);
+		$source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_POST, false);
+
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+
+		$ofile = $notes_path.$oname;
+		$path_parts = pathinfo($ofile);
+		$type = explode('.', $path_parts['basename'])[1];
+
+		$type = (strlen($type) > 0) ? $type:$rcmail->config->get('default_format', false);
+		$nfile = $notes_path.$nname.'.'.$type;
+
+		$yaml = '';
+		if($rcmail->config->get('yaml_support')) {
+			$yaml = "---\n";
+			$yaml.= "title: ".$nname."\n";
+			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
+			$yaml.= (strlen($created) > 0) ? "date: ".$created."\n":"date: ".strftime('%x %X')."\n";
+			$yaml.= "updated: ".strftime('%x %X')."\n";
+			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$rcmail->user->get_username()."\n";
+			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";
+			$yaml.= "---\n\n";
+		}
+
+		$save_allowed = array("txt", "md");
+		
+		if(in_array($type, $save_allowed)) {
+			if((strlen($oname) > 0) && ($nfile != $ofile)) {
+				if(!rename($ofile, $nfile)) {
+					$rcmail->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
+				}
+			}
+			if(!file_put_contents($nfile, $yaml.$content, true)) {
+				$rcmail->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
+			} else {
+				$rcmail->output->command('plugin.savedNote', array('message' => 'saved', 'list' => $this->notes_list()));
+			}
+		}
+	}
+	
+	function deleteMedia() {
+		$rcmail = rcmail::get_instance();
+		$mfiles = explode(',', rcube_utils::get_input_value('_media', rcube_utils::INPUT_POST, false));
+		$notes_path = $rcmail->config->get('notes_path', false);
+		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $rcmail->user->get_username(), $notes_path);
+		$notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+		$media_path = $notes_path.$rcmail->config->get('media_folder', false);
+		$media_path = ($media_path[-1] != '/') ? $media_path.'/':$media_path;
+		
+		foreach($mfiles as $key => $file) {
+			$rfile = filter_var($file, FILTER_SANITIZE_STRING);
+			$rfile = $media_path.$rfile;
+			if(file_exists($rfile)) {
+				if(!unlink($rfile)) $rcmail->output->show_message("'$file' not removed. Please check path/permissions","error");
+			} else {
+				$rcmail->output->show_message("'$file' does not exist","error");
+			}
+		}
+	}
+
+	function human_filesize($bytes, $decimals = 2) {
+		$sz = 'BKMGTP';
+		$factor = round((strlen($bytes) - 1) / 3);
+		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+	}
 }
 ?>

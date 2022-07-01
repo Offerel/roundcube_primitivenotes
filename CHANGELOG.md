@@ -1,10 +1,13 @@
 ### v2.0.7
+- Rewrite of most parts
 - Added markdown linebreak in YAML
-- set JSON response header
-- Fix searchbox css
-- Rewwork toolbar
+- set JSON response headers
 - Empty start note
 - Added empty line between YAML and body
+- EasyMDE 2.16.1      (https://github.com/Ionaru/easy-markdown-editor)
+- Highlight.js 11.5.1 (https://highlightjs.org/)
+- Tagify 4.12.0       (https://github.com/yairEO/tagify)
+- Turndown 7.1.1      (https://github.com/mixmark-io/turndown)
  
 ### v2.0.6
 - Added contextmenu

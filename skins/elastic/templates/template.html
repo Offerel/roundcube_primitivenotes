@@ -1,51 +1,41 @@
 <roundcube:include file="includes/layout.html" />
 <roundcube:include file="includes/menu.html" />
-<h1 class="voice"><roundcube:label name="primitivenotes.notes" /></h1>
-<div id="content" class="content selected" role="main">
-	<div class="header pnlisth">
-		<ul class="menu toolbar listing iconized">
-			<li role="menuitem">
-				<span class="dropbutton active">
-					<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button create" label="primitivenotes.note_new" title="primitivenotes.note_new" />
-					<a href="#new-note" class="button dropdown" id="newmenulink" aria-haspopup="true" aria-expanded="false" data-popup="newmenu-menu" aria-owns="newmenu-menu" tabindex="0"></a>
-				</span>
-			</li>
-			<li>
-				<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button upload" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
-			</li>
-			<li role="menuitem">
-				<roundcube:button innerclass="inner" id="pnoptions" command="pnoptions" type="link" class="button pnoptions" label="options" title="options" />
-			</li>
-		</ul>
+<h1 class="voice"><roundcube:label name="notes" /></h1>
+<!-- notes list -->
+<div id="layout-list" class="listbox">
+	<div id="messagelist-header" class="header">
+		<a class="button icon task-menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
+		<roundcube:button innerclass="inner" id="newnote" command="newnote" type="link" class="button icon toolbar-button" label="primitivenotes.note_new" title="primitivenotes.note_new" />
+		<roundcube:button innerclass="inner" id="addnote" command="addnote" type="link" class="button icon toolbar-button" label="primitivenotes.note_upload" title="primitivenotes.note_upload" />
+		<roundcube:button innerclass="inner" id="pnoptions" command="pnoptions" type="link" class="button icon toolbar-button" label="options" title="options" />
 	</div>
-	<div class="header">
-		<ul id="nmenu" class="menu toolbar listing iconized">
-			<li role="menuitem">
-				<roundcube:button innerclass="inner" id="editnote" command="editnote" type="link" class="button edit disabled" label="primitivenotes.note_edit" title="primitivenotes.note_edit" />
-			</li>
-			<li>
-				<roundcube:button innerclass="inner" id="deletenote" command="deletenote" type="link" class="button delete disabled" label="primitivenotes.note_del" title="primitivenotes.note_del" />
-			</li>
-			<li>
-				<roundcube:button innerclass="inner" id="sendnote" command="sendnote" type="link" class="button send disabled" label="primitivenotes.note_send" title="primitivenotes.note_send" />
-			</li>
-			<form id="upl_form" method="POST" enctype="multipart/form-data"><input name="path" value="<roundcube:var name="env:npath" />" type="hidden" /><input type="file" id="upl" class="upl" name="files" /></form>
-		</ul>
-		<a class="button icon menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
+	<div role="search" aria-labelledby="aria-label-notesquicksearchbox" class="searchbar menu">
+		<span id="nspan"><input name="_q" id="notessearchform" class="no-bs" placeholder="Search …" type="text"></span>
 	</div>
-	<div class="iframe-wrapper">
-		<div id="pluginbody" class="offset">
-			<div class="iframebox simplenotes_<roundcube:var name='env:action' />">
-				<roundcube:object name="notescontent" id="notescontentframe" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
-			</div>
+	<h2 id="aria-label-noteslist" class="voice"><roundcube:label name="arialabelnoteslist" /></h2>
+	<div id="notes-list" class="scroller">
+		<roundcube:object name="plugin.notes_list" />
+	</div>
+</div>
+<!-- notes preview 2-->
+<div id="layout-content">
+	<form id="upl_form" action="&_action=uplNote" method="POST" enctype="multipart/form-data"><input type="file" id="upl" class="upl" name="dropFile" /></form>
+	<form method="POST" id="metah">
+		<div id="main_header" class="main_header">
+			<a class="button icon back-list-button" href="#back"><span class="inner"><roundcube:label name="back" /></span></a>
+			<input id="headerTitle"></input>
+			<input id="fname" name="fname" type="hidden">
+			<input id="ntags" name="ntags" class="taedit">
 		</div>
-		<div id="newmenu" class="popupmenu" aria-hidden="true">
-			<ul id="newmenu-menu" class="toolbarmenu listing" role="menu">
-				<roundcube:button type="link-menuitem" command="mdnote" class="menuentry" label="primitivenotes.note_formatmd" prop="md" />
-				<roundcube:button type="link-menuitem" command="txtnote" class="menuentry" label="primitivenotes.note_formattxt" prop="txt" />
-				<roundcube:container name="newmenu" id="newmenu-menu" />
-			</ul>
+		<div class="main_area" id="main_area">
+			<fieldset id="ndata">
+				<div><label for="author">Author</label><input id="author" name="author" type="text" readonly="true" /></div>
+				<div><label for="date">Created</label><input id="date" name="date" type="text" readonly="true" /></div>
+				<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" readonly="true" /></div>
+				<div><label for="source">Source</label><input id="source" name="source" type="text" readonly="true" placeholder="source" /></div>
+			</fieldset>
+			<textarea id="editor1" name="editor1"></textarea>
 		</div>
-	</div>
+	</form>
 </div>
 <roundcube:include file="includes/footer.html" />
