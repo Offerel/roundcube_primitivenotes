@@ -484,15 +484,8 @@ function loadNote(response) {
 	document.getElementById('ntags').value = response.note.tags;
 	document.getElementById('author').value = response.note.author;
 
-	let toptions = {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-		hour: '2-digit',
-		minute: '2-digit'
-	};
-	document.getElementById('date').value = new Date(response.note.date * 1000).toLocaleString(undefined, toptions);
-	document.getElementById('updated').value = new Date(response.note.updated * 1000).toLocaleString(undefined, toptions);
+	document.getElementById('date').value = response.note.date;
+	document.getElementById('updated').value = response.note.updated;
 	
 	document.getElementById('source').value = response.note.source;
 	document.getElementById('source').title = response.note.source;

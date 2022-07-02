@@ -59,8 +59,6 @@ class primitivenotes extends rcube_plugin{
 
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
 		$this->register_handler('plugin.notes_list', array($this, 'notes_list'));
-
-
 	}
 	
 	function getMedia() {
@@ -202,11 +200,13 @@ class primitivenotes extends rcube_plugin{
 					$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
 					$filename = $fentry['filename'];
 					$format = $fentry['type'];
+					$formatter = new IntlDateFormatter($rcmail->get_user_language(), IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
+
 					$pnlist.="<li id='$id' class='$id $format' data-tags='$tlist' data-name='$filename'>
 								<a id='note_$id' title='".$fentry['name']."' >
 									<div class='subject'>".$fentry['name']."</div>
 									<div class='size'>$fsize</div>
-									<div class='date'>".date("d.m.y H:i",$fentry['time'])."</div>
+									<div class='date'>".$formatter->format($fentry['time'])."</div>
 								</a>
 							</li>";
 				}
@@ -395,6 +395,7 @@ class primitivenotes extends rcube_plugin{
 
 	function showNote() {
 		$rcmail = rcmail::get_instance();
+		$formatter = new IntlDateFormatter($rcmail->get_user_language(), IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
 		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
 		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
 		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
@@ -428,13 +429,11 @@ class primitivenotes extends rcube_plugin{
 				}
 
 				if(strpos($line, 'date:') === 0) {
-					//$date = explode(': ', $line)[1];
-					$date = strtotime(explode(': ', $line)[1]);
+					$date = $formatter->format(strtotime(explode(': ', $line)[1]));
 				}
 
 				if(strpos($line, 'updated:') === 0) {
-					//$updated = explode(': ', $line)[1];
-					$updated = strtotime(explode(': ', $line)[1]);
+					$updated = $formatter->format(strtotime(explode(': ', $line)[1]));
 				}
 
 				if(strpos($line, 'source:') === 0) {
@@ -503,8 +502,8 @@ class primitivenotes extends rcube_plugin{
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
-			$yaml.= (strlen($created) > 0) ? "date: ".$created."\n":"date: ".strftime('%x %X')."\n";
-			$yaml.= "updated: ".strftime('%x %X')."\n";
+			$yaml.= (strlen($created) > 0) ? "date: ".date(DATE_ISO8601,strtotime(trim($created)))."\n":"date: ".date(DATE_ISO8601, time())."\n";
+			$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$rcmail->user->get_username()."\n";
 			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";
 			$yaml.= "---\n\n";
