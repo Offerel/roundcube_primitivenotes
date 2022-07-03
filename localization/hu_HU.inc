@@ -26,5 +26,5 @@ $labels['note_listformat'] = 'Megjelenített formátumok';
 $labels['note_yamls'] = 'YAML aktiválása';
 $labels['note_rmedia_md'] = 'Beágyazott média automatikus törlése';
 $labels['note_media_del'] = '%count% médiafájl található %note%-ben. Szeretné törölni őket?';
-$labels['note_toc'] = 'Tartalomjegyzék';
+$labels['note_toc'] = 'Tartalomjegyzék'; 
 ?>
