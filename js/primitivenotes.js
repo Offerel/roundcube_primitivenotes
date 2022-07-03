@@ -162,6 +162,27 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 	document.getElementById('source').addEventListener('click', osource, true);
 	document.querySelector('.EasyMDEContainer').addEventListener('paste', pasteParse, true);
+
+	let unote = new URLSearchParams(document.location.search).get('note');
+	if(unote) {
+		let nl = null;
+
+		document.querySelectorAll('#pnlist li').forEach((element, index, arr) => {
+			if (element.dataset.name == unote) {
+				nl = element.id;
+				arr.length = index + 1;
+			}
+		});
+		
+		let postData = {
+			_name: unote,
+			_id: nl,
+			_mode: 'show',
+		};
+
+		rcmail.http_post('displayNote', postData, false);
+
+	}
 });
 
 function uplMedia() {
@@ -469,6 +490,9 @@ function togglemData() {
 }
 
 function loadNote(response) {
+	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename;
+	window.history.pushState({path:newurl},'',newurl);
+	
 	loader.remove();
 	
 	if( screen.width <= 480 ) {
@@ -622,7 +646,7 @@ function toggleTOC() {
 function showNote(id, mode='show') {
 	document.getElementById("main_area").appendChild(loader);
 
-	var postData = {
+	let postData = {
 		_name: document.getElementById(id).dataset.name,
 		_id: id,
 		_mode: mode,

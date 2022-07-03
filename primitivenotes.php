@@ -360,10 +360,10 @@ class primitivenotes extends rcube_plugin{
 		$this->rc->output->send('primitivenotes.template');
 	}
 
-	function showNote() {
-		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false);
-		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_GPC, false);
-		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_GPC, false);
+	function showNote($note='') {
+		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
+		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
 		$note = $this->notes_path.$nname;
 
 		if(file_exists($note)) {
@@ -431,6 +431,7 @@ class primitivenotes extends rcube_plugin{
 			);
 
 			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $notea, 'mode' => $mode));
+			$this->rc->output->set_pagetitle($this->gettext('notes').' - '.$notea['name']);
 		} elseif($filename != "" ) {
 			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}
