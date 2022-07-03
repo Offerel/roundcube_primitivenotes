@@ -430,13 +430,6 @@ input#source:read-only:not(:placeholder-shown):hover {
 	height: 6px;
 	background: #dee2e6;
 }
-.cm-comment {
-	font-family: Consolas,Monaco,monospace !important;
-	font-size: 0.9em;
-}
-.cm-url, .cm-link {
-	color: #42b983 !important;
-}
 .editor-preview table {
 	border-spacing: 0;
 	border-collapse: collapse;
@@ -453,4 +446,18 @@ input#source:read-only:not(:placeholder-shown):hover {
 .editor-preview table td, .editor-preview table th {
 	border: 1px solid #ddd;
 	padding: 5px;
+}
+.editor-preview li {
+	margin-left: 0 !important;
+}
+.editor-preview li > input[type="checkbox"] {
+	height: unset !important;
+	margin-left: -1.3em;
+}
+.cm-comment {
+	font-family: Consolas,Monaco,monospace !important;
+	font-size: 0.9em;
+}
+.cm-url, .cm-link {
+	color: #42b983 !important;
 }

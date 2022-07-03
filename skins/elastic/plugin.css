@@ -53,3 +53,15 @@ html.touch .listing tbody td, html.touch .listing:not(.toolbar) li {
 #tocdiv li:not(.ul)::before {
 	color: #00acff;
 }
+#layout-menu {
+	position: sticky;
+	top: 0;
+}
+#layout-list {
+	position: sticky;
+	top: 0;
+}
+#layout-content {
+	position: sticky;
+	top: 0;
+}
