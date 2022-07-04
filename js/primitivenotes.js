@@ -227,8 +227,7 @@ function pasteParse(event) {
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function() {
 			if (xhr.status == 200) {
-				if(title) title = ' "'+title+'"';
-				mde.codemirror.replaceSelection('![' + alt + '](' + xhr.responseText + title + ')');
+				mde.codemirror.replaceSelection(xhr.responseText);
 				loader.remove();
 			} else {
 				let message = "Server Error! Upload failed. Can not connect to server";
@@ -704,8 +703,8 @@ function mform() {
 		data.append("dropFile", document.getElementById('dropMedia').files[0]);
 		var xhr = new XMLHttpRequest();
 		xhr.onload = () => {
+			mde.codemirror.replaceSelection(xhr.responseText);
 			loader.remove();
-			mde.codemirror.replaceSelection('![](' + xhr.responseText + ')');
 		}
 		xhr.open('POST', location.href + '&_action=uplMedia');
 		xhr.send(data);

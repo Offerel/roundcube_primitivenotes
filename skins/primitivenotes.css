@@ -2,30 +2,21 @@
   --maxwidth: 800px;
 }
 @media screen and (max-width: 480px) {
-	button.clean-block {
+	.editor-toolbar button.clean-block {
 		display: none !important;
 	}
-	button.ordered-list {
+	.editor-toolbar button.ordered-list {
 		display: none !important;
 	}
-	button.table {
+	.editor-toolbar button.table {
 		display: none !important;
 	}
-	button.italic {
+	.editor-toolbar button.italic {
 		display: none !important;
 	}
-	.separator {
+	.editor-toolbar .separator {
 		display: none !important;
 	}
-}
-span.success {
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, 0);
-	background-color: chartreuse;
-	padding: 0 5px;
-	border-radius: 4px;
-	color: black;
 }
 #metah {
 	height: 100%;
@@ -135,17 +126,18 @@ span.success {
 	background-color: transparent!important;
 	pointer-events: none;
 }
-.tagify {
+#main_header .tagify {
 	border: 1px solid transparent !important;
-	overflow: auto;
+	overflow-x: auto;
 	flex-wrap: revert !important;
 	margin: 0 10px;
 	border-radius: .3em;
+	overflow-y: hidden;
 }
-.tagify[readonly]:not(.tagify--mix):not(.tagify--select) .tagify__tag > div::before {
+#main_header .tagify[readonly]:not(.tagify--mix):not(.tagify--select) .tagify__tag > div::before {
 	animation: unset !important;
 }
-.taedit {
+#main_header .taedit {
 	background-color: #fff;
 	border-color: #ced4da !important;
 }
@@ -228,7 +220,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 .mtoggle {
 	display: block !important;
 }
-.size {
+#pnlist .size {
 	right: 15px;
 	position: absolute;
 	margin-top: -22px;
@@ -237,14 +229,14 @@ input#source:read-only:not(:placeholder-shown):hover {
 	width: 3em;
 	text-align: right;
 }
-.subject {
-    width: calc(100% - 4em);
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-weight: bolder;
-    color: #686868;
+#pnlist .subject {
+	width: calc(100% - 4em);
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-weight: bolder;
+	color: #686868;
 }
-.date {
+#pnlist .date {
 	font-size: 85%;
 	color: #737677;
 }
@@ -374,16 +366,6 @@ input#source:read-only:not(:placeholder-shown):hover {
 	position: relative;
 	width: 100%;
 }
-.editor-preview pre > code::before {
-	content: attr(class);
-	display: block;
-	right: .3em;
-	position: absolute;
-	top: .3em;
-	color: darkgoldenrod;
-	font-size: .9em;
-	cursor: pointer;
-}
 .editor-preview kbd {
 	font-family: Consolas,"Courier New",monospace;
 	border-radius: 5px;
@@ -453,6 +435,20 @@ input#source:read-only:not(:placeholder-shown):hover {
 .editor-preview li > input[type="checkbox"] {
 	height: unset !important;
 	margin-left: -1.3em;
+}
+.editor-preview span.success {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0);
+	background-color: chartreuse;
+	padding: 0 5px;
+	border-radius: 4px;
+	color: black;
+}
+.editor-preview-side {
+	position: absolute !important;
+	top: 34px;
+	bottom: 31px;
 }
 .cm-comment {
 	font-family: Consolas,Monaco,monospace !important;

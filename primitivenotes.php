@@ -96,9 +96,12 @@ class primitivenotes extends rcube_plugin{
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
 		$filename = time().'.'.$path_parts['extension'];
+		$newname = str_replace($this->notes_path, '', $this->media_path).$filename;
 		
 		if(move_uploaded_file($_FILES['dropFile']['tmp_name'], $this->media_path.$filename)) {
-			echo($filename);
+			$mimetype = mime_content_type($this->media_path.$filename);
+			$istr = (strpos($mimetype, 'image') === 0) ? "![$oname]($newname)":"[$oname]($newname)";
+			echo($istr);
 		} else {
 			echo('Media Upload failure. Check server...');
 		}

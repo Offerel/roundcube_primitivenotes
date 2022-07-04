@@ -1,3 +1,17 @@
+@media screen and (max-width: 480px) {
+	.EasyMDEContainer .CodeMirror {
+		max-width: 100vW;
+	}
+	.editor-preview img {
+		max-width: calc(100vW - 20px) !important;
+	}
+	#main_header .tagify {
+		max-width: calc(100vW - 20px);
+	}
+	#layout-menu {
+		position: absolute !important;
+	}
+}
 #metah {
 	height: 100%;
 }
