@@ -79,6 +79,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			codeSyntaxHighlighting: true,
 			sanitizerFunction: function(renderedHTML) {
 				let output = renderedHTML.replaceAll(rcmail.env.mfolder + "/", '?_task=notes&_action=blink&_file=');
+				output = output.replaceAll("a href=\"?_task", "a class=\"intlink\" href=\"?_task");
 				output = output.replaceAll('<pre>', '<pre class="hljs">');
 				return output;
 			},
@@ -559,7 +560,6 @@ function loadNote(response) {
 		
 	} else {
 		document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
-		
 		let objdiv = document.createElement('div');
 		let object = document.createElement('object');
 		objdiv.id = 'binobj';
@@ -587,6 +587,22 @@ function loadNote(response) {
 			  }, function() {
 			  	console.error('Clipboard error');
 			  });
+		});
+	});
+
+	let intlink = document.querySelectorAll('.editor-preview a.intlink');
+	intlink.forEach(function(e) {
+		e.addEventListener('click', function(link) {
+			link.preventDefault();
+			document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
+			let objdiv = document.createElement('div');
+			let object = document.createElement('object');
+			objdiv.id = 'binobj';
+			object.data = link.target.attributes.href.nodeValue;
+			object.classList.add('objcont');
+			objdiv.classList.add('objdiv');
+			objdiv.appendChild(object);
+			document.getElementById('main_area').appendChild(objdiv);														
 		});
 	});
 }
