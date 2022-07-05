@@ -190,7 +190,7 @@ class primitivenotes extends rcube_plugin{
 					$filename = $fentry['filename'];
 					$format = $fentry['type'];
 					
-					$pnlist.="<li id='$id' class='$id $format' data-tags='$tlist' data-name='$filename'>
+					$pnlist.="<li id='$id' class='$format' data-format='$format' data-tags='$tlist' data-name='$filename'>
 								<a id='note_$id' title='".$fentry['name']."' >
 									<div class='subject'>".$fentry['name']."</div>
 									<div class='size'>$fsize</div>
@@ -209,9 +209,19 @@ class primitivenotes extends rcube_plugin{
     }
 
 	function getNote() {
-		$file = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
-		$note = file_get_contents($this->notes_path.$file);
-		$this->rc->output->command('plugin.getNote', array('message' => 'done', 'file' => $file, 'type' => mime_content_type($this->notes_path.$file), 'note' => $note));
+		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false);
+		$media_path = $this->notes_path.$name;
+		$file = @file_get_contents($media_path);
+		$hash = sha1($media_path);
+		header('Content-Description: File Transfer');
+		$name = utf8_decode(htmlspecialchars_decode($name));
+		header("Content-Disposition: attachment; filename=\"$name\"");
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Type: application/octet-stream');
+		header("ETag: $hash");
+		header("Last-Modified: ".gmdate('D, d M Y H:i:s T', filemtime($media_path)));
+		header('Content-Length: '.filesize($media_path));
+		die($file);
 	}
 
 	function deleteNote() {

@@ -225,7 +225,7 @@ function pasteParse(event) {
 	}
 
 	function uploadFile(file, alt, title) {
-		var xhr = new XMLHttpRequest();
+		let xhr = new XMLHttpRequest();
 		xhr.onload = function() {
 			if (xhr.status == 200) {
 				mde.codemirror.replaceSelection(xhr.responseText);
@@ -243,7 +243,7 @@ function pasteParse(event) {
 			rcmail.display_message(message, 'error')
 		};
 	
-		var formData = new FormData();
+		let formData = new FormData();
 		formData.append("dropFile", file);
 		xhr.open('POST', location.href + '&_action=uplMedia');
 		xhr.send(formData);
@@ -393,10 +393,7 @@ function cCommand(command) {
 			send_note({message:"done", name:file, type: file.slice(-3), note:""});
 			break;
 		case 'download':
-			postData = {
-				_name: element.dataset.name,
-			};
-			rcmail.http_post('getNote', postData, false);
+			downloadNote(element.dataset.name);
 			break;
 		case 'delete':
 			let name = document.getElementById('note_' + element.id).title;
@@ -413,16 +410,36 @@ function cCommand(command) {
 
 }
 
-function downloadNote(args) {
-	let blob = new Blob([args.note], {type: args.type});
-	let url = window.URL.createObjectURL(blob);
-	let dLink = document.createElement('a');
-	dLink.style = "display: none";
-	dLink.href = url;
-	dLink.download = args.file;
-	document.body.appendChild(dLink);
-	dLink.click();
-	window.URL.revokeObjectURL(url);
+function downloadNote(note) {
+	let xhr = new XMLHttpRequest();
+	xhr.onload = function() {
+		if (xhr.status == 200) {
+			let blob = new Blob([xhr.response], {type: xhr.getResponseHeader("content-type")});
+			let data = URL.createObjectURL(blob);
+			let a = document.createElement('a');
+			a.href = data;
+			a.download = xhr.getResponseHeader("content-disposition").split('filename=')[1];
+			a.target = '_blank';
+			a.click();
+			setTimeout(function() {
+				window.URL.revokeObjectURL(data);
+			}, 100);
+			loader.remove();
+		} else {
+			let message = "Server Error! Download failed. Can't connect to server";
+			console.error(message);
+			rcmail.display_message(message, 'error');
+		}
+	};
+
+	xhr.onerror = function() {
+		let message = "Server Error! Download failed. Can't connect to server";
+		console.error(message);
+		rcmail.display_message(message, 'error')
+	};
+	xhr.responseType = "blob";
+	xhr.open('GET', location.href + '&_action=getNote&_name=' + note);
+	xhr.send();
 }
 
 function tPreview(mode = '') {
@@ -593,16 +610,18 @@ function loadNote(response) {
 	let intlink = document.querySelectorAll('.editor-preview a.intlink');
 	intlink.forEach(function(e) {
 		e.addEventListener('click', function(link) {
-			link.preventDefault();
-			document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
-			let objdiv = document.createElement('div');
-			let object = document.createElement('object');
-			objdiv.id = 'binobj';
-			object.data = link.target.attributes.href.nodeValue;
-			object.classList.add('objcont');
-			objdiv.classList.add('objdiv');
-			objdiv.appendChild(object);
-			document.getElementById('main_area').appendChild(objdiv);														
+			if(screen.width > 480) {
+				link.preventDefault();
+				document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
+				let objdiv = document.createElement('div');
+				let object = document.createElement('object');
+				objdiv.id = 'binobj';
+				object.data = link.target.attributes.href.nodeValue;
+				object.classList.add('objcont');
+				objdiv.classList.add('objdiv');
+				objdiv.appendChild(object);
+				document.getElementById('main_area').appendChild(objdiv);
+			}									
 		});
 	});
 }
@@ -659,15 +678,23 @@ function toggleTOC() {
 }
 
 function showNote(id, mode='show') {
-	document.getElementById("main_area").appendChild(loader);
-
-	let postData = {
-		_name: document.getElementById(id).dataset.name,
-		_id: id,
-		_mode: mode,
-	};
-	rcmail.http_post('displayNote', postData, false);
 	document.getElementById('ndata').classList.remove('mtoggle');
+	let postData;
+	
+	let viewA = ['md', 'txt', 'html', 'jpg', 'png'];
+	let fA = document.getElementById(id).dataset.format;
+	
+	if( screen.width > 480 || viewA.indexOf(fA) != -1) {
+		document.getElementById("main_area").appendChild(loader);
+		postData = {
+			_name: document.getElementById(id).dataset.name,
+			_id: id,
+			_mode: mode,
+		};
+		rcmail.http_post('displayNote', postData, false);
+	} else {
+		downloadNote(document.getElementById(id).dataset.name);
+	}
 }
 
 function pnoptions() {
