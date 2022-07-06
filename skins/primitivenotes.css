@@ -262,6 +262,9 @@ input#source:read-only:not(:placeholder-shown):hover {
 .nlist li.jpg {
     background-image: url(images/jpg-icon.png);
 }
+.nlist li.png {
+    background-image: url(images/png-icon.png);
+}
 .nlist li.html {
     background-image: url(images/html-icon.png);
 }
