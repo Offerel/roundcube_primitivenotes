@@ -23,7 +23,7 @@ class primitivenotes extends rcube_plugin{
 		$this->include_stylesheet('skins/primitivenotes.css');
 		$this->include_stylesheet('js/highlight/styles/monokai.css');
 		$this->include_stylesheet('js/easymde/easymde.min.css');
-		$this->include_stylesheet('js/easymde/font-awesome.min.css');
+		$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
 		$this->include_stylesheet('js/tagify/tagify.css');
 
 		$this->register_task('notes');
@@ -405,6 +405,7 @@ class primitivenotes extends rcube_plugin{
 
 				if(strpos($line, 'date:') === 0) {
 					$date = $this->formatter->format(strtotime(explode(': ', $line)[1]));
+					$tstamp = strtotime(explode(': ', $line)[1]);
 				}
 
 				if(strpos($line, 'updated:') === 0) {
@@ -435,6 +436,7 @@ class primitivenotes extends rcube_plugin{
 				'format'	=> $path_parts['extension'],
 				'author'	=> $author,
 				'date'		=> $date,
+				'tstamp'	=> $tstamp,
 				'updated'	=> $updated,
 				'source'	=> $source,
 				'id'		=> $id,
@@ -472,7 +474,7 @@ class primitivenotes extends rcube_plugin{
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
-			$yaml.= (strlen($created) > 0) ? "date: ".date(DATE_ISO8601,strtotime(trim($created)))."\n":"date: ".date(DATE_ISO8601, time())."\n";
+			$yaml.= (strlen($created) > 0) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$this->rc->user->get_username()."\n";
 			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";

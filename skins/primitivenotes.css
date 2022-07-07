@@ -155,13 +155,14 @@
 	border-bottom-left-radius: .3em;
 	border-bottom-right-radius: .3em;
 	padding-bottom: .7em;
-	top: 0px;
+	top: 0;
 	animation-name: bounceInDown;
 	animation-duration: 1s;
 	animation-fill-mode: both;
 	display: none;
-	left: 0;
+	left: -5px;
 	right: 0;
+	max-width: var(--maxwidth);
 }
 @keyframes bounceInDown {
 	0%, 60%, 75%, 90%, 100% {

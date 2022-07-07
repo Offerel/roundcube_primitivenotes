@@ -417,9 +417,14 @@ function downloadNote(note) {
 			let blob = new Blob([xhr.response], {type: xhr.getResponseHeader("content-type")});
 			let data = URL.createObjectURL(blob);
 			let a = document.createElement('a');
+			
+			var disposition = xhr.getResponseHeader('Content-Disposition');
+			var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            var matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+			
 			a.href = data;
-			a.download = xhr.getResponseHeader("content-disposition").split('filename=')[1];
-			a.target = '_blank';
+			a.download = filename;
 			a.click();
 			setTimeout(function() {
 				window.URL.revokeObjectURL(data);
@@ -494,7 +499,7 @@ function saveFile() {
 		_content: mde.value(),
 		_title: document.getElementById('headerTitle').value,
 		_author: document.getElementById('author').value,
-		_date: document.getElementById('date').value,
+		_date: document.getElementById('date').dataset.tstamp,
 		_updated: document.getElementById('updated').value,
 		_source: document.getElementById('source').value,
 		_tags: tagsA,
@@ -526,6 +531,7 @@ function loadNote(response) {
 	document.getElementById('author').value = response.note.author;
 
 	document.getElementById('date').value = response.note.date;
+	document.getElementById('date').dataset.tstamp = response.note.tstamp;
 	document.getElementById('updated').value = response.note.updated;
 	
 	document.getElementById('source').value = response.note.source;
@@ -681,7 +687,7 @@ function showNote(id, mode='show') {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	let postData;
 	
-	let viewA = ['md', 'txt', 'html', 'jpg', 'png'];
+	let viewA = ['md', 'txt', 'html', 'jpg'];
 	let fA = document.getElementById(id).dataset.format;
 	
 	if( screen.width > 480 || viewA.indexOf(fA) != -1) {
