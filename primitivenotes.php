@@ -19,12 +19,8 @@ class primitivenotes extends rcube_plugin{
 		$this->rc = rcube::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		$this->include_stylesheet($this->local_skin_path().'/plugin.css');
-		$this->include_stylesheet('skins/primitivenotes.css');
-		$this->include_stylesheet('js/highlight/styles/monokai.css');
-		$this->include_stylesheet('js/easymde/easymde.min.css');
-		$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
-		$this->include_stylesheet('js/tagify/tagify.css');
+		
+		
 
 		$this->register_task('notes');
 		
@@ -39,11 +35,19 @@ class primitivenotes extends rcube_plugin{
 		), 'taskbar');
 
 		if ($this->rc->task == 'notes') {
+			$this->include_stylesheet('js/highlight/styles/monokai.css');
+			$this->include_stylesheet('js/easymde/easymde.min.css');
+			$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
+			$this->include_stylesheet('js/tagify/tagify.css');
+			$this->include_stylesheet($this->local_skin_path().'/plugin.css');
+			$this->include_stylesheet('skins/primitivenotes.css');
+		
 			$this->include_script('js/primitivenotes.js');
 			$this->include_script('js/highlight/highlight.min.js');
 			$this->include_script('js/easymde/easymde.min.js');
 			$this->include_script('js/tagify/tagify.min.js');
 			$this->include_script('js/turndown/turndown.min.js');
+			
 			$this->register_action('index', array($this, 'action'));
 			$this->register_action('displayNote', array($this, 'showNote'));
 			$this->register_action('saveNote', array($this, 'editNote'));

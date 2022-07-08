@@ -189,6 +189,7 @@
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
 readers do not read off random characters that represent icons */
+/*
 .fa-500px:before {
   content: "\f26e"; }
 
@@ -578,10 +579,10 @@ readers do not read off random characters that represent icons */
 
 .fa-bluetooth-b:before {
   content: "\f294"; }
-
+*/
 .fa-bold:before {
   content: "\f032"; }
-
+/*
 .fa-bolt:before {
   content: "\f0e7"; }
 
@@ -1019,10 +1020,10 @@ readers do not read off random characters that represent icons */
 
 .fa-cocktail:before {
   content: "\f561"; }
-
+*/
 .fa-code:before {
   content: "\f121"; }
-
+/*
 .fa-code-branch:before {
   content: "\f126"; }
 
@@ -1043,10 +1044,10 @@ readers do not read off random characters that represent icons */
 
 .fa-coins:before {
   content: "\f51e"; }
-
+*/
 .fa-columns:before {
   content: "\f0db"; }
-
+/*
 .fa-comment:before {
   content: "\f075"; }
 
@@ -1457,10 +1458,10 @@ readers do not read off random characters that represent icons */
 
 .fa-equals:before {
   content: "\f52c"; }
-
+*/
 .fa-eraser:before {
   content: "\f12d"; }
-
+/*
 .fa-erlang:before {
   content: "\f39d"; }
 
@@ -1508,10 +1509,10 @@ readers do not read off random characters that represent icons */
 
 .fa-external-link-square-alt:before {
   content: "\f360"; }
-
+*/
 .fa-eye:before {
   content: "\f06e"; }
-
+/*
 .fa-eye-dropper:before {
   content: "\f1fb"; }
 
@@ -2135,10 +2136,10 @@ readers do not read off random characters that represent icons */
 
 .fa-head-side-virus:before {
   content: "\e064"; }
-
+*/
 .fa-heading:before {
   content: "\f1dc"; }
-
+/*
 .fa-headphones:before {
   content: "\f025"; }
 
@@ -2282,10 +2283,10 @@ readers do not read off random characters that represent icons */
 
 .fa-igloo:before {
   content: "\f7ae"; }
-
+*/
 .fa-image:before {
   content: "\f03e"; }
-
+/*
 .fa-images:before {
   content: "\f302"; }
 
@@ -2333,10 +2334,10 @@ readers do not read off random characters that represent icons */
 
 .fa-ioxhost:before {
   content: "\f208"; }
-
+*/
 .fa-italic:before {
   content: "\f033"; }
-
+/*
 .fa-itch-io:before {
   content: "\f83a"; }
 
@@ -2498,10 +2499,10 @@ readers do not read off random characters that represent icons */
 
 .fa-line:before {
   content: "\f3c0"; }
-
+*/
 .fa-link:before {
   content: "\f0c1"; }
-
+/*
 .fa-linkedin:before {
   content: "\f08c"; }
 
@@ -2516,7 +2517,7 @@ readers do not read off random characters that represent icons */
 
 .fa-lira-sign:before {
   content: "\f195"; }
-
+*/
 .fa-list:before {
   content: "\f03a"; }
 
@@ -2528,7 +2529,7 @@ readers do not read off random characters that represent icons */
 
 .fa-list-ul:before {
   content: "\f0ca"; }
-
+/*
 .fa-location-arrow:before {
   content: "\f124"; }
 
@@ -3173,13 +3174,13 @@ readers do not read off random characters that represent icons */
 
 .fa-qrcode:before {
   content: "\f029"; }
-
+*/
 .fa-question:before {
   content: "\f128"; }
 
 .fa-question-circle:before {
   content: "\f059"; }
-
+/*
 .fa-quidditch:before {
   content: "\f458"; }
 
@@ -3188,13 +3189,13 @@ readers do not read off random characters that represent icons */
 
 .fa-quora:before {
   content: "\f2c4"; }
-
+*/
 .fa-quote-left:before {
   content: "\f10d"; }
 
 .fa-quote-right:before {
   content: "\f10e"; }
-
+/*
 .fa-quran:before {
   content: "\f687"; }
 
@@ -3872,10 +3873,10 @@ readers do not read off random characters that represent icons */
 
 .fa-syringe:before {
   content: "\f48e"; }
-
+*/
 .fa-table:before {
   content: "\f0ce"; }
-
+/*
 .fa-table-tennis:before {
   content: "\f45d"; }
 
@@ -4562,7 +4563,7 @@ readers do not read off random characters that represent icons */
 
 .fa-zhihu:before {
   content: "\f63f"; }
-
+*/
 .sr-only {
   border: 0;
   clip: rect(0, 0, 0, 0);

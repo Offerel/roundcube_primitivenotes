@@ -255,7 +255,7 @@ input#source:read-only:not(:placeholder-shown):hover {
     background-position-y: 6px;
 }
 .nlist li:hover {
-    background-color: lightgray;
+    background-color: #afd9fd;
 }
 .nlist li.md {
     background-image: url(images/md-icon.png);
@@ -302,7 +302,15 @@ input#source:read-only:not(:placeholder-shown):hover {
 .custom-file {
 	display: none;
 }
+#metah input:focus, #metah .tagify--focus, #metah .CodeMirror-focused {
+	border-color: #37beff !important;
+	box-shadow: 0 0 0 0.2rem rgb(55 190 255 / 25%);
+}
 /* --------------------- Markdown Editor CSS Overwrites --------------------- */
+.EasyMDEContainer {
+	background-color: #f4f4f4;
+	padding: 0 10px;
+}
 .EasyMDEContainer .CodeMirror {
 	border-left: 0 !important;
 	border-right: 0 !important;
@@ -311,9 +319,9 @@ input#source:read-only:not(:placeholder-shown):hover {
 .editor-toolbar {
 	z-index: 2;
 	background-color: #f4f4f4;
-	border-radius: 0 !important;
-	border: 0 !important;
-	padding: 2px .5em !important;
+	border-radius: 0!important;
+	border: 0!important;
+	padding: 2px 0 !important;
 }
 .editor-toolbar button:disabled {
 	pointer-events: none;
