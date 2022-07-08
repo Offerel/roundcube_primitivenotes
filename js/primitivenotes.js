@@ -160,6 +160,10 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 				tPreview('show');
 			}
 		}
+
+		if(event.code == 'KeyF' && (event.ctrlKey || event.metaKey)) {
+			document.getElementById("notessearchform").focus();
+		}
 	});
 	document.getElementById('source').addEventListener('click', osource, true);
 	document.querySelector('.EasyMDEContainer').addEventListener('paste', pasteParse, true);
