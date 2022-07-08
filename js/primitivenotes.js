@@ -156,8 +156,14 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
-			if(mde.isPreviewActive() === false) {
+			if(mde.isPreviewActive() === false && document.getElementById("notessearchform") !== document.activeElement) {
 				tPreview('show');
+			}
+
+			if(document.getElementById("notessearchform") === document.activeElement) {
+				document.getElementById("notessearchform").value = '';
+				document.getElementById("notessearchform").dispatchEvent(new KeyboardEvent('keyup', {'key':''}));
+
 			}
 		}
 
