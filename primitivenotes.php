@@ -19,11 +19,8 @@ class primitivenotes extends rcube_plugin{
 		$this->rc = rcube::get_instance();
 		$this->load_config();
 		$this->add_texts('localization/', true);
-		
-		
-
 		$this->register_task('notes');
-		
+		if($this->rc->config->get('skin') != 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
 		$this->add_button(array(
 			'label'	=> 'primitivenotes.notes',
 			'command'	=> 'notes',
@@ -39,7 +36,7 @@ class primitivenotes extends rcube_plugin{
 			$this->include_stylesheet('js/easymde/easymde.min.css');
 			$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
 			$this->include_stylesheet('js/tagify/tagify.css');
-			$this->include_stylesheet($this->local_skin_path().'/plugin.css');
+			if($this->rc->config->get('skin') == 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
 			$this->include_stylesheet('skins/primitivenotes.css');
 		
 			$this->include_script('js/primitivenotes.js');

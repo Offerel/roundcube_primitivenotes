@@ -311,11 +311,6 @@ input#source:read-only:not(:placeholder-shown):hover {
 	background-color: #f4f4f4;
 	padding: 0 10px;
 }
-.EasyMDEContainer .CodeMirror {
-	border-left: 0 !important;
-	border-right: 0 !important;
-	border-radius: 0;
-}
 .editor-toolbar {
 	z-index: 2;
 	background-color: #f4f4f4;
