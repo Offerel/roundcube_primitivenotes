@@ -20,6 +20,8 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	} else {
 		if(document.querySelector('.task-menu-button')) document.querySelector('.task-menu-button').classList.remove('notes');
 	}
+
+	document.getElementById('headerTitle').placeholder = rcmail.gettext("note_title", "primitivenotes");
 	
 	if(document.querySelector('.back-list-button')) document.getElementById('headerTitle').style.width = (window.getComputedStyle(document.querySelector('.back-list-button'), null).display == 'block') ? document.getElementById('headerTitle').style.width = 'calc(100% - 40px)':document.getElementById('headerTitle').style.width = 'calc(100% - 20px)';
 	
@@ -102,8 +104,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		trim: true,
 		duplicates: false,
 		enforceWhitelist: false,
-		delimiters: ',|;| ',
-		placeholder: 'Tags'
+		delimiters: ',|;| '
 	});
 
 	document.getElementById('notessearchform').addEventListener('keyup', searchList, false);
@@ -524,7 +525,7 @@ function togglemData() {
 }
 
 function loadNote(response) {
-	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename;
+	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename;
 	window.history.pushState({path:newurl},'',newurl);
 	
 	loader.remove();
@@ -730,7 +731,13 @@ function new_note(a) {
 		document.getElementById('layout-list').classList.toggle('hidden');
 		document.getElementById('layout-content').classList.toggle('hidden');
 	}
-	
+
+	document.title = rcmail.env.nnote;
+	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes';
+	window.history.pushState({path:newurl},'',newurl);
+	document.getElementById('headerTitle').placeholder = rcmail.gettext("note_title", "primitivenotes");
+	document.querySelector('.tagify__input').dataset.placeholder = 'Tags';
+
 	format = a ? a:rcmail.env.dformat;
 	mde.value('');
 	tPreview('edit')

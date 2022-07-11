@@ -370,6 +370,7 @@ class primitivenotes extends rcube_plugin{
 		$this->rc->output->set_env('dformat', $this->rc->config->get('default_format', false));
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));
 		$this->rc->output->set_env('mfolder', $this->rc->config->get('media_folder', false));
+		$this->rc->output->set_env('nnote', $this->gettext('notes'));
 		$this->rc->output->set_pagetitle($this->gettext('notes'));
 		$this->rc->output->send('primitivenotes.template');
 	}
