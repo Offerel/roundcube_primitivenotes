@@ -147,22 +147,27 @@
 #ndata {
 	position: absolute;
 	background-color: #d4dbde;
-	margin: 0 auto;
 	border: 1px solid #a9a9a9;
-	width: 90%;
+	width: calc(100% - 50px);
 	border-top: 0;
 	z-index: 1;
 	border-bottom-left-radius: .3em;
 	border-bottom-right-radius: .3em;
-	padding-bottom: .7em;
-	top: 0;
+	top: 15px;
 	animation-name: bounceInDown;
 	animation-duration: 1s;
 	animation-fill-mode: both;
 	display: none;
-	left: -5px;
-	right: 0;
+	left: calc(50% - 10px);
 	max-width: var(--maxwidth);
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-content: space-around;
+	row-gap: 5px;
+	column-gap: 10px;
+	padding: 20px 10px 10px 10px;
+	transform: translate(-50%,0) !important;
+	width: calc(100% - 50px);
 }
 @keyframes bounceInDown {
 	0%, 60%, 75%, 90%, 100% {
@@ -186,26 +191,27 @@
 		transform: none;
 	}
 }
-#ndata div {
-	float: left;
-	width: 25%;
-	margin-top: 2em;
-}
 #ndata label {
-	font-size: .7em;
-	color: #696969;
-	margin: 0;
-	margin-left: 10px;
+    font-size: .7em;
+    color: #696969;
+    margin: 0;
+    width: 100%;
 }
 #ndata input {
-	border: 1px solid #b2b2b2;
-	border-radius: .3em;
-	padding: revert;
-	background-color: white;
-	margin: 0;
-	width: calc(100% - 30px);
-	margin-left: 10px;
-	outline: 0;
+    border: 1px solid #b2b2b2;
+    border-radius: .3em;
+    background-color: #fff;
+    width: 100%;
+    outline: 0;
+}
+#ndata .ifield {
+	flex-grow: 1;
+	width: 200px;
+}
+#ndata .datefield {
+	flex-grow: 1;
+	order: 1;
+	width: 100px;
 }
 #ndata input:read-only {
 	background-color: azure;
@@ -219,7 +225,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 	color: darkblue;
 }
 .mtoggle {
-	display: block !important;
+	display: flex !important;
 }
 #pnlist .size {
 	right: 15px;

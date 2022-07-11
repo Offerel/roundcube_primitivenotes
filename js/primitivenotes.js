@@ -85,9 +85,9 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			},
 		}
 	});
-
+	let taglist = JSON.parse(rcmail.env.taglist);
 	tagify = new Tagify(document.getElementById('ntags'), {
-		whitelist: JSON.parse(rcmail.env.taglist),
+		whitelist: taglist,
 		dropdown : {
 			classname     : "color-blue",
 			enabled       : 0,
@@ -534,7 +534,7 @@ function loadNote(response) {
 	if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 	if(document.getElementById('binobj')) document.getElementById('binobj').remove();
 
-	tagify.removeAllTags({withoutChangeEvent: true});
+	tagify.removeAllTags();
 	document.getElementById('headerTitle').value = response.note.name;
 	document.getElementById('ntags').value = response.note.tags;
 	document.getElementById('author').value = response.note.author;
@@ -733,7 +733,7 @@ function new_note(a) {
 	tPreview('edit')
 	document.getElementById('headerTitle').value = '';
 	document.getElementById('headerTitle').classList.remove('readOnly');
-	tagify.removeAllTags({withoutChangeEvent: true});
+	tagify.removeAllTags();
 	tagify.setReadonly(false);
 	document.querySelector('.tagify').classList.add('taedit');
 	document.getElementById('author').readOnly = false;

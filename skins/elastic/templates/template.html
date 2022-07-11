@@ -12,7 +12,6 @@
 	<div role="search" aria-labelledby="aria-label-notesquicksearchbox" class="searchbar menu">
 		<span id="nspan"><input name="_q" id="notessearchform" class="no-bs" placeholder="Search …" type="text"></span>
 	</div>
-	<h2 id="aria-label-noteslist" class="voice"><roundcube:label name="arialabelnoteslist" /></h2>
 	<div id="notes-list" class="scroller">
 		<roundcube:object name="plugin.notes_list" />
 	</div>
@@ -20,6 +19,7 @@
 <!-- notes preview 2-->
 <div id="layout-content">
 	<form id="upl_form" action="&_action=uplNote" method="POST" enctype="multipart/form-data"><input type="file" id="upl" class="upl" name="dropFile" /></form>
+	<input type="file" id="dropMedia" class="upl" name="dropMedia" />
 	<form method="POST" id="metah">
 		<div id="main_header" class="main_header">
 			<a class="button icon back-list-button" href="#back"><span class="inner"><roundcube:label name="back" /></span></a>
@@ -28,12 +28,12 @@
 			<input id="ntags" name="ntags" class="taedit">
 		</div>
 		<div class="main_area" id="main_area">
-			<fieldset id="ndata">
-				<div><label for="author">Author</label><input id="author" name="author" type="text" readonly="true" /></div>
-				<div><label for="date">Created</label><input id="date" name="date" type="text" readonly="true" /></div>
-				<div><label for="updated">Updated</label><input id="updated" name="updated" type="text" readonly="true" /></div>
-				<div><label for="source">Source</label><input id="source" name="source" type="text" readonly="true" placeholder="source" /></div>
-			</fieldset>
+			<div id="ndata">
+				<div class="ifield" ><label for="author">Author</label><input id="author" name="author" type="text" /></div>
+				<div class="datefield" ><label for="date">Created</label><input id="date" name="date" type="text" readonly="true" /></div>
+				<div class="datefield" ><label for="updated">Updated</label><input id="updated" name="updated" type="text" readonly="true" /></div>
+				<div class="ifield" ><label for="source">Source</label><input id="source" name="source" type="text" placeholder="source" /></div>
+			</div>
 			<textarea id="editor1" name="editor1"></textarea>
 		</div>
 	</form>
