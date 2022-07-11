@@ -85,13 +85,16 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			},
 		}
 	});
-	let taglist = JSON.parse(rcmail.env.taglist);
+
+	let WhiteList = JSON.parse(rcmail.env.taglist);
+
 	tagify = new Tagify(document.getElementById('ntags'), {
-		whitelist: taglist,
+		whitelist: WhiteList,
 		dropdown : {
 			classname     : "color-blue",
+			trim		: true,
 			enabled       : 0,
-			maxItems      : 0,
+			maxItems      : WhiteList.length,
 			position      : "text",
 			closeOnSelect : false,
 			highlightFirst: true
