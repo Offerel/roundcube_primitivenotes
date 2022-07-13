@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.7
+ * @version 2.1.0
  * @author Offerel
  * @copyright Copyright (c) 2021, Offerel
  * @license GNU General Public License, version 3
@@ -383,14 +383,14 @@ class primitivenotes extends rcube_plugin{
 
 		if(file_exists($note)) {
 			$fcontent = file_get_contents($note);
-			$yh_be = '---';
 
-			if($this->rc->config->get('yaml_support', '')) {
-				$yhb_pos = strpos($fcontent, $yh_be);
-				$yhe_pos = strlen($fcontent) >= strlen($yh_be) ? strpos($fcontent, $yh_be, strlen($yh_be)):0;
+			if($this->rc->config->get('yaml_support', true)) {
+				$ydel = '---';
+				$yhb_pos = strpos($fcontent, $ydel);
+				$yhe_pos = strlen($fcontent) >= strlen($ydel) ? strpos($fcontent, $ydel, strlen($ydel)):0;
 				if($yhb_pos == 0 && $yhe_pos > 0) {
 					$yaml = substr($fcontent, 0, $yhe_pos);
-					$fcontent = substr($fcontent,$yhe_pos + strlen($yh_be));
+					$fcontent = substr($fcontent,$yhe_pos + strlen($ydel));
 				}
 			}
 
@@ -432,7 +432,7 @@ class primitivenotes extends rcube_plugin{
 				sort($TagsArray, SORT_STRING);
 			}
 
-			$notea = array(
+			$noteArr = array(
 				'name'		=> substr($nname,0, (stripos($nname,'[')) ? stripos($nname,'['):stripos($nname,'.')),
 				'content'	=> (stripos($mime_type, 'text') === 0) ? trim($fcontent):"data:$mime_type;base64,".$fcontent,
 				'format'	=> $path_parts['extension'],
@@ -447,8 +447,8 @@ class primitivenotes extends rcube_plugin{
 				'tags'		=> $TagsArray
 			);
 
-			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $notea, 'mode' => $mode));
-			$this->rc->output->set_pagetitle($this->gettext('notes').' - '.$notea['name']);
+			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $noteArr, 'mode' => $mode));
+			$this->rc->output->set_pagetitle($this->gettext('notes').' - '.$noteArr['name']);
 		} elseif($filename != "" ) {
 			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}
@@ -471,8 +471,7 @@ class primitivenotes extends rcube_plugin{
 		$type = (strlen($type) > 0) ? $type:$this->rc->config->get('default_format', false);
 		$nfile = $this->notes_path.$nname.'.'.$type;
 
-		$yaml = '';
-		if($this->rc->config->get('yaml_support')) {
+		if($this->rc->config->get('yaml_support', true)) {
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
@@ -491,6 +490,7 @@ class primitivenotes extends rcube_plugin{
 					$this->rc->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
 				}
 			}
+			
 			if(!file_put_contents($nfile, $yaml.$content, true)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {

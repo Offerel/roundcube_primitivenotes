@@ -121,6 +121,10 @@
 	outline: 0;
 	text-overflow: ellipsis;
 }
+#headerTitle::placeholder {
+	color: darkgray;
+	font-weight: lighter;
+}
 #headerTitle.readOnly {
 	border-color: transparent!important;
 	background-color: transparent!important;
@@ -313,6 +317,11 @@ input#source:read-only:not(:placeholder-shown):hover {
 	box-shadow: 0 0 0 0.2rem rgb(55 190 255 / 25%);
 }
 /* --------------------- Markdown Editor CSS Overwrites --------------------- */
+.cm-variable-2.cm-link {
+    overflow: scroll;
+    position: absolute;
+    white-space: nowrap;
+}
 .EasyMDEContainer {
 	background-color: #f4f4f4;
 	padding: 0 10px;
