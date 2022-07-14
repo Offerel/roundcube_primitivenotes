@@ -18,6 +18,17 @@
 		display: none !important;
 	}
 }
+.column-resizer {
+    background: #f4f4f4;
+    right: -11px;
+    width: 10px;
+}
+#layout {
+	background-color: #f4f4f4;
+}
+#layout-content {
+    margin-left: 10px;
+}
 #metah {
 	height: 100%;
 }
@@ -113,11 +124,11 @@
 #headerTitle {
 	font-size: 2em;
 	padding: 0 5px;
-	width: calc(100% - 40px);
+	width: calc(100% - 30px);
 	border: thin solid #ced4da;
 	background-color: #fff;
 	border-radius: .2em;
-	margin: 5px 9px;
+	margin: 5px 0;
 	outline: 0;
 	text-overflow: ellipsis;
 }
@@ -131,12 +142,12 @@
 	pointer-events: none;
 }
 #main_header .tagify {
-	border: 1px solid transparent !important;
-	overflow-x: auto;
-	flex-wrap: revert !important;
-	margin: 0 10px;
-	border-radius: .3em;
-	overflow-y: hidden;
+    border: 1px solid transparent !important;
+    overflow-x: auto;
+    flex-wrap: revert !important;
+    margin: 0 10px 0 0;
+    border-radius: .3em;
+    overflow-y: hidden;
 }
 #main_header .tagify[readonly]:not(.tagify--mix):not(.tagify--select) .tagify__tag > div::before {
 	animation: unset !important;
@@ -323,8 +334,8 @@ input#source:read-only:not(:placeholder-shown):hover {
     white-space: nowrap;
 }
 .EasyMDEContainer {
-	background-color: #f4f4f4;
-	padding: 0 10px;
+    background-color: #f4f4f4;
+    padding: 0 10px 0 0;
 }
 .editor-toolbar {
 	z-index: 2;

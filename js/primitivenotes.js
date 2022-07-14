@@ -23,7 +23,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 	document.getElementById('headerTitle').placeholder = rcmail.gettext("note_title", "primitivenotes");
 	
-	if(document.querySelector('.back-list-button')) document.getElementById('headerTitle').style.width = (window.getComputedStyle(document.querySelector('.back-list-button'), null).display == 'block') ? document.getElementById('headerTitle').style.width = 'calc(100% - 40px)':document.getElementById('headerTitle').style.width = 'calc(100% - 20px)';
+	if(document.querySelector('.back-list-button')) document.getElementById('headerTitle').style.width = (window.getComputedStyle(document.querySelector('.back-list-button'), null).display == 'block') ? document.getElementById('headerTitle').style.width = 'calc(100% - 30px)':document.getElementById('headerTitle').style.width = 'calc(100% - 10px)';
 	
 	mde = new EasyMDE({
 		element: document.getElementById("editor1"),
@@ -195,7 +195,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		};
 
 		rcmail.http_post('displayNote', postData, false);
-
 	}
 });
 
