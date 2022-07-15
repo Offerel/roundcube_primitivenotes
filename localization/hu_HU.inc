@@ -1,0 +1,30 @@
+﻿<?php
+$labels = array();
+$labels['notes'] = 'Jegyzetek';
+$labels['note_new'] = 'Új';
+$labels['note_show'] = 'Megtekintés';
+$labels['note_edit'] = 'Szerkeszt';
+$labels['note_rename'] = 'Átnevez';
+$labels['note_del'] = 'Töröl';
+$labels['note_send'] = 'Küld';
+$labels['note_upload'] = 'Feltöltés';
+$labels['note_Download'] = 'Letöltés';
+$labels['note_title'] = 'Jegyzet címe';
+$labels['note_tags'] = 'Vesszővel elvállaszott címkék';
+$labels['note_inv_format'] = 'Nem támogatott jegyzet formátum!';
+$labels['note_del_note'] = 'Valóban törölni akarod: "%note%"?';
+$labels['note_subject'] = 'Küldés email-ben: ';
+$labels['note_formathtml'] = 'HTML';
+$labels['note_formatmd'] = 'MD';
+$labels['note_formatpdf'] = 'PDF';
+$labels['note_formatjpg'] = 'JPG';
+$labels['note_formatpng'] = 'PNG';
+$labels['note_formattxt'] = 'Egyszerű szöveg';
+$labels['ariallabelnewoptions'] = 'Beállítások';
+$labels['note_defaultformat'] = 'Szabványos formátum';
+$labels['note_listformat'] = 'Megjelenített formátumok';
+$labels['note_yamls'] = 'YAML aktiválása';
+$labels['note_rmedia_md'] = 'Beágyazott média automatikus törlése';
+$labels['note_media_del'] = '%count% médiafájl található %note%-ben. Szeretné törölni őket?';
+$labels['note_toc'] = 'Tartalomjegyzék'; 
+?>

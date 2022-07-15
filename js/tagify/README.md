@@ -12,7 +12,8 @@
 <p>
 
 <h3 align="center">
-  👉 <a href="https://yaireo.github.io/tagify">See Demos</a> 👈
+  👉 <a href="https://yaireo.github.io/tagify">See Many Examples</a> 👈
+  <br/><br/>
 </h3>
 
 <p align="center">
@@ -270,6 +271,12 @@ apply the `pattern` attribute directly on the `input` which will be "transformed
 If the `pattern` setting does not meet your needs, use the [`validate` setting](#settings), which recieves a *tag data object* as an argument and should return `true` if validaiton is passing, or `false`/`string` of not.
 A *string* may be returned as the reason of the validation failure so it would be printed as the `title` attribute of the invalid tag.
 
+[Here's an example](https://jsbin.com/rojixul/edit?js,output) for async validation for an added tag. The idea is to listen to `"add"` event,
+and when it fires, first set the tag to "loading" state, run an async call, and then set the *loading* state (of the tag) back to `false`.
+If the custom async validation failed, call the `replaceTag` Tagify method and set the `__isValid` tag data property to the error string which will
+be shown when hovering the tag.
+
+
 Note - there is a setting to keep invalid tags ([`keepInvalidTags`](#settings))  and if it's set to `true`, the user can see the reason for the invalidation by
 hovering the tag and see the browser's native tooltip via the `title` attribute:
 
@@ -332,8 +339,18 @@ function onDragEnd(elm){
 It's possible to control the templates for some of the HTML elements Tagify is using by
 modifying the `settings.templates` Object with your own custom functions which **must return** an *HTML string*.
 
-Available templates are: `wrapper`, `tag`, `dropdown`, `dropdownItem` and the optional `dropdownItemNoMatch`
-which is a special template for rendering a suggestion item (in the dropdown list) only if there were no matches found for the typed input.
+Available templates are: `wrapper`, `tag`, `dropdown`, `dropdownItem`, `dropdownContent`, `dropdownHeader`, `dropdownFooter` and the optional `dropdownItemNoMatch`
+which is a special template for rendering a suggestion item (in the dropdown list) only if there were no matches found for the typed input, for example:
+
+```js
+// ...more tagify settings...
+templates: {
+  dropdownItemNoMatch: data =>
+    `<div class='${tagify.settings.classNames.dropdownItem}' tagifySuggestionIdx="noMatch" tabindex="0" role="option">
+        No suggestion found for: <strong>${data.value}</strong>
+    </div>`
+}
+```
 
 [View templates](https://github.com/yairEO/tagify/blob/master/src/parts/templates.js)
 
@@ -654,7 +671,7 @@ List of questions & scenarios which might come up during development with Tagify
   <summary><strong>Dynamic whitelist</strong></summary>
 The whitelist initial value is set like so:
 
-```javascript
+```js
 const tagify = new Tagify(tagNode, {
   whitelist: ["a", "b", "c"]
 })
@@ -861,9 +878,11 @@ Name                       | Parameters                                         
 `getTagElmByValue`         | `String`                                                                                | Returns a specific tag DOM node by value
 `tagData`                  | `HTMLElement`, `Object`                                                                 | set/get tag data on a tag element (has`.tagify__tag` class by default)
 `editTag`                  | `HTMLElement`                                                                           | Goes to edit-mode in a specific tag
+`getTagTextNode`           | `HTMLElement`                                                                           | Get the node which has the actual tag's content
+`setTagTextNode`           | `HTMLElement`, `String`                                                                 | Sets the text of a tag (DOM only, does not affect actual data)
 `replaceTag`               | `tagElm`, `Object` <sub>(`tagData`)</sub>                                               | Exit a tag's edit-mode. if "tagData" exists, replace the tag element with new data and update Tagify value
 `loading`                  | `Boolean`                                                                               | toggle loading state on/off (Ex. AJAX whitelist pulling)
-`tagLoading`               | `HTMLElement`, Boolean                                                                  | same as above but for a specific tag element
+`tagLoading`               | `HTMLElement`, `Boolean`                                                                | same as above but for a specific tag element
 `createTagElem`            | `Object` <sub>(`tagData`)</sub>                                                         | Returns a tag element from the supplied tag data
 `injectAtCaret`            | `HTMLElement` <sub>(`injectedNode`)</sub>, `Object` <sub>(`range`)</sub>                | Injects text or HTML node at last caret position. `range` parameter is *optional*
 `placeCaretAfterNode`      | `HTMLElement`                                                             | Places the caret after a given node
@@ -978,6 +997,7 @@ beforePaste            | `tagify`, `pastedText`, `clipboardData`     | Before pa
 
 Name                      | Type                         | Default                                     | Info
 ------------------------- | ---------------------------- | ------------------------------------------- | --------------------------------------------------------------------------
+id                        | <sub>String</sub>            |                                             | See [*Persisted data*](https://github.com/yairEO/tagify/#persisted-data)
 tagTextProp               | <sub>String</sub>            | `"value"`                                   | Tag data Object property which will be displayed as the tag's text. Remember to keep "value" property <em>unique</em>. See Also: `dropdown.mapValueTo`, `dropdown.searchKeys`
 placeholder               | <sub>String</sub>            |                                             | Placeholder text. If this attribute is set on an input/textarea element it will override this setting
 delimiters                | <sub>String</sub>            | `","`                                       | [RegEx **string**] split tags by any of these delimiters. Example delimeters: ",&#124;.&#124; " (*comma*, *dot* or *whitespace*)
@@ -1001,7 +1021,7 @@ editTags                  | <sub>Object/Number</sub>     | {}                   
 editTags.*clicks*         | <sub>Number</sub>            | 2                                           | Number of clicks to enter "edit-mode": 1 for single click. Any other value is considered as double-click
 editTags.*keepInvalid*    | <sub>Boolean</sub>           | true                                        | keeps invalid edits as-is until `esc` is pressed while in focus
 templates                 | <sub>Object</sub>            | <sub>`wrapper`, `tag`, `dropdownItem`</sub> | Object consisting of functions which return template strings
-validate                  | <sub>Function</sub>          |                                             | If the `pattern` setting does not meet your needs, use this function, which receives *tag data object* as an argument and should return `true` if validation passed or `false`/`string` of not. A *string* may be returned as the reason for the validation failure.
+validate                  | <sub>Function</sub>          |                                             | If the `pattern` setting does not meet your needs, use this function, which receives *tag data object* as an argument and should return `true` if validation passed or `false`/`string` if not. A *string* may be returned as the reason for the validation failure.
 transformTag              | <sub>Function</sub>          |                                             | Takes a tag data as argument and allows mutating it before a tag is created or edited and also before validation.<br>Should not `return` anything, only **mutate** the argument.
 keepInvalidTags           | <sub>Boolean</sub>           | false                                       | If `true`, do not remove tags which did not pass validation
 skipInvalid               | <sub>Boolean</sub>           | false                                       | If `true`, do not add invalid, temporary, tags before automatically removing them

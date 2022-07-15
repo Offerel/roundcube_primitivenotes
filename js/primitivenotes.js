@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.0.7
+ * @version 2.1.0
  * @author Offerel
  * @copyright Copyright (c) 2022, Offerel
  * @license GNU General Public License, version 3
@@ -20,8 +20,10 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	} else {
 		if(document.querySelector('.task-menu-button')) document.querySelector('.task-menu-button').classList.remove('notes');
 	}
+
+	document.getElementById('headerTitle').placeholder = rcmail.gettext("note_title", "primitivenotes");
 	
-	if(document.querySelector('.back-list-button')) document.getElementById('headerTitle').style.width = (window.getComputedStyle(document.querySelector('.back-list-button'), null).display == 'block') ? document.getElementById('headerTitle').style.width = 'calc(100% - 40px)':document.getElementById('headerTitle').style.width = 'calc(100% - 20px)';
+	if(document.querySelector('.back-list-button')) document.getElementById('headerTitle').style.width = (window.getComputedStyle(document.querySelector('.back-list-button'), null).display == 'block') ? document.getElementById('headerTitle').style.width = 'calc(100% - 30px)':document.getElementById('headerTitle').style.width = 'calc(100% - 10px)';
 	
 	mde = new EasyMDE({
 		element: document.getElementById("editor1"),
@@ -79,18 +81,22 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			codeSyntaxHighlighting: true,
 			sanitizerFunction: function(renderedHTML) {
 				let output = renderedHTML.replaceAll(rcmail.env.mfolder + "/", '?_task=notes&_action=blink&_file=');
+				output = output.replaceAll("a href=\"?_task", "a class=\"intlink\" href=\"?_task");
 				output = output.replaceAll('<pre>', '<pre class="hljs">');
 				return output;
 			},
 		}
 	});
 
+	let WhiteList = JSON.parse(rcmail.env.taglist);
+
 	tagify = new Tagify(document.getElementById('ntags'), {
-		whitelist: JSON.parse(rcmail.env.taglist),
+		whitelist: WhiteList,
 		dropdown : {
 			classname     : "color-blue",
+			trim		: true,
 			enabled       : 0,
-			maxItems      : 0,
+			maxItems      : WhiteList.length,
 			position      : "text",
 			closeOnSelect : false,
 			highlightFirst: true
@@ -98,8 +104,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		trim: true,
 		duplicates: false,
 		enforceWhitelist: false,
-		delimiters: ',|;| ',
-		placeholder: 'Tags'
+		delimiters: ',|;| '
 	});
 
 	document.getElementById('notessearchform').addEventListener('keyup', searchList, false);
@@ -155,13 +160,42 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
-			if(mde.isPreviewActive() === false) {
+			if(mde.isPreviewActive() === false && document.getElementById("notessearchform") !== document.activeElement && mde.value() !== '') {
 				tPreview('show');
 			}
+
+			if(document.getElementById("notessearchform") === document.activeElement) {
+				document.getElementById("notessearchform").value = '';
+				document.getElementById("notessearchform").dispatchEvent(new KeyboardEvent('keyup', {'key':''}));
+			}
+		}
+
+		if(event.code == 'KeyF' && (event.ctrlKey || event.metaKey)) {
+			document.getElementById("notessearchform").focus();
 		}
 	});
 	document.getElementById('source').addEventListener('click', osource, true);
 	document.querySelector('.EasyMDEContainer').addEventListener('paste', pasteParse, true);
+
+	let unote = new URLSearchParams(document.location.search).get('note');
+	if(unote) {
+		let nl = null;
+
+		document.querySelectorAll('#pnlist li').forEach((element, index, arr) => {
+			if (element.dataset.name == unote) {
+				nl = element.id;
+				arr.length = index + 1;
+			}
+		});
+		
+		let postData = {
+			_name: unote,
+			_id: nl,
+			_mode: 'show',
+		};
+
+		rcmail.http_post('displayNote', postData, false);
+	}
 });
 
 function uplMedia() {
@@ -203,11 +237,10 @@ function pasteParse(event) {
 	}
 
 	function uploadFile(file, alt, title) {
-		var xhr = new XMLHttpRequest();
+		let xhr = new XMLHttpRequest();
 		xhr.onload = function() {
 			if (xhr.status == 200) {
-				if(title) title = ' "'+title+'"';
-				mde.codemirror.replaceSelection('![' + alt + '](' + xhr.responseText + title + ')');
+				mde.codemirror.replaceSelection(xhr.responseText);
 				loader.remove();
 			} else {
 				let message = "Server Error! Upload failed. Can not connect to server";
@@ -222,7 +255,7 @@ function pasteParse(event) {
 			rcmail.display_message(message, 'error')
 		};
 	
-		var formData = new FormData();
+		let formData = new FormData();
 		formData.append("dropFile", file);
 		xhr.open('POST', location.href + '&_action=uplMedia');
 		xhr.send(formData);
@@ -372,10 +405,7 @@ function cCommand(command) {
 			send_note({message:"done", name:file, type: file.slice(-3), note:""});
 			break;
 		case 'download':
-			postData = {
-				_name: element.dataset.name,
-			};
-			rcmail.http_post('getNote', postData, false);
+			downloadNote(element.dataset.name);
 			break;
 		case 'delete':
 			let name = document.getElementById('note_' + element.id).title;
@@ -392,16 +422,41 @@ function cCommand(command) {
 
 }
 
-function downloadNote(args) {
-	let blob = new Blob([args.note], {type: args.type});
-	let url = window.URL.createObjectURL(blob);
-	let dLink = document.createElement('a');
-	dLink.style = "display: none";
-	dLink.href = url;
-	dLink.download = args.file;
-	document.body.appendChild(dLink);
-	dLink.click();
-	window.URL.revokeObjectURL(url);
+function downloadNote(note) {
+	let xhr = new XMLHttpRequest();
+	xhr.onload = function() {
+		if (xhr.status == 200) {
+			let blob = new Blob([xhr.response], {type: xhr.getResponseHeader("content-type")});
+			let data = URL.createObjectURL(blob);
+			let a = document.createElement('a');
+			
+			var disposition = xhr.getResponseHeader('Content-Disposition');
+			var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            var matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+			
+			a.href = data;
+			a.download = filename;
+			a.click();
+			setTimeout(function() {
+				window.URL.revokeObjectURL(data);
+			}, 100);
+			loader.remove();
+		} else {
+			let message = "Server Error! Download failed. Can't connect to server";
+			console.error(message);
+			rcmail.display_message(message, 'error');
+		}
+	};
+
+	xhr.onerror = function() {
+		let message = "Server Error! Download failed. Can't connect to server";
+		console.error(message);
+		rcmail.display_message(message, 'error')
+	};
+	xhr.responseType = "blob";
+	xhr.open('GET', location.href + '&_action=getNote&_name=' + note);
+	xhr.send();
 }
 
 function tPreview(mode = '') {
@@ -456,7 +511,7 @@ function saveFile() {
 		_content: mde.value(),
 		_title: document.getElementById('headerTitle').value,
 		_author: document.getElementById('author').value,
-		_date: document.getElementById('date').value,
+		_date: document.getElementById('date').dataset.tstamp,
 		_updated: document.getElementById('updated').value,
 		_source: document.getElementById('source').value,
 		_tags: tagsA,
@@ -469,6 +524,9 @@ function togglemData() {
 }
 
 function loadNote(response) {
+	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename;
+	window.history.pushState({path:newurl},'',newurl);
+	
 	loader.remove();
 	
 	if( screen.width <= 480 ) {
@@ -479,20 +537,14 @@ function loadNote(response) {
 	if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 	if(document.getElementById('binobj')) document.getElementById('binobj').remove();
 
-	tagify.removeAllTags({withoutChangeEvent: true});
+	tagify.removeAllTags();
 	document.getElementById('headerTitle').value = response.note.name;
 	document.getElementById('ntags').value = response.note.tags;
 	document.getElementById('author').value = response.note.author;
 
-	let toptions = {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-		hour: '2-digit',
-		minute: '2-digit'
-	};
-	document.getElementById('date').value = new Date(response.note.date * 1000).toLocaleString(undefined, toptions);
-	document.getElementById('updated').value = new Date(response.note.updated * 1000).toLocaleString(undefined, toptions);
+	document.getElementById('date').value = response.note.date;
+	document.getElementById('date').dataset.tstamp = response.note.tstamp;
+	document.getElementById('updated').value = response.note.updated;
 	
 	document.getElementById('source').value = response.note.source;
 	document.getElementById('source').title = response.note.source;
@@ -543,7 +595,6 @@ function loadNote(response) {
 		
 	} else {
 		document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
-		
 		let objdiv = document.createElement('div');
 		let object = document.createElement('object');
 		objdiv.id = 'binobj';
@@ -571,6 +622,24 @@ function loadNote(response) {
 			  }, function() {
 			  	console.error('Clipboard error');
 			  });
+		});
+	});
+
+	let intlink = document.querySelectorAll('.editor-preview a.intlink');
+	intlink.forEach(function(e) {
+		e.addEventListener('click', function(link) {
+			if(screen.width > 480) {
+				link.preventDefault();
+				document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
+				let objdiv = document.createElement('div');
+				let object = document.createElement('object');
+				objdiv.id = 'binobj';
+				object.data = link.target.attributes.href.nodeValue;
+				object.classList.add('objcont');
+				objdiv.classList.add('objdiv');
+				objdiv.appendChild(object);
+				document.getElementById('main_area').appendChild(objdiv);
+			}									
 		});
 	});
 }
@@ -627,15 +696,23 @@ function toggleTOC() {
 }
 
 function showNote(id, mode='show') {
-	document.getElementById("main_area").appendChild(loader);
-
-	var postData = {
-		_name: document.getElementById(id).dataset.name,
-		_id: id,
-		_mode: mode,
-	};
-	rcmail.http_post('displayNote', postData, false);
 	document.getElementById('ndata').classList.remove('mtoggle');
+	let postData;
+	
+	let viewA = ['md', 'txt', 'html', 'jpg'];
+	let fA = document.getElementById(id).dataset.format;
+	
+	if( screen.width > 480 || viewA.indexOf(fA) != -1) {
+		document.getElementById("main_area").appendChild(loader);
+		postData = {
+			_name: document.getElementById(id).dataset.name,
+			_id: id,
+			_mode: mode,
+		};
+		rcmail.http_post('displayNote', postData, false);
+	} else {
+		downloadNote(document.getElementById(id).dataset.name);
+	}
 }
 
 function pnoptions() {
@@ -653,13 +730,19 @@ function new_note(a) {
 		document.getElementById('layout-list').classList.toggle('hidden');
 		document.getElementById('layout-content').classList.toggle('hidden');
 	}
-	
+
+	document.title = rcmail.env.nnote;
+	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes';
+	window.history.pushState({path:newurl},'',newurl);
+	document.getElementById('headerTitle').placeholder = rcmail.gettext("note_title", "primitivenotes");
+	document.querySelector('.tagify__input').dataset.placeholder = 'Tags';
+
 	format = a ? a:rcmail.env.dformat;
 	mde.value('');
 	tPreview('edit')
 	document.getElementById('headerTitle').value = '';
 	document.getElementById('headerTitle').classList.remove('readOnly');
-	tagify.removeAllTags({withoutChangeEvent: true});
+	tagify.removeAllTags();
 	tagify.setReadonly(false);
 	document.querySelector('.tagify').classList.add('taedit');
 	document.getElementById('author').readOnly = false;
@@ -687,8 +770,8 @@ function mform() {
 		data.append("dropFile", document.getElementById('dropMedia').files[0]);
 		var xhr = new XMLHttpRequest();
 		xhr.onload = () => {
+			mde.codemirror.replaceSelection(xhr.responseText);
 			loader.remove();
-			mde.codemirror.replaceSelection('![](' + xhr.responseText + ')');
 		}
 		xhr.open('POST', location.href + '&_action=uplMedia');
 		xhr.send(data);

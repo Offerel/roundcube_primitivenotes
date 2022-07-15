@@ -1,3 +1,17 @@
+@media screen and (max-width: 480px) {
+	.EasyMDEContainer .CodeMirror {
+		max-width: 100vW;
+	}
+	.editor-preview img {
+		max-width: calc(100vW - 20px) !important;
+	}
+	#main_header .tagify {
+		max-width: calc(100vW - 20px);
+	}
+	#layout-menu {
+		position: absolute !important;
+	}
+}
 #metah {
 	height: 100%;
 }
@@ -14,13 +28,14 @@ a.button.icon.task-menu-button.notes {
 	position: absolute;
 }
 a.button.icon.back-list-button {
-	color: black;
-	font-size: 1.3em;
-	top: 6px;
-	display: block;
-	width: 15px;
-	float: left;
-	position: inherit;
+    color: #000;
+    font-size: 1.3em;
+    top: 7px;
+    display: block;
+    width: 15px;
+    float: left;
+    position: inherit;
+    left: -7px;
 }
 #headerTitle.readOnly.button.icon.task-menu-button {
 	position: absolute;
@@ -52,4 +67,16 @@ html.touch .listing tbody td, html.touch .listing:not(.toolbar) li {
 }
 #tocdiv li:not(.ul)::before {
 	color: #00acff;
+}
+#layout-menu {
+	position: sticky;
+	top: 0;
+}
+#layout-list {
+	position: sticky;
+	top: 0;
+}
+#layout-content {
+	position: sticky;
+	top: 0;
 }
