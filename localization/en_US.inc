@@ -2,11 +2,13 @@
 $labels = array();
 $labels['notes'] = 'Notes';
 $labels['note_new'] = 'New';
+$labels['note_show'] = 'Show';
 $labels['note_edit'] = 'Edit';
 $labels['note_rename'] = 'Rename';
 $labels['note_del'] = 'Delete';
 $labels['note_send'] = 'Send';
 $labels['note_upload'] = 'Upload';
+$labels['note_download'] = 'Download';
 $labels['note_title'] = 'Name for Note';
 $labels['note_tags'] = 'Comma Separated Taglist';
 $labels['note_inv_format'] = 'Unsupported note format!';
@@ -23,4 +25,6 @@ $labels['note_defaultformat'] = 'Default Format';
 $labels['note_listformat'] = 'Displayed Formats';
 $labels['note_yamls'] = 'Enable YAML';
 $labels['note_rmedia_md'] = 'Remove automatically embedded Media';
+$labels['note_media_del'] = 'Found %count% media files in %note%. Do you want to delete them?';
+$labels['note_toc'] = 'Table of Contents';
 ?>

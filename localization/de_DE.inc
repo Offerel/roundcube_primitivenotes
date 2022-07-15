@@ -2,11 +2,13 @@
 $labels = array();
 $labels['notes'] = 'Notizen';
 $labels['note_new'] = 'Neu';
+$labels['note_show'] = 'Anzeigen';
 $labels['note_edit'] = 'Bearbeiten';
 $labels['note_rename'] = 'Umbenennen';
 $labels['note_del'] = 'Löschen';
 $labels['note_send'] = 'Senden';
 $labels['note_upload'] = 'Hochladen';
+$labels['note_Download'] = 'Download';
 $labels['note_title'] = 'Name für Notiz';
 $labels['note_tags'] = 'Kommagetrennte Tagliste';
 $labels['note_inv_format'] = 'Nicht unterstütztes Notiz Format!';
@@ -23,4 +25,6 @@ $labels['note_defaultformat'] = 'Standard Format';
 $labels['note_listformat'] = 'Angezeigte Formate';
 $labels['note_yamls'] = 'Aktiviere YAML';
 $labels['note_rmedia_md'] = 'Eingbettete Medien automatisch löschen';
+$labels['note_media_del'] = '%count% Mediendateien in %note% gefunden. Möchten Sie diese löschen?';
+$labels['note_toc'] = 'Inhaltsverzeichnis';
 ?>

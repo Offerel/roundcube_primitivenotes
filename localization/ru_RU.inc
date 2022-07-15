@@ -2,11 +2,13 @@
 $labels = array();
 $labels['notes'] = 'Заметки';
 $labels['note_new'] = 'Новая заметка';
+$labels['note_show'] = 'Посмотреть';
 $labels['note_edit'] = 'Изменить';
 $labels['note_rename'] = 'Переименовать';
 $labels['note_del'] = 'Удалить';
 $labels['note_send'] = 'Отправить';
 $labels['note_upload'] = 'Импортировать';
+$labels['note_download'] = 'Скачать';
 $labels['note_title'] = 'Название заметки';
 $labels['note_tags'] = 'Теги через запятую';
 $labels['note_inv_format'] = 'Неподдерживаемый формат заметок!';
@@ -23,4 +25,6 @@ $labels['note_defaultformat'] = 'Стандартный формат';
 $labels['note_listformat'] = 'Отображаемые форматы';
 $labels['note_yamls'] = 'Активировать YAML';
 $labels['note_rmedia_md'] = 'Автоматическое удаление встроенного мультимедиа с помощью файлов Markdown';
+$labels['note_media_del'] = 'В файле %note% найдено %count% медиафайлов. Вы хотите удалить их?';
+$labels['note_toc'] = 'Содержание';
 ?>

@@ -2,11 +2,13 @@
 $labels = array();
 $labels['notes'] = 'Notas';
 $labels['note_new'] = 'Nova';
+$labels['note_show'] = 'Mostrar';
 $labels['note_edit'] = 'Editar';
 $labels['note_rename'] = 'Renomear';
 $labels['note_del'] = 'Deletar';
 $labels['note_send'] = 'Compartilhar';
 $labels['note_upload'] = 'Upload';
+$labels['note_Download'] = 'Download';
 $labels['note_title'] = 'Nome para a nota';
 $labels['note_tags'] = 'Tags separadas por vírgula';
 $labels['note_inv_format'] = 'Formato de nota não suportado !';
@@ -23,4 +25,6 @@ $labels['note_defaultformat'] = 'Formato Padrão';
 $labels['note_listformat'] = 'Formatos Exibidos';
 $labels['note_yamls'] = 'Habilitar YAML';
 $labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada';
+$labels['note_media_del'] = 'Encontrei %count% ficheiros multimédia em %note%. Quer apagá-los?';
+$labels['note_toc'] = 'Tabela de conteúdos';
 ?>
