@@ -1,4 +1,7 @@
 ### v2.1.1
+
+
+### v2.1.1
 - Fix for pasting html/markdown
   
 ### v2.1.0
