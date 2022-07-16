@@ -1,3 +1,6 @@
+### v2.1.1
+- Fix for pasting html/markdown
+  
 ### v2.1.0
 - Rewrite of most parts
 - Added markdown linebreak in YAML

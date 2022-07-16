@@ -2,14 +2,14 @@
 	"name": "offerel/primitivenotes",
 	"description": "A deadly simple notes plugin for Roundcube",
 	"keywords": ["notes","plugin","html","markdown","images","pdf","roundcube"],
-	"homepage": "https://github.com/Offerel/roundcube_primitivenotes",
+	"homepage": "https://codeberg.org/Offerel/roundcube_primitivenotes",
 	"type": "roundcube-plugin",
 	"license": "AGPL-3.0",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"authors": [
 	{
 		"name": "Offerel",
-		"homepage": "https://github.com/Offerel",
+		"homepage": "https://codeberg.org/Offerel",
 		"role": "Developer"
 	}
 	],
