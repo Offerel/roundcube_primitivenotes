@@ -2,9 +2,9 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.1.0
+ * @version 2.1.1
  * @author Offerel
- * @copyright Copyright (c) 2021, Offerel
+ * @copyright Copyright (c) 2022, Offerel
  * @license GNU General Public License, version 3
  */
 class primitivenotes extends rcube_plugin{
