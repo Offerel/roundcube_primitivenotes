@@ -1,5 +1,5 @@
-### v2.1.1
-
+### v2.1.2
+- Fix for ToC
 
 ### v2.1.1
 - Fix for pasting html/markdown

@@ -16,7 +16,7 @@ loader.appendChild(ldr);
 
 window.rcmail && rcmail.addEventListener("init", function(a) {
 	if(new URLSearchParams(window.location.search).get('_task') === 'notes') {
-	    if(document.querySelector('.task-menu-button')) document.querySelector('.task-menu-button').classList.add('notes');
+		if(document.querySelector('.task-menu-button')) document.querySelector('.task-menu-button').classList.add('notes');
 	} else {
 		if(document.querySelector('.task-menu-button')) document.querySelector('.task-menu-button').classList.remove('notes');
 	}
@@ -100,7 +100,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			position      : "text",
 			closeOnSelect : false,
 			highlightFirst: true
-        },
+		},
 		trim: true,
 		duplicates: false,
 		enforceWhitelist: false,
@@ -433,8 +433,8 @@ function downloadNote(note) {
 			
 			var disposition = xhr.getResponseHeader('Content-Disposition');
 			var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            var matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+			var matches = filenameRegex.exec(disposition);
+			if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
 			
 			a.href = data;
 			a.download = filename;
@@ -565,22 +565,12 @@ function loadNote(response) {
 				toc.classList.add('no-disable');
 				let tocdiv = document.createElement('div');
 				tocdiv.id = 'tocdiv';
-				let o = 0;
-				let a = 0;
-				let list = 'c%';
-				headings.forEach(function(element){
-					a = element.tagName.substr(1,1);
-					if(o < a) {
-						list = (o == 0) ? list.replace('c%','<ul><li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%</ul>'):list.replace('c%','<li class="ul"><ul><li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%</ul></li>');
-					} else if(o > a) {
-						list = list.replace('c%','</ul><li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%');
-					} else {
-						list = list.replace('c%','<li><a title="'+element.innerText+'" href="#' + element.id + '">' + element.innerText + '</a></li>c%');
-					}
-					o = a;
-				});
-				list = list.replace('c%</ul>','');
-				tocdiv.innerHTML = '<h3>' + rcmail.gettext("note_toc", "primitivenotes") + '</h3><div>' + list + '</div>';
+				let thead = document.createElement('h3');
+				thead.innerText = rcmail.gettext("note_toc", "primitivenotes");
+				tocdiv.appendChild(thead);
+				let tdiv = document.createElement('div');
+				tdiv.appendChild(buildToc(tocHierarchi(tocArr(headings))));
+				tocdiv.appendChild(tdiv);
 				document.querySelector('.EasyMDEContainer').appendChild(tocdiv);
 				document.querySelectorAll('#tocdiv a').forEach(function(elem) {
 					elem.addEventListener('click', function(e){
@@ -593,7 +583,6 @@ function loadNote(response) {
 		}, 50);
 		
 		tagify.addTags(response.note.tags);
-		
 	} else {
 		document.querySelector('.EasyMDEContainer').classList.add('mdeHide');
 		let objdiv = document.createElement('div');
@@ -643,6 +632,62 @@ function loadNote(response) {
 			}									
 		});
 	});
+}
+
+function buildToc(headings) {
+	let li, a, anchor;
+	let ul = document.createElement('ul');
+	if(headings && headings.length) {
+		for(t of headings) {
+			li = document.createElement('li');
+			a  = document.createElement('a');
+			a.href = '#' + t.el.id;
+			a.textContent = t.el.textContent;
+			li.append(a);
+			if(t.subitems && t.subitems.length) li.append(buildToc(t.subitems));
+			ul.append(li);
+		}
+	}
+	return ul;
+}
+
+function tocHierarchi(items) {
+	let tocHierarchi = Object.create(null);
+	items.forEach(item => tocHierarchi[item.idt] = { ...item, subitems : [] });
+	let tree = [];
+	items.forEach( item => {
+		if(item.parent)
+			tocHierarchi[item.parent].subitems.push(tocHierarchi[item.idt]);
+		else
+			tree.push(tocHierarchi[item.idt]);
+	});
+	return tree;
+}
+
+function tocArr(array) {
+	let idt, level, t;
+	for(let i = 0, n = array.length; i < n; i++) {
+		t       = array[i];
+		t.el    = t;
+		level   = parseInt(t.tagName[1], 10);
+		t.level = level;
+		t.idt   = i + 1;
+
+		if(level <= 1) t.parent = 0;
+		if(i) {
+			if(array[i - 1].level < level) t.parent = array[i - 1].idt;
+			else if(array[i - 1].level == level) t.parent = array[i - 1].parent;
+			else {
+				for(let j = i - 1; j >= 0; j--) {
+					if(array[j].level == level - 1) {
+						t.parent = array[j].idt;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return array;
 }
 
 function savedNote(response) {
