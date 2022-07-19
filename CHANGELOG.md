@@ -1,5 +1,6 @@
 ### v2.1.2
 - Fix for ToC
+- Fix resizing notes list
 
 ### v2.1.1
 - Fix for pasting html/markdown
