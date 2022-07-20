@@ -598,16 +598,13 @@ function loadNote(response) {
 
 	tPreview(response.mode);
 
-	document.querySelectorAll('.hljs').forEach(function(element) {
+	document.querySelectorAll('.editor-preview code').forEach(function(element) {
 		element.addEventListener('click', function() {
 			let element = this;
+			element.classList.add('success');
 			navigator.clipboard.writeText(element.innerText).then(function() {
-				let osp = document.createElement('span');
-				osp.classList.add('success');
-				osp.innerText = 'copied';
-				element.appendChild(osp);
 				setTimeout(function () {
-					osp.remove();
+					element.classList.remove('success');
 				}, 1000);
 			  }, function() {
 			  	console.error('Clipboard error');
