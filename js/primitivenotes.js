@@ -1,7 +1,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.1.2
+ * @version 2.1.3
  * @author Offerel
  * @copyright Copyright (c) 2022, Offerel
  * @license GNU General Public License, version 3
@@ -212,7 +212,7 @@ function pasteParse(event) {
 	event.stopPropagation();
 	
 	const pastedString = event.clipboardData.getData('text/html') || event.clipboardData.getData('text/plain');
-	console.log(pastedString);
+	const pastedTypes = event.clipboardData.types;
 
 	for (var i = 0; i < event.clipboardData.items.length ; i++) {
 		let item = event.clipboardData.items[i];
@@ -285,7 +285,7 @@ function pasteParse(event) {
 		}
 	});
 
-	let markdownString = pastedString.startsWith('<') ? turndownService.turndown(pastedString) : pastedString;
+	let markdownString = pastedTypes.includes('text/html') ? turndownService.turndown(pastedString):pastedString;
 
 	if(markdownString.startsWith('---')) {
 		let mdArr = markdownString.split('\n');

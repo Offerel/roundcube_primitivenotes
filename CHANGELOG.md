@@ -1,5 +1,6 @@
 ### v2.1.3
 - Fix auto-copy code
+- Fix detect paste data
 
 ### v2.1.2
 - Fix for ToC
