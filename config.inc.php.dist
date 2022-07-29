@@ -1,5 +1,5 @@
 <?php
-$config['notes_path'] = '/path/to/server/folder/%u/files/Notes'; // path to your notes, use %u for username
+$config['notes_path'] = '/path/to/server/folder/%u/files/Notes'; // path to your notes folder, use %u for username
 $config['media_folder'] = '.media';  // folder to store embedded images or binary file like *.pdf
 $config['default_format'] = 'md'; // default format, you can choose between 'md' or 'txt'
 $config['list_formats'] = ['md', 'txt']; // list of displayed formats, can be a combination of md, html, txt, pdf, jpg, png
