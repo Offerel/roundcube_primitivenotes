@@ -200,12 +200,9 @@ class primitivenotes extends rcube_plugin{
 							</li>";
 				}
 			}
-			
 			asort($taglist, SORT_LOCALE_STRING | SORT_FLAG_CASE );
 			$this->rc->output->set_env('taglist', json_encode(array_values($taglist)));
 			return html::div(array('id' => 'pnlist', 'class' => 'listing nlist treelist'), $pnlist);
-		} else {
-			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}
     }
 
@@ -367,6 +364,15 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function action() {
+		$notes_path = $this->notes_path;
+		$media_path = $this->media_path;
+
+		if(!is_dir($notes_path)) {
+			mkdir($notes_path);
+			mkdir($media_path);
+		}
+		if(!is_dir($media_path)) mkdir($media_path);    
+
 		$this->rc->output->set_env('dformat', $this->rc->config->get('default_format', false));
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));
 		$this->rc->output->set_env('mfolder', $this->rc->config->get('media_folder', false));

@@ -88,7 +88,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		}
 	});
 
-	let WhiteList = JSON.parse(rcmail.env.taglist);
+	let WhiteList = (rcmail.env.taglist != undefined) ?JSON.parse(rcmail.env.taglist):'';
 
 	tagify = new Tagify(document.getElementById('ntags'), {
 		whitelist: WhiteList,
