@@ -22,6 +22,64 @@
     right: -11px;
     width: 10px;
 }
+.anone {
+	pointer-events: none;
+}
+#cSearch {
+	position: absolute;
+	top: 19px;
+	z-index: 1;
+	margin: 0 auto;
+	background-color: #d4dbdec4;
+	height: 70px;
+	border: 1px solid #a9a9a9;
+	border-top: 0;
+	border-bottom-left-radius: .3em;
+	border-bottom-right-radius: .3em;
+	animation-name: bounceInDown;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+	padding: 20px 10px 10px 10px;
+	right: 25px;
+	width: 200px;
+}
+.fc {
+	background-color: coral !important;
+}
+#cSearch div {
+    font-size: .8em;
+    color: gray;
+    width: 100%;
+    display: block;
+    text-align: end;
+    line-height: 2em;
+}
+#cSearch .sep {
+    border-left: 1px solid darkgray;
+    border-right: 1px solid ghostwhite;
+    width: 2px;
+    margin: 0 1em;
+}
+#cSearch a {
+    color: currentColor;
+    width: 16px !important;
+    background-color: transparent;
+    display: inline-block;
+    text-align: center;
+    line-height: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+#cSearch a:hover {
+    background-color: silver;
+}
+#iSearch {
+	width: 100%;
+	outline: 0;
+	border: thin solid #a9a9a9;
+	line-height: 1.5em;
+	border-radius: .3em;
+}
 code.success::before {
 	content: 'Copied!';
 	background-color: gold;
@@ -417,7 +475,6 @@ input#source:read-only:not(:placeholder-shown):hover {
 	overflow-x: auto;
 	scrollbar-width: thin;
 	margin: 0 0 -5px 0;
-/*	user-select: all; */
 	width: unset;
 	background-color: #eed7d7;
 	font-family: Consolas,Monaco,monospace !important;
@@ -512,6 +569,10 @@ input#source:read-only:not(:placeholder-shown):hover {
 	padding: 0 5px;
 	border-radius: 4px;
 	color: black;
+}
+.editor-preview mark {
+    padding: 0;
+    background-color: gold;
 }
 .editor-preview-side {
 	position: absolute !important;
