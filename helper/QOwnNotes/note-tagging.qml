@@ -4,7 +4,7 @@ import QOwnNotesTypes 1.0
 QtObject {
     function init() {
         script.registerCustomAction("getTagsFromName", "Get tags from note filename", "Get tags");
-		script.registerCustomAction("setTagsToName", "Rename a note with tags", "Set tags");
+		script.registerCustomAction("setTagsToName", "Rename a note with tags", "Set tags"); 
 	}
 	
 	function customActionInvoked(identifier) {

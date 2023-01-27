@@ -1,3 +1,9 @@
+### v2.1.3
+- Added search function
+- Fix auto-copy code
+- Fix detect paste data
+- Fix for notes folder not available
+
 ### v2.1.2
 - Fix for ToC
 - Fix resizing notes list

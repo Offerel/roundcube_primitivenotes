@@ -2,9 +2,9 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.1.2
+ * @version 2.1.3
  * @author Offerel
- * @copyright Copyright (c) 2022, Offerel
+ * @copyright Copyright (c) 2023, Offerel
  * @license GNU General Public License, version 3
  */
 class primitivenotes extends rcube_plugin{
@@ -200,12 +200,9 @@ class primitivenotes extends rcube_plugin{
 							</li>";
 				}
 			}
-			
 			asort($taglist, SORT_LOCALE_STRING | SORT_FLAG_CASE );
 			$this->rc->output->set_env('taglist', json_encode(array_values($taglist)));
 			return html::div(array('id' => 'pnlist', 'class' => 'listing nlist treelist'), $pnlist);
-		} else {
-			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}
     }
 
@@ -367,6 +364,15 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function action() {
+		$notes_path = $this->notes_path;
+		$media_path = $this->media_path;
+
+		if(!is_dir($notes_path)) {
+			mkdir($notes_path);
+			mkdir($media_path);
+		}
+		if(!is_dir($media_path)) mkdir($media_path);    
+
 		$this->rc->output->set_env('dformat', $this->rc->config->get('default_format', false));
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));
 		$this->rc->output->set_env('mfolder', $this->rc->config->get('media_folder', false));
@@ -475,7 +481,7 @@ class primitivenotes extends rcube_plugin{
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
-			$yaml.= (strlen($created) > 0) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
+			$yaml.= (strlen($created) > 7) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$this->rc->user->get_username()."\n";
 			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";
