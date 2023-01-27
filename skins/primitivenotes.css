@@ -18,6 +18,29 @@
 		display: none !important;
 	}
 }
+.cm-quote.cm-quote-1 {
+	background-color: rgba(66,185,131,.1);
+	color: #3c763d;
+}
+.cm-formatting-code.cm-comment + span.cm-comment {
+	white-space: pre;
+	max-width: calc(100% - 20px);
+	display: inline-block;
+	overflow-x: auto;
+	background-color: #eed7d7;
+	color: #e93700;
+	margin: 0 0 -3px 0;
+	font-family: Consolas,Monaco,monospace !important;
+	padding: 0 3px;
+	scrollbar-width: thin;
+	font-size: .85em;
+}
+.cm-formatting.cm-formatting-code.cm-comment {
+	font-family: Consolas,Monaco,monospace !important;
+	font-size: .9em;
+	background-color: #eed7d7 !important;
+	color: #e93700;
+}
 #nspan {
 	width: 100%;
 	margin-right: 35px;
