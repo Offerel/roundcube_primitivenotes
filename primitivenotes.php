@@ -470,6 +470,8 @@ class primitivenotes extends rcube_plugin{
 		$updated = rcube_utils::get_input_value('_updated', rcube_utils::INPUT_POST, false);
 		$source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_POST, false);
 
+		if($created == "false") $created = '';
+
 		$ofile = $this->notes_path.$oname;
 		$path_parts = pathinfo($ofile);
 		$type = explode('.', $path_parts['basename'])[1];
