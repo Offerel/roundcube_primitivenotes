@@ -4,7 +4,7 @@
  *
  * @version 2.1.3
  * @author Offerel
- * @copyright Copyright (c) 2022, Offerel
+ * @copyright Copyright (c) 2023, Offerel
  * @license GNU General Public License, version 3
  */
 class primitivenotes extends rcube_plugin{
@@ -481,7 +481,7 @@ class primitivenotes extends rcube_plugin{
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
-			$yaml.= (strlen($created) > 0) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
+			$yaml.= (strlen($created) > 7) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
 			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$this->rc->user->get_username()."\n";
 			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";

@@ -20,6 +20,9 @@
 	top: 34px;
 	bottom: 31px;
 }
+.CodeMirror-sided {
+	flex: unset !important;
+}
 .EasyMDEContainer .CodeMirror {
 	height: calc(100vh - 145px) !important;
 }

@@ -3,7 +3,7 @@
  *
  * @version 2.1.3
  * @author Offerel
- * @copyright Copyright (c) 2022, Offerel
+ * @copyright Copyright (c) 2023, Offerel
  * @license GNU General Public License, version 3
  */
 var mde, tagify, oNote;
