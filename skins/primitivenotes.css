@@ -18,6 +18,10 @@
 		display: none !important;
 	}
 }
+#nspan {
+	width: 100%;
+	margin-right: 35px;
+}
 .column-resizer {
     right: -11px;
     width: 10px;
