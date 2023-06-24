@@ -23,4 +23,6 @@ $labels['note_defaultformat'] = 'Predvolený formát';
 $labels['note_listformat'] = 'Zobrazované formáty';
 $labels['note_yamls'] = 'Povoliť YAML';
 $labels['note_rmedia_md'] = 'Odstrániť automaticky vložené médiá';
+$labels['note_toc'] = 'Obsah';
+$labels['note_ntoc'] = 'Číslovanie obsahu';
 ?>

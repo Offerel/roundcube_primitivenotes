@@ -27,4 +27,5 @@ $labels['note_yamls'] = 'Aktiviere YAML';
 $labels['note_rmedia_md'] = 'Eingbettete Medien automatisch löschen';
 $labels['note_media_del'] = '%count% Mediendateien in %note% gefunden. Möchten Sie diese löschen?';
 $labels['note_toc'] = 'Inhaltsverzeichnis';
+$labels['note_ntoc'] = 'Nummerierung Inhaltsverzeichnis';
 ?>

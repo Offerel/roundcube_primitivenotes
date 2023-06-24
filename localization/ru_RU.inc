@@ -27,4 +27,5 @@ $labels['note_yamls'] = 'Активировать YAML';
 $labels['note_rmedia_md'] = 'Автоматическое удаление встроенного мультимедиа с помощью файлов Markdown';
 $labels['note_media_del'] = 'В файле %note% найдено %count% медиафайлов. Вы хотите удалить их?';
 $labels['note_toc'] = 'Содержание';
+$labels['note_ntoc'] = 'Нумерация Оглавление';
 ?>

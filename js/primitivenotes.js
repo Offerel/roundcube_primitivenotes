@@ -614,6 +614,20 @@ function tPreview(mode = '') {
 			document.getElementById('source').readOnly = true;
 			document.querySelector('.toc').classList.add('no-disable');
 			document.querySelector('.toc').removeAttribute('disabled');
+			document.querySelectorAll('.editor-preview code').forEach(function(element) {
+				element.addEventListener('click', function() {
+					console.info('clicked');
+					let element = this;
+					element.classList.add('success');
+					navigator.clipboard.writeText(element.innerText).then(function() {
+						setTimeout(function () {
+							element.classList.remove('success');
+						}, 1000);
+					  }, function() {
+					  	console.error('Clipboard error');
+					  });
+				});
+			});
 		} else {
 			document.querySelector('.preview').classList.remove('active');
 			document.getElementById('headerTitle').classList.remove('readOnly');
@@ -728,20 +742,6 @@ function loadNote(response) {
 	}
 
 	tPreview(response.mode);
-
-	document.querySelectorAll('.editor-preview code').forEach(function(element) {
-		element.addEventListener('click', function() {
-			let element = this;
-			element.classList.add('success');
-			navigator.clipboard.writeText(element.innerText).then(function() {
-				setTimeout(function () {
-					element.classList.remove('success');
-				}, 1000);
-			  }, function() {
-			  	console.error('Clipboard error');
-			  });
-		});
-	});
 
 	let intlink = document.querySelectorAll('.editor-preview a.intlink');
 	intlink.forEach(function(e) {

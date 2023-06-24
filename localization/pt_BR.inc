@@ -27,4 +27,5 @@ $labels['note_yamls'] = 'Habilitar YAML';
 $labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada';
 $labels['note_media_del'] = 'Encontrei %count% ficheiros multimédia em %note%. Quer apagá-los?';
 $labels['note_toc'] = 'Tabela de conteúdos';
+$labels['note_ntoc'] = 'Numeração do índice';
 ?>

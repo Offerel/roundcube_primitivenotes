@@ -38,6 +38,7 @@ class primitivenotes extends rcube_plugin{
 			$this->include_stylesheet('js/tagify/tagify.css');
 			if($this->rc->config->get('skin') == 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
 			$this->include_stylesheet('skins/primitivenotes.css');
+			if($this->rc->config->get('nrtoc', true))  $this->include_stylesheet('skins/ntoc.css');
 		
 			$this->include_script('js/primitivenotes.js');
 			$this->include_script('js/highlight/highlight.min.js');
@@ -299,6 +300,15 @@ class primitivenotes extends rcube_plugin{
 
 		$p['blocks']['main']['options']['pn_rmed'] = array(	'title'=> html::label($field_id, $this->gettext('note_rmedia_md')),
 															'content'=> $input->show(intval($this->rc->config->get('rm_md_media'))));
+
+		$field_id='nrtoc';
+		$input = new html_checkbox(array(	'name'	=> 'nrtoc',
+											'id'	=> 'nrtoc',
+											'value' => 1));
+
+		$p['blocks']['main']['options']['pn_ntoc'] = array(	'title'=> html::label($field_id, $this->gettext('note_ntoc')),
+															'content'=> $input->show(intval($this->rc->config->get('nrtoc'))));
+		
 		return $p;
 	}
 	
@@ -308,7 +318,8 @@ class primitivenotes extends rcube_plugin{
 				'default_format'	=> strval(rcube_utils::get_input_value('default_format', rcube_utils::INPUT_POST)),
 				'list_formats'		=> rcube_utils::get_input_value('list_formats', rcube_utils::INPUT_POST),
 				'yaml_support'		=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST)),
-				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST))
+				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST)),
+				'nrtoc'				=> intval(rcube_utils::get_input_value('nrtoc', rcube_utils::INPUT_POST))
 				);
 		}
         return $p;

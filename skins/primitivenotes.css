@@ -1,6 +1,9 @@
 :root {
   --maxwidth: 800px;
 }
+.table {
+	width: unset;
+}
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {
 		display: none !important;
@@ -157,7 +160,7 @@ code.success::before {
 	width: 100%;
 	padding-top: 10px;
 	padding-right: 15px;
-	counter-reset: section;
+/*	counter-reset: section; */
 }
 #tocdiv h3 {
 	font-size: 1.3em;
@@ -173,7 +176,7 @@ code.success::before {
 #tocdiv ul {
 	margin: 0;
 	padding-left: 15px;
-	counter-reset: item;
+/*	counter-reset: item; */
 }
 #tocdiv li {
 	list-style: none;
@@ -181,10 +184,11 @@ code.success::before {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+/*
 #tocdiv li:not(.ul)::before {
 	content: counters(item, ".") " ";
 	counter-increment: item;
-}
+} */
 .db-spinner {
 	width: 40px;
 	height: 40px;
@@ -452,8 +456,9 @@ input#source:read-only:not(:placeholder-shown):hover {
 .editor-preview {
 	background-color: white !important;
 	line-height: 1.2em;
-	counter-reset: h1;
+/*	counter-reset: h1; */
 }
+/*
 .editor-preview h1 {
 	counter-reset: h2;
 }
@@ -492,7 +497,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 	counter-increment: h5;
 	content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " ";
 	counter-reset: h6;
-}
+} */
 .editor-preview * {
 	max-width: var(--maxwidth);
 	margin-left: auto;
@@ -571,6 +576,8 @@ input#source:read-only:not(:placeholder-shown):hover {
 	border-spacing: 0;
 	border-collapse: collapse;
 	text-shadow: 1px 1px 0 #fff;
+	width: var(--maxwidth);
+    margin-bottom: 1em;
 }
 .editor-preview table thead th {
 	background-color: #e0e0e0;
@@ -615,4 +622,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 }
 .cm-url, .cm-link {
 	color: #42b983 !important;
+}
+h1, h2, h3, h4 {
+    font-size: revert;
 }

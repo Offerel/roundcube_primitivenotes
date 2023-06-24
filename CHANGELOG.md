@@ -1,3 +1,11 @@
+### v2.1.4
+- Fix table width
+- Fix copy of codeblocks
+- Optional numbering Table of contents
+- EasyMDE 2.18.0      (https://github.com/Ionaru/easy-markdown-editor)
+- Turndown 7.1.2      (https://github.com/mixmark-io/turndown)
+- Tagify 4.17.8       (https://github.com/yairEO/tagify)
+
 ### v2.1.3
 - Added search function
 - Fix auto-copy code
