@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.1.4
+ * @version 2.1.5
  * @author Offerel
  * @copyright Copyright (c) 2023, Offerel
  * @license GNU General Public License, version 3
@@ -127,6 +127,7 @@ class primitivenotes extends rcube_plugin{
 		if(is_dir($notes_path) && !isset($_POST['action']) || $_POST['action'] == 'getTags') {
 			$taglist = array();
 			if ($handle = opendir($notes_path)) {
+				$id = 1;
 				while (($file = readdir($handle)) !== false) {
 					if (is_file($notes_path.$file)) {
 						$name = pathinfo($notes_path.$file,PATHINFO_BASENAME);
@@ -158,13 +159,13 @@ class primitivenotes extends rcube_plugin{
 							}
 							
 							$files[] = array(
-								'name' => (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
+								'name'	=> (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
 								'filename' => $name,
-								'size' => filesize($notes_path.$file),
-								'type' => $ext,
-								'time' => filemtime($notes_path.$file),
-								'tags' => $ttags,
-								'id' => $id
+								'size'	=> filesize($notes_path.$file),
+								'type'	=> $ext,
+								'time'	=> filemtime($notes_path.$file),
+								'tags'	=> $ttags,
+								'id'	=> $id
 								);
 							}	
 						$id++;
@@ -176,10 +177,11 @@ class primitivenotes extends rcube_plugin{
 		}
 		
 		if(is_array($files) && count($files) > 0  && !isset($_POST['action'])) {
-			usort($files, function($a, $b) { return $b['time'] > $a['time']; });
+			usort($files, function($a, $b) { return $b['time'] <=> $a['time']; });
 		}
 
 		if(is_array($files) && $files) {
+			$pnlist = "";
 			foreach ($files as $fentry) {
 				if(strlen($fentry['name']) > 0 ) {
 					$fsize = $this->human_filesize($fentry['size'], 2);
@@ -188,7 +190,7 @@ class primitivenotes extends rcube_plugin{
 					} else
 						$tlist = "";
 					
-					$id = ($fentry['id'] != "") ? $fentry['id'] : 0;						
+					$id = (array_key_exists('id', $fentry)) ? $fentry['id'] : 0;
 					$filename = $fentry['filename'];
 					$format = $fentry['type'];
 					
@@ -400,7 +402,7 @@ class primitivenotes extends rcube_plugin{
 
 		if(file_exists($note)) {
 			$fcontent = file_get_contents($note);
-
+			$yaml = "";
 			if($this->rc->config->get('yaml_support', true)) {
 				$ydel = '---';
 				$yhb_pos = strpos($fcontent, $ydel);
@@ -418,32 +420,26 @@ class primitivenotes extends rcube_plugin{
 					$ytags = explode($delm, $res[1]);
 				}
 
-				if(strpos($line, 'author:') === 0) {
-					$author = explode(': ', $line)[1];
-				}
+				$author = (strpos($line, 'author:') === 0) ? explode(': ', $line)[1]:"";
 
 				if(strpos($line, 'date:') === 0) {
 					$date = $this->formatter->format(strtotime(explode(': ', $line)[1]));
 					$tstamp = strtotime(explode(': ', $line)[1]);
 				}
 
-				if(strpos($line, 'updated:') === 0) {
-					$updated = $this->formatter->format(strtotime(explode(': ', $line)[1]));
-				}
+				$updated = (strpos($line, 'updated:') === 0) ? $this->formatter->format(strtotime(explode(': ', $line)[1])):"";
 
-				if(strpos($line, 'source:') === 0) {
-					$source = explode(': ', $line)[1];
-				}
+				$source = (strpos($line, 'source:') === 0) ? explode(': ', $line)[1]:"";
 			}
 
 			$path_parts = pathinfo($note);
 			$mime_type = mime_content_type($note);
 			$fcontent = (substr($mime_type, 0, 4) === 'text') ? $fcontent:base64_encode($fcontent);
 
-			$tagString = substr($filename, stripos($filename, "["), stripos($filename, "]"));
+			$tagString = substr($nname, stripos($nname, "["), stripos($nname, "]"));
 			$tagA = explode(' ', $tagString);
 
-			if(is_array($ytags)) {
+			if(isset($ytags) && is_array($ytags)) {
 				$TagsArray = array_unique(array_merge($tagA, $ytags));
 				$TagsArray = array_filter($TagsArray);
 				sort($TagsArray, SORT_STRING);
@@ -461,7 +457,7 @@ class primitivenotes extends rcube_plugin{
 				'id'		=> $id,
 				'mime_type'	=> $mime_type,
 				'filename'	=> $nname,
-				'tags'		=> $TagsArray
+				'tags'		=> isset($TagsArray) ? $TagsArray:array(),
 			);
 
 			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $noteArr, 'mode' => $mode));
@@ -475,7 +471,7 @@ class primitivenotes extends rcube_plugin{
 		$oname = rcube_utils::get_input_value('_oname', rcube_utils::INPUT_POST, false);
 		$nname = rcube_utils::get_input_value('_title', rcube_utils::INPUT_POST, false);
 		$content = rcube_utils::get_input_value('_content', rcube_utils::INPUT_POST, true);
-		$tags = implode(', ', rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false));
+		$tags = is_array(rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false)) ? implode(', ',rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false)):"";
 		$author = rcube_utils::get_input_value('_author', rcube_utils::INPUT_POST, false);
 		$created = rcube_utils::get_input_value('_date', rcube_utils::INPUT_POST, false);
 		$updated = rcube_utils::get_input_value('_updated', rcube_utils::INPUT_POST, false);

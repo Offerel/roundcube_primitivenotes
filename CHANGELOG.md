@@ -1,3 +1,6 @@
+### v2.1.5
+- Fix some PHP8 warnings
+
 ### v2.1.4
 - Fix table width
 - Fix copy of codeblocks
