@@ -1,3 +1,7 @@
+
+### v2.1.6
+- Fix deprecated null value
+
 ### v2.1.5
 - Fix some PHP8 warnings
 

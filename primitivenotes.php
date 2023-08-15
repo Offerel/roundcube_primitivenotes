@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.1.5
+ * @version 2.1.6
  * @author Offerel
  * @copyright Copyright (c) 2023, Offerel
  * @license GNU General Public License, version 3
@@ -67,13 +67,14 @@ class primitivenotes extends rcube_plugin{
 		$this->add_hook('message_compose', array($this, 'note_mail_compose'));
 		$this->register_handler('plugin.notes_list', array($this, 'notes_list'));
 
-		$notes_path = $this->rc->config->get('notes_path', false);
-		$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $this->rc->user->get_username(), $notes_path);
-		$this->notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
-
-		$media_path = $this->notes_path.$this->rc->config->get('media_folder', false);
-		$this->media_path = ($media_path[-1] != '/') ? $media_path.'/':$media_path;
-
+		if ($this->rc->task == 'notes') {
+			$notes_path = $this->rc->config->get('notes_path', false);
+			$notes_path = (strpos($notes_path, '%u') === false) ? $notes_path:str_replace('%u', $this->rc->user->get_username(), $notes_path);
+			$this->notes_path = ($notes_path[-1] != '/') ? $notes_path.'/':$notes_path;
+			$media_path = $this->notes_path.$this->rc->config->get('media_folder', false);
+			$this->media_path = ($media_path[-1] != '/') ? $media_path.'/':$media_path;
+		}
+		
 		$this->formatter = new IntlDateFormatter($this->rc->get_user_language(), IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
 	}
 	
