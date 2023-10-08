@@ -1,4 +1,7 @@
 
+### v2.1.7
+- Fix file issue
+  
 ### v2.1.6
 - Fix deprecated null value
 

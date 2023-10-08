@@ -426,6 +426,9 @@ class primitivenotes extends rcube_plugin{
 				if(strpos($line, 'date:') === 0) {
 					$date = $this->formatter->format(strtotime(explode(': ', $line)[1]));
 					$tstamp = strtotime(explode(': ', $line)[1]);
+				} else {
+					$date = time();
+					$tstamp = time();
 				}
 
 				$updated = (strpos($line, 'updated:') === 0) ? $this->formatter->format(strtotime(explode(': ', $line)[1])):"";
@@ -481,10 +484,13 @@ class primitivenotes extends rcube_plugin{
 		if($created == "false") $created = '';
 
 		$ofile = $this->notes_path.$oname;
-		$path_parts = pathinfo($ofile);
-		$type = explode('.', $path_parts['basename'])[1];
 
-		$type = (strlen($type) > 0) ? $type:$this->rc->config->get('default_format', false);
+		if(is_file($ofile)) {
+			$path_parts = pathinfo($ofile);
+			$type = explode('.', $path_parts['basename'])[1];
+		}
+
+		$type = (isset($type) && strlen($type) > 0) ? $type:$this->rc->config->get('default_format', false);
 		$nfile = $this->notes_path.$nname.'.'.$type;
 
 		if($this->rc->config->get('yaml_support', true)) {
