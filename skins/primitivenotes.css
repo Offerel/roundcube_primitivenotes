@@ -33,7 +33,7 @@
 	max-width: calc(100% - 20px);
 	display: inline-block;
 	overflow-x: auto;
-	background-color: #eed7d7;
+	background-color: #ffefef;
 	color: #e93700;
 	margin: 0 0 -3px 0;
 	font-family: Consolas,Monaco,monospace !important;
@@ -456,48 +456,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 .editor-preview {
 	background-color: white !important;
 	line-height: 1.2em;
-/*	counter-reset: h1; */
 }
-/*
-.editor-preview h1 {
-	counter-reset: h2;
-}
-.editor-preview h1:before {
-	counter-increment: h1;
-	content: counter(h1) " ";
-}
-.editor-preview h2 {
-	counter-reset: h3;
-}
-.editor-preview h2:before {
-	counter-increment: h2;
-	content: counter(h1) "." counter(h2) " ";
-	counter-reset: h3;
-}
-.editor-preview h3 {
-	counter-reset: h4;
-}
-.editor-preview h3:before {
-	counter-increment: h3;
-	content: counter(h1) "." counter(h2) "." counter(h3) " ";
-	counter-reset: h4;
-}
-.editor-preview h4 {
-	counter-reset: h5;
-}
-.editor-preview h4:before {
-	counter-increment: h4;
-	content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) " ";
-	counter-reset: h5;
-}
-.editor-preview h5 {
-	counter-reset: h6;
-}
-.editor-preview h5:before {
-	counter-increment: h5;
-	content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " ";
-	counter-reset: h6;
-} */
 .editor-preview * {
 	max-width: var(--maxwidth);
 	margin-left: auto;
@@ -511,7 +470,7 @@ input#source:read-only:not(:placeholder-shown):hover {
 	scrollbar-width: thin;
 	margin: 0 0 -5px 0;
 	width: unset;
-	background-color: #eed7d7;
+	background-color: #ffefef;
 	font-family: Consolas,Monaco,monospace !important;
 	color: #e93700;
 	padding: 2px;
@@ -519,12 +478,14 @@ input#source:read-only:not(:placeholder-shown):hover {
 	display: inline-block;
 	white-space: pre;
 	max-width: 100%;
+	user-select: all;
 }
 .editor-preview pre code {
 	color: unset;
 	background-color: unset;
 	position: relative;
 	width: 100%;
+	user-select: all;
 }
 .editor-preview kbd {
 	font-family: Consolas,"Courier New",monospace;
