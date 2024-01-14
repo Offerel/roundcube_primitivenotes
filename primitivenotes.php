@@ -4,7 +4,7 @@
  *
  * @version 2.1.7
  * @author Offerel
- * @copyright Copyright (c) 2023, Offerel
+ * @copyright Copyright (c) 2024, Offerel
  * @license GNU General Public License, version 3
  */
 class primitivenotes extends rcube_plugin{
@@ -142,6 +142,10 @@ class primitivenotes extends rcube_plugin{
 								$yhb_pos = strpos($contents, $yh_be);
 								$yhe_pos = strlen($contents) >= strlen($yh_be) ? strpos($contents, $yh_be, strlen($yh_be)) : 0;
 								if($yhb_pos == 0 && $yhe_pos > 0) {
+
+									//$yaml = substr($contents,0,$yhe_pos + strlen($yh_be));
+									//file_put_contents("$file.yaml",$yaml);
+
 									$yaml_arr = preg_split("/\r\n|\n|\r/", substr($contents,0,$yhe_pos + strlen($yh_be)));
 									foreach($yaml_arr as $line) {
 										if(strpos($line,"tags:") === 0) {
@@ -177,11 +181,11 @@ class primitivenotes extends rcube_plugin{
 			$taglist = array_unique($taglist);
 		}
 		
-		if(is_array($files) && count($files) > 0  && !isset($_POST['action'])) {
+		if(isset($files) && is_array($files) && count($files) > 0  && !isset($_POST['action'])) {
 			usort($files, function($a, $b) { return $b['time'] <=> $a['time']; });
 		}
 
-		if(is_array($files) && $files) {
+		if(isset($files) && is_array($files)) {
 			$pnlist = "";
 			foreach ($files as $fentry) {
 				if(strlen($fentry['name']) > 0 ) {
@@ -414,6 +418,20 @@ class primitivenotes extends rcube_plugin{
 				}
 			}
 
+			$pyaml = yaml_parse($yaml);
+			//if(!is_array($pyaml['tags'])) $pyaml['tags'] = explode(" ",$pyaml['tags']);
+			if(!is_array($pyaml['tags'])) $pyaml['tags'] = preg_split("/[\s,]+/", $pyaml['tags']);
+
+			if (array_key_exists('date', $pyaml)) {
+				$pyaml['created'] = $pyaml['date'];
+				unset($pyaml['date']);
+			}
+
+			if (array_key_exists('updated', $pyaml)) {
+				$pyaml['modified'] = $pyaml['updated'];
+				unset($pyaml['updated']);
+			}
+			/*
 			foreach(preg_split("/((\r?\n)|(\r\n?))/", $yaml) as $line){
 				if(strpos($line, 'tags:') === 0) {
 					$res = explode(': ', $line);
@@ -435,6 +453,7 @@ class primitivenotes extends rcube_plugin{
 
 				$source = (strpos($line, 'source:') === 0) ? explode(': ', $line)[1]:"";
 			}
+			*/
 
 			$path_parts = pathinfo($note);
 			$mime_type = mime_content_type($note);
@@ -442,9 +461,16 @@ class primitivenotes extends rcube_plugin{
 
 			$tagString = substr($nname, stripos($nname, "["), stripos($nname, "]"));
 			$tagA = explode(' ', $tagString);
-
+			/*
 			if(isset($ytags) && is_array($ytags)) {
 				$TagsArray = array_unique(array_merge($tagA, $ytags));
+				$TagsArray = array_filter($TagsArray);
+				sort($TagsArray, SORT_STRING);
+			}
+			*/
+
+			if(isset($pyaml['tags'])) {
+				$TagsArray = array_unique(array_merge($tagA, $pyaml['tags']));
 				$TagsArray = array_filter($TagsArray);
 				sort($TagsArray, SORT_STRING);
 			}
@@ -453,11 +479,15 @@ class primitivenotes extends rcube_plugin{
 				'name'		=> substr($nname,0, (stripos($nname,'[')) ? stripos($nname,'['):stripos($nname,'.')),
 				'content'	=> (stripos($mime_type, 'text') === 0) ? trim($fcontent):"data:$mime_type;base64,".$fcontent,
 				'format'	=> $path_parts['extension'],
-				'author'	=> $author,
-				'date'		=> $date,
+				//'author'	=> $author,	$pyaml['author']
+				'author'	=> $pyaml['author'],
+				//'date'		=> $date,
+				'created'	=> $pyaml['created'],
 				'tstamp'	=> $tstamp,
-				'updated'	=> $updated,
-				'source'	=> $source,
+				//'updated'	=> $updated,
+				'modified'	=> $pyaml['modified'],
+				//'source'	=> $source,
+				'source'	=> $pyaml['source'],
 				'id'		=> $id,
 				'mime_type'	=> $mime_type,
 				'filename'	=> $nname,
@@ -477,8 +507,8 @@ class primitivenotes extends rcube_plugin{
 		$content = rcube_utils::get_input_value('_content', rcube_utils::INPUT_POST, true);
 		$tags = is_array(rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false)) ? implode(', ',rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false)):"";
 		$author = rcube_utils::get_input_value('_author', rcube_utils::INPUT_POST, false);
-		$created = rcube_utils::get_input_value('_date', rcube_utils::INPUT_POST, false);
-		$updated = rcube_utils::get_input_value('_updated', rcube_utils::INPUT_POST, false);
+		$created = rcube_utils::get_input_value('_created', rcube_utils::INPUT_POST, false);
+		$modified = rcube_utils::get_input_value('_modified', rcube_utils::INPUT_POST, false);
 		$source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_POST, false);
 
 		if($created == "false") $created = '';
@@ -496,13 +526,22 @@ class primitivenotes extends rcube_plugin{
 		if($this->rc->config->get('yaml_support', true)) {
 			$yaml = "---\n";
 			$yaml.= "title: ".$nname."\n";
+			$eyaml['title'] = $nname;
 			if(strlen($tags) > 0) $yaml.= "tags: ".$tags."\n";
+			$eyaml['tags'] = rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false);
 			$yaml.= (strlen($created) > 7) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
-			$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
+			$eyaml['created'] = (strlen($created) > 7) ? "date: ".date(DATE_ISO8601, trim($created))."\n":"date: ".date(DATE_ISO8601, time())."\n";
+			//$yaml.= "updated: ".date(DATE_ISO8601, time())."\n";
+			$yaml.= "modified: ".date(DATE_ISO8601, time())."\n";
+			$eyaml['modified'] = date(DATE_ISO8601, time())."\n";
 			$yaml.= (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$this->rc->user->get_username()."\n";
+			$eyaml['author'] = (strlen($author) > 0) ? "author: ".$author."\n":"author: ".$this->rc->user->get_username()."\n";
 			if(strlen($source) > 0) $yaml.= "source: ".$source."\n";
+			$eyaml['source'] = $source;
 			$yaml.= "---\n\n";
 		}
+
+		file_put_contents("/tmp/$nname.yml",yaml_emit($eyaml));
 
 		$save_allowed = array("txt", "md");
 		
