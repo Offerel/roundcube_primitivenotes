@@ -82,6 +82,8 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			sanitizerFunction: function(renderedHTML) {
 				let output = renderedHTML.replaceAll(rcmail.env.mfolder + "/", '?_task=notes&_action=blink&_file=');
 				output = output.replaceAll("a href=\"?_task", "a class=\"intlink\" href=\"?_task");
+				output = output.replaceAll("a href=\"http", "a class=\"extlink\" href=\"http"); 
+				output = output.replaceAll("a href=\"", "a class=\"intlink\" href=\"");
 				output = output.replaceAll('<pre>', '<pre class="hljs">');
 				return output;
 			},
@@ -425,9 +427,7 @@ function pasteParse(event) {
 			let yentry = mdArr[i].split(':');
 			if(yentry[0] == 'tags') tagify.addTags(yentry[1]);
 			if(yentry[0] == 'author') document.getElementById('author').value = yentry[1].trim();
-			//if(yentry[0] == 'date') document.getElementById('date').value = yentry.slice(1).join(':').trim();
 			if(yentry[0] == 'created') document.getElementById('created').value = yentry.slice(1).join(':').trim();
-			//if(yentry[0] == 'updated') document.getElementById('updated').value = yentry.slice(1).join(':').trim();
 			if(yentry[0] == 'modified') document.getElementById('modified').value = yentry.slice(1).join(':').trim();
 			if(yentry[0] == 'source') document.getElementById('source').value = yentry.slice(1).join(':').trim();
 		}
@@ -658,9 +658,7 @@ function saveFile() {
 		_content: mde.value(),
 		_title: document.getElementById('headerTitle').value,
 		_author: document.getElementById('author').value,
-		//_date: document.getElementById('date').dataset.tstamp,
 		_created: document.getElementById('created').dataset.tstamp,
-		//_updated: document.getElementById('updated').value,
 		_modified: document.getElementById('modified').value,
 		_source: document.getElementById('source').value,
 		_tags: tagsA,
@@ -691,11 +689,8 @@ function loadNote(response) {
 	document.getElementById('ntags').value = response.note.tags;
 	document.getElementById('author').value = response.note.author;
 
-	//document.getElementById('date').value = response.note.date;
 	document.getElementById('created').value = response.note.created;
-	//document.getElementById('date').dataset.tstamp = response.note.tstamp;
 	document.getElementById('created').dataset.tstamp = response.note.tstamp;
-	//document.getElementById('updated').value = response.note.updated;
 	document.getElementById('modified').value = response.note.modified;
 	
 	document.getElementById('source').value = response.note.source;
@@ -930,9 +925,7 @@ function new_note(a) {
 	document.getElementById('author').value = '';
 	document.getElementById('source').readOnly = false;
 	document.getElementById('source').value = '';
-	//document.getElementById('date').value = '';
 	document.getElementById('created').value = '';
-	//document.getElementById('updated').value = '';
 	document.getElementById('modified').value = '';
 	document.getElementById('fname').value = '';
 	document.querySelector('.toc').classList.remove('no-disable');

@@ -326,7 +326,7 @@ code.success::before {
 #ndata .datefield {
 	flex-grow: 1;
 	order: 1;
-	width: 100px;
+	width: 110px;
 }
 #ndata input:read-only {
 	background-color: azure;
