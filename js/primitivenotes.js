@@ -83,8 +83,14 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 				let output = renderedHTML.replaceAll(rcmail.env.mfolder + "/", '?_task=notes&_action=blink&_file=');
 				output = output.replaceAll("a href=\"?_task", "a class=\"intlink\" href=\"?_task");
 				output = output.replaceAll("a href=\"http", "a class=\"extlink\" href=\"http"); 
-				output = output.replaceAll("a href=\"", "a class=\"intlink\" href=\"");
+				output = output.replaceAll("a href=\"", "a class=\"dlink\" href=\"");
 				output = output.replaceAll('<pre>', '<pre class="hljs">');
+
+				document.querySelectorAll('.intlink').forEach(function(link){
+					link.addEventListener('click', function(){
+						showNote(119);
+					});
+				});
 				return output;
 			},
 		}
@@ -759,8 +765,18 @@ function loadNote(response) {
 				objdiv.classList.add('objdiv');
 				objdiv.appendChild(object);
 				document.getElementById('main_area').appendChild(objdiv);
-			}									
+			}
 		});
+	});
+
+	let dlink = document.querySelectorAll('.editor-preview a.dlink');
+	dlink.forEach(function(e) {
+		e.addEventListener('click', function(link) {
+			link.preventDefault();
+			showNote(document.querySelectorAll("[data-name='"+link.target.attributes.href.value+"']")[0].id);
+			return false;
+		});
+		return false;
 	});
 }
 
