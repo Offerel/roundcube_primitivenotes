@@ -97,23 +97,28 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	let WhiteList = (rcmail.env.taglist != undefined) ?JSON.parse(rcmail.env.taglist):'';
+	lcount = document.getElementById('notes-list').children.length;
 
-	tagify = new Tagify(document.getElementById('ntags'), {
-		whitelist: WhiteList,
-		dropdown : {
-			classname     : "color-blue",
-			trim		: true,
-			enabled       : 0,
-			maxItems      : WhiteList.length,
-			position      : "text",
-			closeOnSelect : false,
-			highlightFirst: true
-		},
-		trim: true,
-		duplicates: false,
-		enforceWhitelist: false,
-		delimiters: ',|;| '
-	});
+	if(lcount > 0 ) {
+		tagify = new Tagify(document.getElementById('ntags'), {
+			whitelist: WhiteList,
+			dropdown : {
+				classname     : "color-blue",
+				trim		: true,
+				enabled       : 0,
+				maxItems      : WhiteList.length,
+				position      : "text",
+				closeOnSelect : false,
+				highlightFirst: true
+			},
+			trim: true,
+			duplicates: false,
+			enforceWhitelist: false,
+			delimiters: ',|;| '
+		});
+	} else {
+		document.getElementById('ntags').style.visibility = 'hidden';
+	}
 
 	document.getElementById('notessearchform').addEventListener('keyup', searchList, false);
 	document.querySelectorAll('#pnlist li a').forEach(function(note){
