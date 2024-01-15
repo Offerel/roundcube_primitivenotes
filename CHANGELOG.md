@@ -1,6 +1,11 @@
+### v2.2.0
+- Tagify 4.18.2       (https://github.com/yairEO/tagify)
+- Using php-yaml do deal with YAML
+- Add function to open internal links
 
 ### v2.1.7
-- Fix file issue
+- Fix new file issue
+- Fix issue with empty notes folder 
   
 ### v2.1.6
 - Fix deprecated null value
