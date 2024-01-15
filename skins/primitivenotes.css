@@ -1,6 +1,9 @@
 :root {
   --maxwidth: 800px;
 }
+.tagify__input {
+	width: 100vH;
+}
 .table {
 	width: unset;
 }
