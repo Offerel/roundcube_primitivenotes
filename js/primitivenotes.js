@@ -466,7 +466,7 @@ function doDropUpload() {
 		data.append('dropFile', thisfile);
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {
-			document.getElementById('pnlist').remove();
+			if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();
 			const lDom = new DOMParser().parseFromString(xhr.response, "text/html").getElementById('pnlist');
 			document.getElementById('notes-list').appendChild(lDom);
 			loader.remove();
@@ -844,7 +844,7 @@ function savedNote(response) {
 
 
 	if(success.includes(response.message)) {
-		document.getElementById('pnlist').remove();
+		if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();
 		const lDom = new DOMParser().parseFromString(response.list, "text/html");
 		document.getElementById('notes-list').appendChild(lDom.body.children[0]);
 	}
@@ -981,7 +981,7 @@ function sform() {
 		let data = new FormData(document.getElementById("upl_form"));
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {
-			document.getElementById('pnlist').remove();
+			if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();
 			const lDom = new DOMParser().parseFromString(xhr.response, "text/html").getElementById('pnlist');
 			document.getElementById('notes-list').appendChild(lDom);
 			loader.remove();
