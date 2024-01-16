@@ -1,8 +1,11 @@
 :root {
   --maxwidth: 800px;
 }
-.tagify__input {
-	width: 100vH;
+.tagify {
+	width: calc(100% - 10px);
+}
+.ntags {
+	visibility: hidden;
 }
 .table {
 	width: unset;
