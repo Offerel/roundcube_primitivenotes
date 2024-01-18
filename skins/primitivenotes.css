@@ -265,7 +265,7 @@ code.success::before {
 	border: 1px solid #a9a9a9;
 	width: calc(100% - 50px);
 	border-top: 0;
-	z-index: 1;
+	z-index: 10;
 	border-bottom-left-radius: .3em;
 	border-bottom-right-radius: .3em;
 	top: 15px;
@@ -442,7 +442,7 @@ span.cm-header.cm-header-2 {
     padding: 0 10px 0 0;
 }
 .editor-toolbar {
-	z-index: 2;
+	z-index: 11;
 	background-color: #f4f4f4;
 	border-radius: 0!important;
 	border: 0!important;
