@@ -34,18 +34,12 @@
 	background-color: rgba(66,185,131,.1);
 	color: #3c763d;
 }
-.cm-formatting-code.cm-comment + span.cm-comment {
-	white-space: pre;
-	max-width: calc(100% - 20px);
-	display: inline-block;
-	overflow-x: auto;
-	background-color: #ffefef;
-	color: #e93700;
-	margin: 0 0 -3px 0;
-	font-family: Consolas,Monaco,monospace !important;
-	padding: 0 3px;
-	scrollbar-width: thin;
-	font-size: .85em;
+.cm-formatting-code.cm-comment+span.cm-comment {
+    background-color: #ffefef;
+    color: #e93700;
+    font-family: Consolas,Monaco,monospace!important;
+    scrollbar-width: thin;
+    font-size: .85em;
 }
 .cm-formatting.cm-formatting-code.cm-comment {
 	font-family: Consolas,Monaco,monospace !important;
@@ -434,10 +428,14 @@ input#source:read-only:not(:placeholder-shown):hover {
 	box-shadow: 0 0 0 0.2rem rgb(55 190 255 / 25%);
 }
 /* --------------------- Markdown Editor CSS Overwrites --------------------- */
-.cm-variable-2.cm-link {
-    overflow: scroll;
-    position: absolute;
-    white-space: nowrap;
+span.cm-header.cm-header-1 {
+    font-size: calc(1.375rem + .5vw);
+}
+span.cm-header.cm-header-2 {
+    font-size: calc(1.325rem + .3vw);
+}
+.cm-s-easymde .cm-header-3 {
+    font-size: calc(1.1rem + .1vw);
 }
 .EasyMDEContainer {
     background-color: #f4f4f4;
@@ -472,19 +470,13 @@ input#source:read-only:not(:placeholder-shown):hover {
 	border-radius: 4px;
 }
 .editor-preview code {
-	overflow-x: auto;
-	scrollbar-width: thin;
-	margin: 0 0 -5px 0;
-	width: unset;
-	background-color: #ffefef;
-	font-family: Consolas,Monaco,monospace !important;
-	color: #e93700;
-	padding: 2px;
-	border-radius: 4px;
-	display: inline-block;
-	white-space: pre;
-	max-width: 100%;
-	user-select: all;
+    scrollbar-width: thin;
+    margin: 0 0 -5px 0;
+    background-color: #ffefef;
+    font-family: Consolas,Monaco,monospace!important;
+    color: #e93700;
+    border-radius: 4px;
+    user-select: all;
 }
 .editor-preview pre code {
 	color: unset;
