@@ -2,6 +2,9 @@
 - Tagify 4.18.2       (https://github.com/yairEO/tagify)
 - Using php-yaml do deal with YAML
 - Add function to open internal links
+- Changed initial directory creation and fix #64
+- Fix #63 in case the note list is empty
+- Changed some CSS
 
 ### v2.1.7
 - Fix new file issue
