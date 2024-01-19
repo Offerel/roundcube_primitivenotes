@@ -460,6 +460,9 @@ span.cm-header.cm-header-2 {
 .fa-pen::before {
 	content: "\f304";
 }
+.preview {
+    display: none !important;
+}
 .btninv {
     display: none !important;
 }
