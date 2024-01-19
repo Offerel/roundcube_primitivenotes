@@ -20,7 +20,6 @@ class primitivenotes extends rcube_plugin{
 		$this->load_config();
 		$this->add_texts('localization/', true);
 		$this->register_task('notes');
-		if($this->rc->config->get('skin') != 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
 		$this->add_button(array(
 			'label'	=> 'primitivenotes.notes',
 			'command'	=> 'notes',
@@ -374,14 +373,14 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function action() {
-		$notes_path = $this->notes_path;
 		$media_path = $this->media_path;
 
-		if(!is_dir($notes_path)) {
-			mkdir($notes_path);
-			mkdir($media_path);
-		}
-		if(!is_dir($media_path)) mkdir($media_path);    
+		if(!is_dir($media_path)) {
+			if (!mkdir($media_path, 0777, true)) {
+				$this->rc->output->show_message("Accessing notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
+				error_log("Accessing notes folder (\$config['notes_path']) failed. Please check directory permissions.");
+			}
+		}  
 
 		$this->rc->output->set_env('dformat', $this->rc->config->get('default_format', false));
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));

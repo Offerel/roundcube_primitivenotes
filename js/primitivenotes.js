@@ -41,7 +41,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					name: "edit btninv",
 					action: tPreview,
 					title: "Edit",
-					className: "fa fa-pen no-disable"
+					className: "edit fa fa-pen no-disable"
 				},{
 					name: "save",
 					action: saveFile,
@@ -80,7 +80,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					}],
 		shortcuts: {
 			"save": "Ctrl-S",
-			"preview": "Ctrl-P",
+			"edit": "Ctrl-E",
 		},
 		renderingConfig: {
 			codeSyntaxHighlighting: true,
