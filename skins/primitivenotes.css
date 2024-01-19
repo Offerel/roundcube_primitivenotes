@@ -457,6 +457,12 @@ span.cm-header.cm-header-2 {
 .fa-floppy-disk::before {
 	content: "\f0c7";
 }
+.fa-pen::before {
+	content: "\f304";
+}
+.btninv {
+    display: none !important;
+}
 .editor-preview {
 	background-color: white !important;
 	line-height: 1.2em;

@@ -38,10 +38,15 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		sideBySideFullscreen: false,
 		iconsSet: 'material',
 		toolbar: [{
+					name: "edit btninv",
+					action: tPreview,
+					title: "Edit",
+					className: "fa fa-pen no-disable"
+				},{
 					name: "save",
 					action: saveFile,
 					title: "Save",
-					className: "fa fa-floppy-disk"
+					className: "fa fa-floppy-disk no-disable"
 				},"|",
 					"bold", "italic", "heading", "clean-block", "|",
 					"quote", "code", "unordered-list", "ordered-list", "|",
@@ -50,13 +55,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 						action: uplMedia,
 						title: "Insert Media",
 						className: "fa fa-image"
-					},"table", "|",
-					{
-						name: "preview",
-						action: tPreview,
-						title: "Toggle Preview",
-						className: "preview fa fa-eye no-disable"
-					}, "side-by-side",
+					},"table", "|", "side-by-side",
 					{
 						name: "meta",
 						action: togglemData,
@@ -612,9 +611,13 @@ function tPreview(mode = '') {
 		if(mode == 'show') mde.togglePreview();
 	}
 
+	var sBtn = document.querySelector('[aria-label="Save"]');
+	var eBtn = document.querySelector('[aria-label="Edit"]');
+
 	setTimeout(() => {
 		if (mode == 'show') {
-			document.querySelector('.preview').classList.add('active');
+			sBtn.classList.add('btninv');
+			eBtn.classList.remove('btninv');
 			document.getElementById('headerTitle').classList.add('readOnly');
 			tagify.setReadonly(true);
 			document.querySelector('.tagify').classList.remove('taedit');
@@ -637,7 +640,8 @@ function tPreview(mode = '') {
 				});
 			});
 		} else {
-			document.querySelector('.preview').classList.remove('active');
+			sBtn.classList.remove('btninv');
+			eBtn.classList.add('btninv');
 			document.getElementById('headerTitle').classList.remove('readOnly');
 			tagify.setReadonly(false);
 			document.querySelector('.tagify').classList.add('taedit');
