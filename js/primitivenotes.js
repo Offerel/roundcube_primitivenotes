@@ -38,10 +38,10 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		sideBySideFullscreen: false,
 		iconsSet: 'material',
 		toolbar: [{
-					name: "edit btninv",
+					name: "edit",
 					action: tPreview,
 					title: "Edit",
-					className: "edit fa fa-pen no-disable"
+					className: "btninv fa fa-pen no-disable"
 				},{
 					name: "save",
 					action: saveFile,
