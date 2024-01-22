@@ -20,7 +20,6 @@ class primitivenotes extends rcube_plugin{
 		$this->load_config();
 		$this->add_texts('localization/', true);
 		$this->register_task('notes');
-		if($this->rc->config->get('skin') != 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
 		$this->add_button(array(
 			'label'	=> 'primitivenotes.notes',
 			'command'	=> 'notes',
@@ -139,7 +138,7 @@ class primitivenotes extends rcube_plugin{
 							$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
 							if($this->rc->config->get('yaml_support', '') && stripos($file,".md")) {
 								$contents = file_get_contents($notes_path.$file);
-								$yaml = yaml_parse($contents);
+								$yaml = @yaml_parse($contents);
 								if(isset($yaml['tags'])) {
 									if(!is_array($yaml['tags'])) {
 										$delm = (strpos($yaml['tags'], ', ') === false) ? ' ':', ';
@@ -374,14 +373,14 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function action() {
-		$notes_path = $this->notes_path;
 		$media_path = $this->media_path;
 
-		if(!is_dir($notes_path)) {
-			mkdir($notes_path);
-			mkdir($media_path);
-		}
-		if(!is_dir($media_path)) mkdir($media_path);    
+		if(!is_dir($media_path)) {
+			if (!mkdir($media_path, 0777, true)) {
+				$this->rc->output->show_message("Accessing notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
+				error_log("Accessing notes folder (\$config['notes_path']) failed. Please check directory permissions.");
+			}
+		}  
 
 		$this->rc->output->set_env('dformat', $this->rc->config->get('default_format', false));
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));
@@ -410,15 +409,15 @@ class primitivenotes extends rcube_plugin{
 				}
 			}
 
-			$pyaml = yaml_parse($yaml);
-			if(!is_array($pyaml['tags'])) $pyaml['tags'] = preg_split("/[\s,]+/", $pyaml['tags']);
+			$pyaml = @yaml_parse($yaml);
+			if(isset($pyaml['tags']) && !is_array($pyaml['tags'])) $pyaml['tags'] = preg_split("/[\s,]+/", $pyaml['tags']);
 
-			if (array_key_exists('date', $pyaml)) {
+			if (isset($pyaml['date'])) {
 				$pyaml['created'] = $pyaml['date'];
 				unset($pyaml['date']);
 			}
 
-			if (array_key_exists('updated', $pyaml)) {
+				if (isset($pyaml['updated'])) {
 				$pyaml['modified'] = $pyaml['updated'];
 				unset($pyaml['updated']);
 			}
@@ -440,11 +439,11 @@ class primitivenotes extends rcube_plugin{
 				'name'		=> substr($nname,0, (stripos($nname,'[')) ? stripos($nname,'['):stripos($nname,'.')),
 				'content'	=> (stripos($mime_type, 'text') === 0) ? trim($fcontent):"data:$mime_type;base64,".$fcontent,
 				'format'	=> $path_parts['extension'],
-				'author'	=> $pyaml['author'],
-				'created'	=> date('Y-m-d\TH:i', strtotime($pyaml['created'])),
-				'tstamp'	=> strtotime($pyaml['created']),
-				'modified'	=> date('Y-m-d\TH:i', strtotime($pyaml['modified'])),
-				'source'	=> $pyaml['source'],
+				'author'	=> isset($pyaml['author']) ? $pyaml['author']:'',
+				'created'	=> isset($pyaml['created']) ? date('Y-m-d\TH:i', strtotime($pyaml['created'])):date('Y-m-d\TH:i', filemtime($note)),
+				'tstamp'	=> isset($pyaml['created']) ? strtotime($pyaml['created']):filemtime($note),
+				'modified'	=> isset($pyaml['modified']) ? date('Y-m-d\TH:i', strtotime($pyaml['modified'])):'',
+				'source'	=> isset($pyaml['source']) ? $pyaml['source']:'',
 				'id'		=> $id,
 				'mime_type'	=> $mime_type,
 				'filename'	=> $nname,
