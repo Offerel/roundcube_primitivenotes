@@ -38,10 +38,10 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		sideBySideFullscreen: false,
 		iconsSet: 'material',
 		toolbar: [{
-					name: "edit btninv",
+					name: "edit",
 					action: tPreview,
 					title: "Edit",
-					className: "fa fa-pen no-disable"
+					className: "btninv fa fa-pen no-disable"
 				},{
 					name: "save",
 					action: saveFile,
@@ -56,6 +56,12 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 						title: "Insert Media",
 						className: "fa fa-image"
 					},"table", "|", "side-by-side",
+					{
+						name: "preview",
+						action: tPreview,
+						title: "Toggle Preview",
+						className: "preview fa fa-eye no-disable"
+					},
 					{
 						name: "meta",
 						action: togglemData,
@@ -74,7 +80,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					}],
 		shortcuts: {
 			"save": "Ctrl-S",
-			"preview": "Ctrl-P",
+			"edit": "Ctrl-E",
 		},
 		renderingConfig: {
 			codeSyntaxHighlighting: true,
@@ -618,6 +624,7 @@ function tPreview(mode = '') {
 		if (mode == 'show') {
 			sBtn.classList.add('btninv');
 			eBtn.classList.remove('btninv');
+			document.querySelector('.preview').classList.add('active');
 			document.getElementById('headerTitle').classList.add('readOnly');
 			tagify.setReadonly(true);
 			document.querySelector('.tagify').classList.remove('taedit');
@@ -642,6 +649,7 @@ function tPreview(mode = '') {
 		} else {
 			sBtn.classList.remove('btninv');
 			eBtn.classList.add('btninv');
+			document.querySelector('.preview').classList.remove('active');
 			document.getElementById('headerTitle').classList.remove('readOnly');
 			tagify.setReadonly(false);
 			document.querySelector('.tagify').classList.add('taedit');
