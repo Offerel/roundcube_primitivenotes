@@ -1,3 +1,6 @@
+### v2.2.1
+- Fix non existing dates
+
 ### v2.2.0
 - Tagify 4.18.2       (https://github.com/yairEO/tagify)
 - Using php-yaml do deal with YAML
