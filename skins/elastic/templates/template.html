@@ -1,7 +1,6 @@
 <roundcube:include file="includes/layout.html" />
 <roundcube:include file="includes/menu.html" />
 <h1 class="voice"><roundcube:label name="notes" /></h1>
-<!-- notes list -->
 <div id="layout-list" class="listbox">
 	<div id="messagelist-header" class="header">
 		<a class="button icon task-menu-button" href="#menu"><span class="inner"><roundcube:label name="menu" /></span></a>
@@ -16,7 +15,6 @@
 		<roundcube:object name="plugin.notes_list" />
 	</div>
 </div>
-<!-- notes preview 2-->
 <div id="layout-content">
 	<form id="upl_form" action="&_action=uplNote" method="POST" enctype="multipart/form-data"><input type="file" id="upl" class="upl" name="dropFile" /></form>
 	<input type="file" id="dropMedia" class="upl" name="dropMedia" />

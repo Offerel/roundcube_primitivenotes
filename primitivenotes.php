@@ -325,12 +325,7 @@ class primitivenotes extends rcube_plugin{
 
 	function note_mail_compose($args) {
 		$filename = $args['param']['note_filename'];
-
-		if(stripos($filename, "[")) {
-			$name = substr($filename, 0, stripos($filename, "["));
-		} else {
-			$name = substr($filename, 0, stripos($filename, "."));
-		}
+		$name = stripos($filename, "[") ? substr($filename, 0, stripos($filename, "[")):substr($filename, 0, stripos($filename, "."));
 
 		$type = substr($filename,stripos($filename, ".")+1);
 		if(strlen($name) > 0) {
@@ -349,6 +344,7 @@ class primitivenotes extends rcube_plugin{
 		} else {
 			$this->rc->output->show_message("Note not found. Attach the note to the mail failed.","error");
 		}
+		
 		if($type != "") {
 			switch ($type) {
 				case 'html': $mimetype = mime_content_type($note_file); break;
@@ -480,7 +476,7 @@ class primitivenotes extends rcube_plugin{
 		if($this->rc->config->get('yaml_support', true)) {
 			$eyaml['title'] = $nname;
 			$eyaml['tags'] = rcube_utils::get_input_value('_tags', rcube_utils::INPUT_POST, false);
-			$eyaml['created'] = (strlen($created) > 7) ? date('Y-m-d\TH:i', trim($created)):date('Y-m-d\TH:i', time());
+			$eyaml['created'] = (!is_null($created) && strlen($created) > 7) ? date('Y-m-d\TH:i', trim($created)):date('Y-m-d\TH:i', time());
 			$eyaml['modified'] = date('Y-m-d\TH:i', time());
 			$eyaml['author'] = (strlen($author) > 0) ? $author:$this->rc->user->get_username();
 			$eyaml['source'] = $source;

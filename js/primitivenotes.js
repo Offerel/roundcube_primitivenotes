@@ -176,14 +176,15 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			document.getElementById("notessearchform").focus();
 			return false;
 		}
-		
+		/*
 		if(e.ctrlKey && "KeyF" === e.code) {
 			e.preventDefault();
 			searchInNote();
 			return false;
 		}
+		*/
 	});
-
+	
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
 			if(mde.isPreviewActive() === false && document.getElementById("notessearchform") !== document.activeElement && mde.value() !== '') {
@@ -220,6 +221,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	}
 });
 
+/*
 function searchInNote() {
 	let cSearch = document.createElement('div');
 	cSearch.id = 'cSearch';
@@ -340,6 +342,7 @@ function searchInNote() {
 		}
 	});
 }
+*/
 
 function uplMedia() {
 	document.getElementById("dropMedia").click();
