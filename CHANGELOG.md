@@ -1,5 +1,7 @@
 ### v2.2.1
 - Fix non existing dates
+- Hide editor on show, to fit browser search
+- Add function to print the note
 
 ### v2.2.0
 - Tagify 4.18.2       (https://github.com/yairEO/tagify)
