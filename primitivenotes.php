@@ -137,6 +137,13 @@ class primitivenotes extends rcube_plugin{
 							$tags = null;
 							$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
 							if($this->rc->config->get('yaml_support', '') && stripos($file,".md")) {
+
+								if (!function_exists('yaml_parse')) {
+									$msg = "YAML functions not available. Please install php-yaml package.";
+									error_log($msg);
+									$this->rc->output->show_message($msg,"error");
+								}
+
 								$contents = file_get_contents($notes_path.$file);
 								$yaml = @yaml_parse($contents);
 								if(isset($yaml['tags'])) {
