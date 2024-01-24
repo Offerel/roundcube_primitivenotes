@@ -186,12 +186,11 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	window.addEventListener("beforeprint", e => {
-		originalData = document.body.innerHTML;
 		document.body.innerHTML = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/skins/print.css\"></link><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/js/highlight/styles/default.css\"></link><title>" + document.getElementById('headerTitle').value + "</title></head><body>" + mde.markdown(mde.value()) + "</body>";
 	});
 
 	window.addEventListener("afterprint", e => {
-		document.body.innerHTML = originalData;
+		window.onfocus=function(){ location.reload();}
 	});
 	
 	document.addEventListener("keyup", event => {
