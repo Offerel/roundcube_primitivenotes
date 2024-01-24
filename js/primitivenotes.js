@@ -184,6 +184,25 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			return false;
 		}
 	});
+
+	window.addEventListener("beforeprint", e => {
+		e.preventDefault();
+		e.stopPropagation();
+		var a = window.open('', '', 'height=900, width=900');
+		a.document.write('<html>');
+		a.document.write('<head>');
+		a.document.write('<title>Test</title>');
+		a.document.write('<link rel="stylesheet" type="text/css" href="plugins/primitivenotes/js/highlight/styles/default.css"></link>');
+		a.document.write('<link rel="stylesheet" type="text/css" href="plugins/primitivenotes/skins/print.css"></link>');
+		a.document.write('</head>');
+		a.document.write('<body >');
+		a.document.write(mde.markdown(mde.value()));
+		a.document.write('</body></html>');
+		setTimeout(function() {
+			a.print();
+		}, 100);
+		a.document.close();
+	});
 	
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
@@ -481,6 +500,24 @@ function downloadNote(note) {
 	xhr.responseType = "blob";
 	xhr.open('GET', location.href + '&_action=getNote&_name=' + note);
 	xhr.send();
+}
+
+function printnote(e) {
+	//e.preventDefault();
+	var a = window.open('', '', 'height=500, width=500');
+	a.document.write('<html>');
+	a.document.write('<head>');
+	a.document.write('<title>Test</title>');
+	a.document.write('<link rel="stylesheet" type="text/css" href="plugins/primitivenotes/js/highlight/styles/default.css"></link>');
+	a.document.write('<link rel="stylesheet" type="text/css" href="plugins/primitivenotes/skins/print.css"></link>');
+	a.document.write('</head>');
+    a.document.write('<body >');
+    a.document.write(mde.markdown(mde.value()));
+    a.document.write('</body></html>');
+	setTimeout(function() {
+		a.print();
+	}, 200);
+	a.document.close();
 }
 
 function sidebyside() {

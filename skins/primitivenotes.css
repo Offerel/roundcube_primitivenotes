@@ -10,20 +10,7 @@
 .table {
 	width: unset;
 }
-@media print {
-	* { 
-		overflow: visible !important;
-	}
-	body {
-		visibility: hidden;
-	}
-	.editor-preview {
-		visibility: visible;
-		position: absolute !important;
-		top: 0;
-		left: 0;
-	}
-}
+
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {
 		display: none !important;
