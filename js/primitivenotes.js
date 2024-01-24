@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2024, Offerel
  * @license GNU General Public License, version 3
  */
-var mde, tagify, oNote;
+var mde, tagify;
 var filelist = [];
 var loader = document.createElement("div");
 var ldr = document.createElement("div");
@@ -55,7 +55,13 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 						action: uplMedia,
 						title: "Insert Media",
 						className: "fa fa-image"
-					},"table", "|", "side-by-side",
+					},"table", "|",
+					{
+						name: "side-by-side",
+						action: sidebyside,
+						title: "Toggle Side by Side",
+						className: "side-by-side fa fa-columns no-disable"
+					},
 					{
 						name: "preview",
 						action: tPreview,
@@ -81,6 +87,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		shortcuts: {
 			"save": "Ctrl-S",
 			"edit": "Ctrl-E",
+			"side-by-side": "F9",
 		},
 		renderingConfig: {
 			codeSyntaxHighlighting: true,
@@ -176,13 +183,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			document.getElementById("notessearchform").focus();
 			return false;
 		}
-		/*
-		if(e.ctrlKey && "KeyF" === e.code) {
-			e.preventDefault();
-			searchInNote();
-			return false;
-		}
-		*/
 	});
 	
 	document.addEventListener("keyup", event => {
@@ -220,129 +220,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		rcmail.http_post('displayNote', postData, false);
 	}
 });
-
-/*
-function searchInNote() {
-	let cSearch = document.createElement('div');
-	cSearch.id = 'cSearch';
-	let iSearch = document.createElement('input');
-	iSearch.id = 'iSearch';
-	cSearch.appendChild(iSearch);
-	let iInfo = document.createElement('div');
-	let act = document.createElement('span');
-	act.innerText = '0';
-	let found = document.createElement('span');
-	
-	let prev = document.createElement('a');
-	prev.id = 'prev';
-	prev.innerHTML = '&#10092;'
-	prev.addEventListener('click', e => {
-		e.preventDefault();
-		let fpos = parseInt(act.innerText) - 1;
-		fpos = (fpos >= 1) ? fpos:1;
-		document.querySelector('[data-pos="' + fpos.toString() + '"]').scrollIntoView();
-		document.querySelectorAll('mark').forEach(e => {
-			e.classList.remove('fc')
-		});
-		document.querySelector('[data-pos="' + fpos.toString() + '"]').classList.add('fc');
-
-		if(fpos == 1) {
-			prev.classList.add('anone');
-			next.classList.remove('anone');
-		} else {
-			prev.classList.remove('anone');
-			next.classList.remove('anone');
-		}
-
-		act.innerText = fpos;
-	});
-	
-	let next = document.createElement('a');
-	next.id = 'next';
-	next.innerHTML = '&#10093;'
-	next.addEventListener('click', e => {
-		e.preventDefault();
-		marks = document.querySelectorAll('mark');
-		let fpos = parseInt(act.innerText) + 1;
-		fpos = (fpos > marks.length) ? marks.length:fpos;
-		document.querySelector('[data-pos="' + fpos.toString() + '"]').scrollIntoView();
-		marks.forEach(e => {
-			e.classList.remove('fc')
-		});
-		document.querySelector('[data-pos="' + fpos.toString() + '"]').classList.add('fc');
-
-		if(fpos == marks.length) {
-			console.log(fpos);
-			next.classList.add('anone');
-			prev.classList.remove('anone');
-		} else {
-			next.classList.remove('anone');
-			prev.classList.remove('anone');
-		}
-
-		act.innerText = fpos;
-	});
-	
-	let iStatus = document.createElement('span');
-	let iText = document.createTextNode(' / ');
-	
-	found.innerText = '0';
-	let iText2 = document.createElement('span');
-	iText2.classList.add('sep');
-	
-	iStatus.appendChild(act);
-	iStatus.appendChild(iText);
-	iStatus.appendChild(found);
-	iStatus.appendChild(iText2);
-	
-	iInfo.appendChild(iStatus);
-	iInfo.appendChild(prev);
-	iInfo.appendChild(next);
-	
-	cSearch.appendChild(iInfo);
-	let main_area = document.getElementById('main_area');
-	main_area.appendChild(cSearch);
-	iSearch.focus();
-	iSearch.addEventListener("keyup", e => {
-		if(e.key == 'Escape') {
-			cSearch.remove();
-			iSearch.remove();
-		} else {
-			let sPos = 1;
-			let sTerm = document.getElementById('iSearch').value.trim();
-			let text = oNote;
-			let re = new RegExp(sTerm,"gi");
-			let newText = '';
-			let marks;
-			
-			if(sTerm.length < 3) {
-				newText = oNote;
-			} else {
-				newText = oNote.replace(re, `<mark>${sTerm}</mark>`);
-			}
-			
-			mde.value(newText);
-			
-			marks = document.querySelectorAll('mark');
-			marks.forEach(e => {
-				e.dataset.pos = sPos;
-				sPos++;
-			});
-			
-			found.innerText = (marks.length) ? marks.length:0;
-			
-			try {
-				document.querySelector('[data-pos="1"]').scrollIntoView(true);
-				act.innerText = '1';
-				prev.classList.add('anone');
-				document.querySelector('[data-pos="1"]').classList.add('fc')
-			} catch (e) {
-				return null;
-			}
-		}
-	});
-}
-*/
 
 function uplMedia() {
 	document.getElementById("dropMedia").click();
@@ -606,6 +483,21 @@ function downloadNote(note) {
 	xhr.send();
 }
 
+function sidebyside() {
+	var sBtn = document.querySelector('[aria-label="Save"]');
+	var eBtn = document.querySelector('[aria-label="Edit"]');
+	mde.toggleSideBySide();
+	setTimeout(() => {
+		if(mde.isSideBySideActive()) {
+			document.querySelector('.CodeMirror-code').classList.add('edVis');
+			sBtn.classList.remove('btninv');
+			eBtn.classList.add('btninv');
+		} else {
+			tPreview();
+		}
+	}, 10);
+}
+
 function tPreview(mode = '') {
 	if(mode === "show" || mode === "edit") {
 		//
@@ -625,6 +517,7 @@ function tPreview(mode = '') {
 
 	setTimeout(() => {
 		if (mode == 'show') {
+			document.querySelector('.CodeMirror-code').classList.remove('edVis');
 			sBtn.classList.add('btninv');
 			eBtn.classList.remove('btninv');
 			document.querySelector('.preview').classList.add('active');
@@ -650,6 +543,7 @@ function tPreview(mode = '') {
 				});
 			});
 		} else {
+			document.querySelector('.CodeMirror-code').classList.add('edVis');
 			sBtn.classList.remove('btninv');
 			eBtn.classList.add('btninv');
 			document.querySelector('.preview').classList.remove('active');
@@ -722,7 +616,6 @@ function loadNote(response) {
 	document.getElementById(response.note.id).classList.add('lselected');
 
 	if(response.note.mime_type.indexOf('text') === 0) {
-		oNote = response.note.content;
 		mde.value(response.note.content);
 		document.querySelector('.EasyMDEContainer').classList.remove('mdeHide');
 		setTimeout(() => {
