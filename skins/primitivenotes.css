@@ -10,7 +10,9 @@
 .table {
 	width: unset;
 }
-
+.listing.iconized tr.primitivenotes>td.section:before {
+    content: '\f249';
+}
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {
 		display: none !important;

@@ -12,6 +12,7 @@ class primitivenotes extends rcube_plugin{
 
 	private $rc;
 	private $notes_path;
+	private $yaml_support;
 	private $media_path;
 	private $formatter;
 	
@@ -136,14 +137,7 @@ class primitivenotes extends rcube_plugin{
 						if(in_array($ext,$supported_ext)) {				
 							$tags = null;
 							$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
-							if($this->rc->config->get('yaml_support', '') && stripos($file,".md")) {
-
-								if (!function_exists('yaml_parse')) {
-									$msg = "YAML functions not available. Please install php-yaml package.";
-									error_log($msg);
-									$this->rc->output->show_message($msg,"error");
-								}
-
+							if($this->rc->config->get('yaml_support', '') && stripos($file,".md")) {					
 								$contents = file_get_contents($notes_path.$file);
 								$yaml = @yaml_parse($contents);
 								if(isset($yaml['tags'])) {
@@ -292,10 +286,12 @@ class primitivenotes extends rcube_plugin{
 														'content'=> $selectf->show($this->rc->config->get('list_formats')));
 
 		$field_id='yaml_support';
+		
+		$hint = (!function_exists('yaml_parse')) ? ' (php-yaml missing)':'';
 		$input = new html_checkbox(array(	'name'	=> 'yaml_support',
 											'id'	=> 'yaml_support',
 											'value' => 1));
-		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls')),
+		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls').$hint),
 															'content'=> $input->show(intval($this->rc->config->get('yaml_support'))));
 
 		$field_id='rm_md_media';
@@ -403,6 +399,12 @@ class primitivenotes extends rcube_plugin{
 			$fcontent = file_get_contents($note);
 			$yaml = "";
 			if($this->rc->config->get('yaml_support', true)) {
+				if (!function_exists('yaml_parse')) {
+					$msg = "YAML functions not available. php-yaml package missing.";
+					error_log($msg);
+					$this->rc->output->show_message($msg,"error");
+				}
+
 				$ydel = '---';
 				$yhb_pos = strpos($fcontent, $ydel);
 				$yhe_pos = strlen($fcontent) >= strlen($ydel) ? strpos($fcontent, $ydel, strlen($ydel)):0;
@@ -496,6 +498,12 @@ class primitivenotes extends rcube_plugin{
 				if(!rename($ofile, $nfile)) {
 					$this->rc->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
 				}
+			}
+
+			if (!function_exists('yaml_emit')) {
+				$msg = "YAML functions not available. php-yaml package missing.";
+				error_log($msg);
+				$this->rc->output->show_message($msg,"error");
 			}
 
 			$eyamls = yaml_emit($eyaml);
