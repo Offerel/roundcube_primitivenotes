@@ -33,23 +33,6 @@
 .listing li a {
 	cursor: pointer;
 }
-.cm-quote.cm-quote-1 {
-	background-color: rgba(66,185,131,.1);
-	color: #3c763d;
-}
-.cm-formatting-code.cm-comment+span.cm-comment {
-    background-color: #ffefef;
-    color: #e93700;
-    font-family: Consolas,Monaco,monospace!important;
-    scrollbar-width: thin;
-    font-size: .85em;
-}
-.cm-formatting.cm-formatting-code.cm-comment {
-	font-family: Consolas,Monaco,monospace !important;
-	font-size: .9em;
-	background-color: #eed7d7 !important;
-	color: #e93700;
-}
 #nspan {
 	width: 100%;
 	margin-right: 35px;
@@ -105,7 +88,6 @@ code.success::before {
 	width: 100%;
 	padding-top: 10px;
 	padding-right: 15px;
-/*	counter-reset: section; */
 }
 #tocdiv h3 {
 	font-size: 1.3em;
@@ -121,7 +103,6 @@ code.success::before {
 #tocdiv ul {
 	margin: 0;
 	padding-left: 15px;
-/*	counter-reset: item; */
 }
 #tocdiv li {
 	list-style: none;
@@ -129,11 +110,6 @@ code.success::before {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-/*
-#tocdiv li:not(.ul)::before {
-	content: counters(item, ".") " ";
-	counter-increment: item;
-} */
 .db-spinner {
 	width: 40px;
 	height: 40px;
@@ -373,6 +349,23 @@ input#source:read-only:not(:placeholder-shown):hover {
 	box-shadow: 0 0 0 0.2rem rgb(55 190 255 / 25%);
 }
 /* --------------------- Markdown Editor CSS Overwrites --------------------- */
+.cm-quote.cm-quote-1 {
+	background-color: rgba(66,185,131,.1);
+	color: #3c763d;
+}
+.cm-formatting-code.cm-comment+span.cm-comment {
+    background-color: #ffefef;
+    color: #e93700;
+    font-family: Consolas,Monaco,monospace!important;
+    scrollbar-width: thin;
+    font-size: .85em;
+}
+.cm-formatting.cm-formatting-code.cm-comment {
+	font-family: Consolas,Monaco,monospace !important;
+	font-size: .9em;
+	background-color: #eed7d7 !important;
+	color: #e93700;
+}
 span.cm-header.cm-header-1 {
     font-size: calc(1.375rem + .5vw);
 }

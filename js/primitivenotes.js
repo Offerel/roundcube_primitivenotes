@@ -187,9 +187,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 	window.addEventListener("beforeprint", e => {
 		document.body.innerHTML = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/skins/print.css\"></link><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/js/highlight/styles/default.css\"></link><title>" + document.getElementById('headerTitle').value + "</title></head><body>" + mde.markdown(mde.value()) + "</body>";
-	});
-
-	window.addEventListener("afterprint", e => {
 		window.onfocus=function(){ location.reload();}
 	});
 	
