@@ -32,7 +32,7 @@ class primitivenotes extends rcube_plugin{
 		), 'taskbar');
 
 		if ($this->rc->task == 'notes') {
-			$this->include_stylesheet('js/highlight/styles/monokai.css');
+			$this->include_stylesheet('js/highlight/styles/one-light.min.css');
 			$this->include_stylesheet('js/easymde/easymde.min.css');
 			$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
 			$this->include_stylesheet('js/tagify/tagify.css');
