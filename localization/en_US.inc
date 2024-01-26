@@ -24,6 +24,7 @@ $labels['ariallabelnewoptions'] = 'Options';
 $labels['note_defaultformat'] = 'Default Format';
 $labels['note_listformat'] = 'Displayed Formats';
 $labels['note_yamls'] = 'Enable YAML';
+$labels['note_highlight_theme'] = 'Syntax Highlight Theme';
 $labels['note_rmedia_md'] = 'Remove automatically embedded Media';
 $labels['note_media_del'] = 'Found %count% media files in %note%. Do you want to delete them?';
 $labels['note_toc'] = 'Table of Contents';

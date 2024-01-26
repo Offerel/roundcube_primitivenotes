@@ -5,4 +5,5 @@ $config['default_format'] = 'md'; // default format, you can choose between 'md'
 $config['list_formats'] = ['md', 'txt']; // list of displayed formats, can be a combination of md, html, txt, pdf, jpg, png
 $config['yaml_support'] = true;  // set to true, if you want enable yaml support
 $config['rm_md_media'] = false;  // if set to yes, embedded media will be removed
+$config['highlight_theme'] = 'cupertino.min.css';  // Theme used for code highlight
 ?>

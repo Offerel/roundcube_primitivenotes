@@ -12,7 +12,6 @@ class primitivenotes extends rcube_plugin{
 
 	private $rc;
 	private $notes_path;
-	private $yaml_support;
 	private $media_path;
 	private $formatter;
 	
@@ -31,15 +30,15 @@ class primitivenotes extends rcube_plugin{
 			'type'		=> 'link'
 		), 'taskbar');
 
+		$this->include_stylesheet('skins/primitivenotes.css');
+		
 		if ($this->rc->task == 'notes') {
-			$this->include_stylesheet('js/highlight/styles/one-light.min.css');
+			$this->include_stylesheet('js/highlight/styles/'.$this->rc->config->get('highlight_theme'));
 			$this->include_stylesheet('js/easymde/easymde.min.css');
 			$this->include_stylesheet('js/easymde/fontawesome/css/all.css');
 			$this->include_stylesheet('js/tagify/tagify.css');
-			if($this->rc->config->get('skin') == 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');
-			$this->include_stylesheet('skins/primitivenotes.css');
-			if($this->rc->config->get('nrtoc', true))  $this->include_stylesheet('skins/ntoc.css');
-		
+			if($this->rc->config->get('skin') == 'elastic') $this->include_stylesheet($this->local_skin_path().'/plugin.css');			
+			if($this->rc->config->get('nrtoc', true))  $this->include_stylesheet('skins/ntoc.css');		
 			$this->include_script('js/primitivenotes.js');
 			$this->include_script('js/highlight/highlight.min.js');
 			$this->include_script('js/easymde/easymde.min.js');
@@ -271,22 +270,46 @@ class primitivenotes extends rcube_plugin{
 		}
 		
 		$p['blocks']['main']['name'] = $this->gettext('mainoptions');
+
 		$field_id='default_format';
 		$select   = new html_select(array('name' => 'default_format', 'id' => $field_id));
-		foreach (array('md', 'txt') as $m) {$select->add($this->gettext('note_format'.$m), $m);}
+		foreach (array('md', 'txt') as $m) {
+			$select->add($this->gettext('note_format'.$m), $m);
+		}
 		$p['blocks']['main']['options']['default_format'] = array(
-														'title'=> html::label($field_id, $this->gettext('note_defaultformat')),
-														'content'=> $select->show($this->rc->config->get('default_format')));
+											'title'=> html::label($field_id, $this->gettext('note_defaultformat')),
+											'content'=> $select->show($this->rc->config->get('default_format')));
 
 		$field_id='list_formats';
 		$selectf   = new html_select(array('multiple' => true, 'name' => 'list_formats[]', 'id' => $field_id));
 		foreach (array('md', 'html', 'txt', 'pdf', 'jpg', 'png') as $mf) {$selectf->add($this->gettext('note_format'.$mf), $mf);}
 		$p['blocks']['main']['options']['list_formats'] = array(
-														'title'=> html::label($field_id, $this->gettext('note_listformat')),
-														'content'=> $selectf->show($this->rc->config->get('list_formats')));
+											'title'=> html::label($field_id, $this->gettext('note_listformat')),
+											'content'=> $selectf->show($this->rc->config->get('list_formats')));
+
+		$field_id='highlight_theme';
+		$cselect = new html_select(array('name' => 'highlight_theme', 'id' => $field_id));
+		$cpath = "plugins/primitivenotes/js/highlight/styles";
+		if ($handle = opendir($cpath)) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != ".." && is_file($cpath.'/'.$file) && strpos($file,'.css')) {
+					$arrFiles[] = $file;
+				}
+			}
+			closedir($handle);
+			natsort($arrFiles);
+			foreach($arrFiles AS $entry) {
+				$pinfo = pathinfo($entry);
+				$cselect->add(str_replace('.min','',ucwords(str_replace('-', ' ', $pinfo['filename']), ' ')), $entry);
+			}
+		}
+		
+		$p['blocks']['main']['options']['highlight_theme'] = array(
+											'title'=> html::label($field_id, $this->gettext('note_highlight_theme')),
+											'content'=> $cselect->show($this->rc->config->get('highlight_theme')));
+											
 
 		$field_id='yaml_support';
-		
 		$hint = (!function_exists('yaml_parse')) ? ' (php-yaml missing)':'';
 		$input = new html_checkbox(array(	'name'	=> 'yaml_support',
 											'id'	=> 'yaml_support',
@@ -320,7 +343,8 @@ class primitivenotes extends rcube_plugin{
 				'list_formats'		=> rcube_utils::get_input_value('list_formats', rcube_utils::INPUT_POST),
 				'yaml_support'		=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST)),
 				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST)),
-				'nrtoc'				=> intval(rcube_utils::get_input_value('nrtoc', rcube_utils::INPUT_POST))
+				'nrtoc'				=> intval(rcube_utils::get_input_value('nrtoc', rcube_utils::INPUT_POST)),
+				'highlight_theme'	=> strval(rcube_utils::get_input_value('highlight_theme', rcube_utils::INPUT_POST))
 				);
 		}
         return $p;

@@ -22,6 +22,7 @@ $labels['ariallabelnewoptions'] = 'Předvolby';
 $labels['note_defaultformat'] = 'Výchozí formát';
 $labels['note_listformat'] = 'Zobrazované formáty';
 $labels['note_yamls'] = 'Povolit YAML';
+$labels['note_highlight_theme'] = 'Téma zvýraznění syntaxe';
 $labels['note_rmedia_md'] = 'Odstranit automaticky vložená média';
 $labels['note_toc'] = 'Obsah';
 $labels['note_ntoc'] = 'Číslování obsahu';

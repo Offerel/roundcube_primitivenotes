@@ -24,6 +24,7 @@ $labels['ariallabelnewoptions'] = 'Opciones';
 $labels['note_defaultformat'] = 'Formato estándar';
 $labels['note_listformat'] = 'Formatos mostrados';
 $labels['note_yamls'] = 'Activa YAML';
+$labels['note_highlight_theme'] = 'Tema resaltado de sintaxis';
 $labels['note_media_del'] = 'Se han encontrado %count% archivos multimedia en %note%. Desea eliminarlos?';
 $labels['note_toc'] = 'Tabla de contenidos';
 $labels['note_ntoc'] = 'Numeración Índice';

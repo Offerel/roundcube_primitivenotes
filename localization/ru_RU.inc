@@ -24,6 +24,7 @@ $labels['ariallabelnewoptions'] = 'Параметры';
 $labels['note_defaultformat'] = 'Стандартный формат';
 $labels['note_listformat'] = 'Отображаемые форматы';
 $labels['note_yamls'] = 'Активировать YAML';
+$labels['note_highlight_theme'] = 'Тема выделения синтаксиса';
 $labels['note_rmedia_md'] = 'Автоматическое удаление встроенного мультимедиа с помощью файлов Markdown';
 $labels['note_media_del'] = 'В файле %note% найдено %count% медиафайлов. Вы хотите удалить их?';
 $labels['note_toc'] = 'Содержание';
