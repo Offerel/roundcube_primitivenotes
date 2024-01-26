@@ -1,5 +1,6 @@
-### v2.2.1
-- Fix non existing dates
+### v2.2.2
+- 
+
 ### v2.2.1
 - Fix non existing dates
 - Hide editor on show, to fit browser search
