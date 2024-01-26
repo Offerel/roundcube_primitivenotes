@@ -42,7 +42,14 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					action: tPreview,
 					title: "Edit",
 					className: "btninv fa fa-pen no-disable"
-				},{
+				},
+				{
+					name: "side-by-side",
+					action: sidebyside,
+					title: "Toggle Side by Side",
+					className: "side-by-side fa fa-columns no-disable"
+				},
+				{
 					name: "save",
 					action: saveFile,
 					title: "Save",
@@ -57,12 +64,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 						className: "fa fa-image"
 					},"table", "|",
 					{
-						name: "side-by-side",
-						action: sidebyside,
-						title: "Toggle Side by Side",
-						className: "side-by-side fa fa-columns no-disable"
-					},
-					{
 						name: "preview",
 						action: tPreview,
 						title: "Toggle Preview",
@@ -71,7 +72,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					{
 						name: "meta",
 						action: togglemData,
-						className: "fa fa-question-circle no-disable",
+						className: "fa fa-lightbulb no-disable",
 						title: "Metadata",
 					},
 					{

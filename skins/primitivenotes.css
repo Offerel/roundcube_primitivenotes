@@ -398,6 +398,9 @@ span.cm-header.cm-header-2 {
 .fa-pen::before {
 	content: "\f304";
 }
+.fa-lightbulb::before {
+	content: "\f0eb";
+}
 .preview {
 	display: none !important;
 }
