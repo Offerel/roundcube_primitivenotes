@@ -120,6 +120,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function notes_list() {
+		date_default_timezone_set($this->rc->config->get('timezone', false));
 		$notes_path = $this->notes_path;
 		$taglist = array();
 		$yh_be = '---';
@@ -153,13 +154,12 @@ class primitivenotes extends rcube_plugin{
 							} else {
 								$ttags = "";
 							}
-							
 							$files[] = array(
 								'name'	=> (strpos($name, "[")) ? explode("[", $name)[0] : explode(".", $name)[0],
 								'filename' => $name,
 								'size'	=> filesize($notes_path.$file),
 								'type'	=> $ext,
-								'time'	=> filemtime($notes_path.$file),
+								'time'	=> stat($notes_path.$file)['mtime'],
 								'tags'	=> $ttags,
 								'id'	=> $id
 								);
@@ -175,7 +175,7 @@ class primitivenotes extends rcube_plugin{
 		if(isset($files) && is_array($files) && count($files) > 0  && !isset($_POST['action'])) {
 			usort($files, function($a, $b) { return $b['time'] <=> $a['time']; });
 		}
-
+		
 		if(isset($files) && is_array($files)) {
 			$pnlist = "";
 			foreach ($files as $fentry) {
@@ -194,7 +194,8 @@ class primitivenotes extends rcube_plugin{
 								<a id='note_$id' title='".$fentry['name']."' >
 									<div class='subject'>".$fentry['name']."</div>
 									<div class='size'>$fsize</div>
-									<div class='date'>".$this->formatter->format($fentry['time'])."</div>
+									<!-- <div class='date'>".$this->formatter->format($fentry['time'])."</div> -->
+									<div class='date'>".date($this->rc->config->get('date_long', false), $fentry['time'])."</div>
 								</a>
 							</li>";
 				}

@@ -44,17 +44,18 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 					className: "btninv fa fa-pen no-disable"
 				},
 				{
+					name: "save",
+					action: saveFile,
+					title: "Save",
+					className: "fa fa-floppy-disk no-disable"
+				},
+				{
 					name: "side-by-side",
 					action: sidebyside,
 					title: "Toggle Side by Side",
 					className: "side-by-side fa fa-columns no-disable"
 				},
-				{
-					name: "save",
-					action: saveFile,
-					title: "Save",
-					className: "fa fa-floppy-disk no-disable"
-				},"|",
+				"|",
 					"bold", "italic", "heading", "clean-block", "|",
 					"quote", "code", "unordered-list", "ordered-list", "|",
 					"link",{

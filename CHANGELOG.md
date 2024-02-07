@@ -1,5 +1,6 @@
 ### v2.2.2
-- 
+- Fix wrong timezone
+- Fix button order
 
 ### v2.2.1
 - Fix non existing dates
