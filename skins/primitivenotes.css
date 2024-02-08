@@ -532,7 +532,7 @@ span.cm-header.cm-header-2 {
 .editor-preview-side {
 	position: absolute !important;
 	top: 34px;
-	bottom: 31px;
+	bottom: 31px !important;
 }
 .cm-comment {
 	font-family: Consolas,Monaco,monospace !important;
