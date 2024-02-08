@@ -78,9 +78,11 @@ code.success::before {
 	border-top: 0;
 	height: 250px;
 	overflow-y: auto;
+	z-index: -1;
 }
 #tocdiv.tocShow {
 	top: 29px;
+	z-index: 9;
 }
 #tocdiv div {
 	height: calc(100% - 35px);
