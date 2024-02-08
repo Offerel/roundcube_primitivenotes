@@ -13,6 +13,9 @@
 .listing.iconized tr.primitivenotes>td.section:before {
 	content: '\f249';
 }
+.editor-preview-active-side {
+    top: 34px !important;
+}
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {
 		display: none !important;
