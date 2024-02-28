@@ -531,7 +531,7 @@ class primitivenotes extends rcube_plugin{
 				$this->rc->output->show_message($msg,"error");
 			}
 
-			$eyamls = yaml_emit($eyaml);
+			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
 			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
 			
 			if(!file_put_contents($nfile, $eyamls.$content, true)) {

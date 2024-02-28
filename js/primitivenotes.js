@@ -789,7 +789,8 @@ function searchList() {
 
 	for (i = 0; i < li.length; i++) {
 		liTags = li[i].dataset.tags;
-		if (liTags.toUpperCase().indexOf(filter) > -1) {
+		liNames = li[i].dataset.name;
+		if (liTags.toUpperCase().indexOf(filter) > -1 || liNames.toUpperCase().indexOf(filter) > -1) {
 			li[i].style.display = "";
 		} else {
 			li[i].style.display = "none";
