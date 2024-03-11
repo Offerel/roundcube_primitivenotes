@@ -58,12 +58,20 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 				"|",
 					"bold", "italic", "heading", "clean-block", "|",
 					"quote", "code", "unordered-list", "ordered-list", "|",
-					"link",{
+					"link",
+					{
+						name: "linkURL",
+						action: linkURL,
+						title: "Create Link",
+						className: "fa fa-link"
+					},
+					{
 						name: "media",
 						action: uplMedia,
 						title: "Insert Media",
 						className: "fa fa-image"
-					},"table", "|",
+					},
+					"table", "|",
 					{
 						name: "preview",
 						action: tPreview,
@@ -226,6 +234,15 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 		rcmail.http_post('displayNote', postData, false);
 	}
+
+	document.getElementById('cdlist').addEventListener('click', function() {
+		document.getElementById('modal').style.visibility = 'hidden';
+	});
+
+	document.getElementById('odlist').addEventListener('click', function() {
+		mde.codemirror.replaceSelection(document.getElementById('flink').innerText);
+		document.getElementById('modal').style.visibility = 'hidden';
+	});
 });
 
 function uplMedia() {
@@ -797,6 +814,51 @@ function searchList() {
 		}
 	}
 }
+
+function linkURL() {
+	let lsearch = document.getElementById('lsearch');
+	let selectionT = mde.codemirror.getSelection().trim();
+	lsearch.value = selectionT;
+	let linktext = '[' + selectionT + ']()';
+	let dlistmodal = document.getElementById('modal');
+	document.getElementById('flink').innerText = linktext;
+	dlistmodal.style.visibility = 'visible';
+	linkSearch();
+	lsearch.addEventListener('keyup',linkSearch);
+}
+
+function linkSearch() {
+	filter = document.getElementById('lsearch').value.toUpperCase();
+
+	let plist = document.getElementById("pnlist").cloneNode(true);	
+	let olist =  plist.getElementsByTagName('li');
+
+	if(document.getElementById('dlist')) document.getElementById('dlist').remove();
+	
+	dlist = document.createElement('ul');
+	dlist.id = 'dlist';
+
+	for (i = 0; i < olist.length; i++) {
+		dlistTags = olist[i].dataset.tags;
+		dlistNames = olist[i].dataset.name;
+		if (dlistTags.toUpperCase().indexOf(filter) > -1 || dlistNames.toUpperCase().indexOf(filter) > -1) {
+			olist[i].addEventListener('click', function(e) {
+				let link = '[' + mde.codemirror.getSelection().trim() + '](' + this.dataset.name + ')';
+				document.getElementById('flink').innerText = link;
+			});
+			dlist.appendChild(olist[i]);
+		}
+	}
+
+	let dldvn = document.getElementById('dldvn');
+
+	if(dlist.children.length > 0) {
+		dldvn.appendChild(dlist);
+		let selected = document.querySelector('#dlist .lselected');
+		selected.classList.remove('lselected');
+	}
+}
+
 
 function toggleTOC() {
 	let tocdiv = document.getElementById('tocdiv');

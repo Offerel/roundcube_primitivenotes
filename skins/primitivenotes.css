@@ -13,6 +13,66 @@
 .listing.iconized tr.primitivenotes>td.section:before {
 	content: '\f249';
 }
+#modal {
+    height: 100%;
+    width: 100%;
+    background: #00000029;
+    position: absolute;
+    visibility: hidden;
+}
+#dldv {
+    width: 500px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,.3);
+    padding: 10px;
+}
+#lsearch {
+    width: 100%;
+    border-radius: 5px;
+    outline: 0;
+    border: 1px solid;
+    border-color: #a3a3a3;
+    line-height: 2em;
+    padding: 0 .5em;
+    margin-bottom: .5em;
+}
+#flink {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #d3d3d3;
+    margin-bottom: .5em;
+    padding: 0 .5em;
+    line-height: 1.5em;
+    color: darkgreen;
+}
+#dlist {
+    overflow: auto;
+    height: 100%;
+    padding-inline-start: 0;
+}	
+#dlist .size {
+    display: none;
+}
+#dlist li {
+    list-style: none;
+    cursor: pointer;
+}
+#dldvn {
+    height: 12em;
+    margin-bottom: 1em;
+}
+#dldv button {
+    outline: 0;
+    border: 0;
+    width: 100px;
+    margin-left: 20%;
+}
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {
 		display: none !important;
