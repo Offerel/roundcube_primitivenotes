@@ -243,6 +243,13 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		mde.codemirror.replaceSelection(document.getElementById('flink').innerText);
 		document.getElementById('modal').style.visibility = 'hidden';
 	});
+
+	document.getElementById('lurl').addEventListener('input', function() {
+		let flink = document.getElementById('flink');
+		let link = '[' + mde.codemirror.getSelection().trim() + '](' + document.getElementById('lurl').value + ')';
+		flink.innerText = link;
+		flink.title = flink.innerText;
+	});
 });
 
 function uplMedia() {
@@ -813,6 +820,21 @@ function searchList() {
 			li[i].style.display = "none";
 		}
 	}
+}
+
+function openDiv(variant) {
+	switch(variant) {
+		case 'ext':
+			document.querySelector('.dldvi').style.display = 'none';
+			document.querySelector('.dldve').style.display = 'block';
+			break;
+		case 'int':
+			document.querySelector('.dldvi').style.display = 'block';
+			document.querySelector('.dldve').style.display = 'none';
+			break;
+		default:
+			document.getElementById('modal').style.visibility = 'hidden';
+	  }
 }
 
 function linkURL() {
