@@ -147,6 +147,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	rcmail.addEventListener('plugin.loadNote', loadNote);
 	rcmail.addEventListener('plugin.savedNote', savedNote);
 	rcmail.addEventListener('plugin.getNote', downloadNote);
+	rcmail.addEventListener('plugin.getHeadings', getHeadings);
 
 	cContextMenu();
 	
@@ -249,6 +250,10 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		let link = '[' + mde.codemirror.getSelection().trim() + '](' + document.getElementById('lurl').value + ')';
 		flink.innerText = link;
 		flink.title = flink.innerText;
+	});
+
+	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
+		button.addEventListener('click', openDiv);
 	});
 });
 
@@ -822,25 +827,33 @@ function searchList() {
 	}
 }
 
-function openDiv(variant) {
-	switch(variant) {
-		case 'ext':
+function openDiv() {
+	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
+		button.classList.remove('tactive');
+	});
+	this.classList.add('tactive');
+
+	switch(this.innerText) {
+		case 'Extern':
 			document.querySelector('.dldvi').style.display = 'none';
 			document.querySelector('.dldve').style.display = 'block';
 			break;
-		case 'int':
+		case 'Intern':
 			document.querySelector('.dldvi').style.display = 'block';
 			document.querySelector('.dldve').style.display = 'none';
 			break;
 		default:
 			document.getElementById('modal').style.visibility = 'hidden';
-	  }
+	}
 }
 
 function linkURL() {
 	let lsearch = document.getElementById('lsearch');
 	let selectionT = mde.codemirror.getSelection().trim();
 	lsearch.value = selectionT;
+
+	selectionT = (selectionT.length > 0) ? selectionT:'unknown';
+
 	let linktext = '[' + selectionT + ']()';
 	let dlistmodal = document.getElementById('modal');
 	document.getElementById('flink').innerText = linktext;
@@ -865,8 +878,14 @@ function linkSearch() {
 		dlistNames = olist[i].dataset.name;
 		if (dlistTags.toUpperCase().indexOf(filter) > -1 || dlistNames.toUpperCase().indexOf(filter) > -1) {
 			olist[i].addEventListener('click', function(e) {
-				let link = '[' + mde.codemirror.getSelection().trim() + '](' + this.dataset.name + ')';
+				let selectionT = mde.codemirror.getSelection().trim();
+				//selectionT = (selectionT > 0) ? selectionT:'unknown';
+				let link = '[' + selectionT + '](' + this.dataset.name + ')';
 				document.getElementById('flink').innerText = link;
+				postData = {
+					_name: this.dataset.name,
+				};
+				rcmail.http_post('cHeadings', postData, false);
 			});
 			dlist.appendChild(olist[i]);
 		}
@@ -881,6 +900,18 @@ function linkSearch() {
 	}
 }
 
+function getHeadings(response) {
+	if(response.message == "ok") {
+		if(response.count > 0) {
+			document.getElementById('flink').classList.add('hshow');
+		} else {
+			document.getElementById('flink').classList.remove('hshow');
+			console.warn("No headings found");
+		}
+	} else {
+		console.warn(response.message);
+	}
+}
 
 function toggleTOC() {
 	let tocdiv = document.getElementById('tocdiv');

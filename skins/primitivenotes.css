@@ -32,6 +32,11 @@
     box-shadow: 3px 3px 10px rgba(0,0,0,.3);
     padding: 0;
 }
+#dldvt {
+    background-color: #ededed;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
 .dldvi {
     display: block;
     margin: 0 .7em;
@@ -62,6 +67,21 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+#flink:after {
+    content: 'H';
+    width: 20px;
+    height: 20px;
+    display: block;
+    right: 15px;
+    top: 30px;
+    position: absolute;
+    text-align: center;
+    cursor: pointer;
+    visibility: hidden;
+}
+.hshow:after {
+    visibility: visible !important;
 }
 #dlist .date {
     color: darkslategray;
@@ -95,19 +115,30 @@
     width: 100px;
     margin-left: 20%;
 }
-.tab_button {
-	border-radius: 0;
-	margin: 0 !important;
-	padding: 0;
-	vertical-align: revert;
+.tbutton {
+    margin: 0!important;
+    padding: 0;
+    vertical-align: revert;
+    background-color: #d3d3d3;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
 }
-.tab_button:first-child {
+.tactive {
+    background-color: white;
+    color: black;
+}
+.tbutton:first-child {
     border-top-left-radius: 5px;
 }
-.tab_button:last-child {
+.tbutton:last-child {
     right: 0;
     position: absolute;
     border-top-right-radius: 5px;
+    width: 30px;
 }
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {

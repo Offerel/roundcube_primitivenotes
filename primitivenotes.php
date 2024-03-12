@@ -54,6 +54,7 @@ class primitivenotes extends rcube_plugin{
 			$this->register_action('uplMedia', array($this, 'uploadMedia'));
 			$this->register_action('uplNote', array($this, 'uploadNote'));
 			$this->register_action('blink', array($this, 'getMedia'));
+			$this->register_action('cHeadings', array($this, 'getHeadings'));
 			$this->rc->output->set_env('refresh_interval', 0);
 		}
 
@@ -75,6 +76,38 @@ class primitivenotes extends rcube_plugin{
 		}
 		
 		$this->formatter = new IntlDateFormatter($this->rc->get_user_language(), IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
+	}
+
+	function getHeadings() {
+		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$note = $this->notes_path.$nname;
+		$headings = [];
+		$cb = 0;
+
+		if(file_exists($note)) {
+			$fcontent = file_get_contents($note);
+			$nlines = explode("\n", $fcontent);
+
+			foreach ($nlines as $line) {
+				if(substr($line, 0, 3) === "```") {
+					$cb = ($cb === 0) ? 1:0;
+				}
+
+				if(substr($line, 0, 2) === "# " && $cb === 0) $headings[] = array($line,"H1");
+				if(substr($line, 0, 3) === "## " && $cb === 0) $headings[] = array($line,"H2");
+				if(substr($line, 0, 4) === "### " && $cb === 0) $headings[] = array($line,"H3");
+				if(substr($line, 0, 5) === "#### " && $cb === 0) $headings[] = array($line,"H4");
+				if(substr($line, 0, 6) === "##### " && $cb === 0) $headings[] = array($line,"H5");
+				if(substr($line, 0, 7) === "###### " && $cb === 0) $headings[] = array($line,"H6");
+			}
+			$message = "ok";
+			$count = count($headings);
+		} else {
+			$message = "File not found";
+			$count = 0;
+		}
+
+		$this->rc->output->command('plugin.getHeadings', array('message' => $message, 'headings' => $headings, 'count' => $count));
 	}
 	
 	function getMedia() {
