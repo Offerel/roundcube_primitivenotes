@@ -68,42 +68,50 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-#flink:after {
-    content: 'H';
+#flink .headings {
     width: 20px;
     height: 20px;
-    display: block;
-    right: 15px;
-    top: 30px;
-    position: absolute;
+    display: inline-block;
     text-align: center;
-    cursor: pointer;
+    right: 15px;
+    position: absolute;
     visibility: hidden;
+    cursor: pointer;
 }
-.hshow:after {
+.headings.hshow {
     visibility: visible !important;
 }
 #dlist .date {
     color: darkslategray;
     font-size: .8em;
 }
-#dlist {
+#dlist, #headinglist {
     overflow: auto;
     height: 100%;
     padding-inline-start: 0;
-}	
+}
 #dlist .size {
     display: none;
 }
-#dlist li {
+#dlist li, #headinglist li {
     list-style: none;
     cursor: pointer;
     border-bottom: 1px solid ghostwhite;
     background-color: #dcdcdc69;
     padding: 0 0 0 .5em;
 }
-#dlist li:hover {
+#dlist li:hover, #headinglist li:hover {
     background-color: aliceblue;
+}
+#dlist.dlh {
+    display: none;
+}
+#headinglist > li {
+    line-height: 2em;
+}
+#headinglist > li > span {
+    float: right;
+    margin-right: 10px;
 }
 #dldvn {
     height: 12em;

@@ -241,12 +241,12 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	document.getElementById('odlist').addEventListener('click', function() {
-		mde.codemirror.replaceSelection(document.getElementById('flink').innerText);
+		mde.codemirror.replaceSelection(document.querySelector('#flink .text').innerText);
 		document.getElementById('modal').style.visibility = 'hidden';
 	});
 
 	document.getElementById('lurl').addEventListener('input', function() {
-		let flink = document.getElementById('flink');
+		let flink = document.querySelector('#flink .text');
 		let link = '[' + mde.codemirror.getSelection().trim() + '](' + document.getElementById('lurl').value + ')';
 		flink.innerText = link;
 		flink.title = flink.innerText;
@@ -255,6 +255,8 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
 		button.addEventListener('click', openDiv);
 	});
+
+	document.querySelector('#flink .headings').addEventListener('click', showHeadings);
 });
 
 function uplMedia() {
@@ -850,13 +852,14 @@ function openDiv() {
 function linkURL() {
 	let lsearch = document.getElementById('lsearch');
 	let selectionT = mde.codemirror.getSelection().trim();
+	document.getElementById('lselection').value = selectionT;
 	lsearch.value = selectionT;
 
 	selectionT = (selectionT.length > 0) ? selectionT:'unknown';
 
 	let linktext = '[' + selectionT + ']()';
 	let dlistmodal = document.getElementById('modal');
-	document.getElementById('flink').innerText = linktext;
+	document.querySelector('#flink .text').innerText = linktext;
 	dlistmodal.style.visibility = 'visible';
 	linkSearch();
 	lsearch.addEventListener('keyup',linkSearch);
@@ -869,6 +872,7 @@ function linkSearch() {
 	let olist =  plist.getElementsByTagName('li');
 
 	if(document.getElementById('dlist')) document.getElementById('dlist').remove();
+	if(document.getElementById('headinglist')) document.getElementById('headinglist').remove();
 	
 	dlist = document.createElement('ul');
 	dlist.id = 'dlist';
@@ -878,12 +882,12 @@ function linkSearch() {
 		dlistNames = olist[i].dataset.name;
 		if (dlistTags.toUpperCase().indexOf(filter) > -1 || dlistNames.toUpperCase().indexOf(filter) > -1) {
 			olist[i].addEventListener('click', function(e) {
-				let selectionT = mde.codemirror.getSelection().trim();
-				//selectionT = (selectionT > 0) ? selectionT:'unknown';
-				let link = '[' + selectionT + '](' + this.dataset.name + ')';
-				document.getElementById('flink').innerText = link;
+				let selectionT = document.getElementById('lselection').value;
+				document.getElementById('lfile').value = this.dataset.name;
+				let link = '[' + selectionT + '](' + document.getElementById('lfile').value + ')';
+				document.querySelector('#flink .text').innerText = link;
 				postData = {
-					_name: this.dataset.name,
+					_name: document.getElementById('lfile').value,
 				};
 				rcmail.http_post('cHeadings', postData, false);
 			});
@@ -903,14 +907,41 @@ function linkSearch() {
 function getHeadings(response) {
 	if(response.message == "ok") {
 		if(response.count > 0) {
-			document.getElementById('flink').classList.add('hshow');
+			document.querySelector('#flink .headings').classList.add('hshow');
+			if(document.getElementById("headinglist")) document.getElementById("headinglist").remove();
+			let headinglist = document.createElement('ul');
+			headinglist.id = "headinglist";
+			response.headings.forEach(heading => {
+				let h = document.createElement('li');
+				let htext = heading[0];
+				let hlvl = parseInt(heading[1].substring(1));
+				htext = htext.substring(hlvl).trim();
+				h.innerHTML = htext + '<span>' + heading[1] + '</span>';
+				h.addEventListener('click', e => {
+					let hd = e.srcElement.innerText.split("\n")[0];
+					document.getElementById('lheading').value = encodeURIComponent(hd);
+					let link = '[' + document.getElementById('lselection').value + '](' + document.getElementById('lfile').value + '#' + document.getElementById('lheading').value + ')';
+					document.querySelector('#flink .text').innerText = link;
+					if(document.getElementById('headinglist')) document.getElementById('headinglist').remove();
+					document.getElementById('dlist').classList.remove('dlh');
+				});
+				headinglist.appendChild(h);
+			});
+			document.body.appendChild(headinglist);
 		} else {
-			document.getElementById('flink').classList.remove('hshow');
+			document.querySelector('#flink .headings').classList.remove('hshow');
 			console.warn("No headings found");
 		}
 	} else {
 		console.warn(response.message);
 	}
+}
+
+function showHeadings() {
+	let dldvn = document.getElementById('dldvn');
+	document.getElementById('dlist').classList.add('dlh');
+	let hlist = document.getElementById('headinglist');
+	dldvn.appendChild(hlist);
 }
 
 function toggleTOC() {
