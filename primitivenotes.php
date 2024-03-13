@@ -382,6 +382,7 @@ class primitivenotes extends rcube_plugin{
 				'default_format'	=> strval(rcube_utils::get_input_value('default_format', rcube_utils::INPUT_POST)),
 				'list_formats'		=> rcube_utils::get_input_value('list_formats', rcube_utils::INPUT_POST),
 				'yaml_support'		=> intval(rcube_utils::get_input_value('yaml_support', rcube_utils::INPUT_POST)),
+				'check_links'		=> intval(rcube_utils::get_input_value('check_links', rcube_utils::INPUT_POST)),
 				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST)),
 				'nrtoc'				=> intval(rcube_utils::get_input_value('nrtoc', rcube_utils::INPUT_POST)),
 				'highlight_theme'	=> strval(rcube_utils::get_input_value('highlight_theme', rcube_utils::INPUT_POST))
