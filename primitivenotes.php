@@ -351,11 +351,17 @@ class primitivenotes extends rcube_plugin{
 		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls').$hint),
 															'content'=> $input->show(intval($this->rc->config->get('yaml_support'))));
 
+		$field_id='check_links';
+		$input = new html_checkbox(array(	'name'	=> 'check_links',
+											'id'	=> 'check_links',
+											'value' => 1));
+		$p['blocks']['main']['options']['pn_cl'] = array(	'title'=> html::label($field_id, $this->gettext('note_cl')),
+															'content'=> $input->show(intval($this->rc->config->get('check_links'))));
+		
 		$field_id='rm_md_media';
 		$input = new html_checkbox(array(	'name'	=> 'rm_md_media',
 											'id'	=> 'rm_md_media',
 											'value' => 1));
-
 		$p['blocks']['main']['options']['pn_rmed'] = array(	'title'=> html::label($field_id, $this->gettext('note_rmedia_md')),
 															'content'=> $input->show(intval($this->rc->config->get('rm_md_media'))));
 
@@ -553,6 +559,7 @@ class primitivenotes extends rcube_plugin{
 		
 		if(in_array($type, $save_allowed)) {
 			if((strlen($oname) > 0) && ($nfile != $ofile)) {
+				//checkLinks($ofile, $nfile);
 				if(!rename($ofile, $nfile)) {
 					$this->rc->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
 				}
@@ -571,6 +578,19 @@ class primitivenotes extends rcube_plugin{
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
 				$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'list' => $this->notes_list()));
+			}
+		}
+	}
+
+	function checkLinks($ofile, $nfile) {
+		$dir = $this->notes_path;
+		foreach (glob("$dir/*") as $note) {
+			$ncontent = file_get_contents("$dir/$note");
+			if (strpos($ncontent, $ofile) !== false) {
+				$ndate = filemtime($dir/$note);
+				$ncontent = str_replace($ofile, $nfile, $ncontent);
+				file_put_contents($dir/$note, $ncontent);
+				touch($dir/$note, $ndate);
 			}
 		}
 	}

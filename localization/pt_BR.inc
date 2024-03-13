@@ -24,6 +24,7 @@ $labels['ariallabelnewoptions'] = 'Opções';
 $labels['note_defaultformat'] = 'Formato Padrão';
 $labels['note_listformat'] = 'Formatos Exibidos';
 $labels['note_yamls'] = 'Habilitar YAML';
+$labels['note_cl'] = 'Verifique links para notas renomeadas';
 $labels['note_highlight_theme'] = 'Tema de destaque de sintaxe';
 $labels['note_rmedia_md'] = 'Exclua automaticamente a mídia incorporada';
 $labels['note_media_del'] = 'Encontrei %count% ficheiros multimédia em %note%. Quer apagá-los?';

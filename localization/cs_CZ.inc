@@ -2,11 +2,13 @@
 $labels = array();
 $labels['notes'] = 'Poznámky';
 $labels['note_new'] = 'Nová';
+$labels['note_show'] = 'Ukázat';
 $labels['note_edit'] = 'Upravit';
 $labels['note_rename'] = 'Přejmenovat';
 $labels['note_del'] = 'Smazat';
 $labels['note_send'] = 'Odeslat';
 $labels['note_upload'] = 'Nahrát';
+$labels['note_download'] = 'Stažení';
 $labels['note_title'] = 'Název poznámky';
 $labels['note_tags'] = 'Text oddělený čárkou (CSV)';
 $labels['note_inv_format'] = 'Nepodporovaný formát poznámky!';
@@ -22,8 +24,10 @@ $labels['ariallabelnewoptions'] = 'Předvolby';
 $labels['note_defaultformat'] = 'Výchozí formát';
 $labels['note_listformat'] = 'Zobrazované formáty';
 $labels['note_yamls'] = 'Povolit YAML';
+$labels['note_cl'] = 'Zkontrolujte odkazy na přejmenované poznámky';
 $labels['note_highlight_theme'] = 'Téma zvýraznění syntaxe';
 $labels['note_rmedia_md'] = 'Odstranit automaticky vložená média';
+$labels['note_media_del'] = '%count% Mediální soubory nalezené v %note%. Chcete je smazat?';
 $labels['note_toc'] = 'Obsah';
 $labels['note_ntoc'] = 'Číslování obsahu';
 ?>

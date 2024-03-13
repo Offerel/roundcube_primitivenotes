@@ -24,6 +24,7 @@ $labels['ariallabelnewoptions'] = 'Optionen';
 $labels['note_defaultformat'] = 'Standard Format';
 $labels['note_listformat'] = 'Angezeigte Formate';
 $labels['note_yamls'] = 'Aktiviere YAML';
+$labels['note_cl'] = 'Prüfe Links zu umbenannten Notizen';
 $labels['note_highlight_theme'] = 'Syntax-Highlight-Thema';
 $labels['note_rmedia_md'] = 'Eingbettete Medien automatisch löschen';
 $labels['note_media_del'] = '%count% Mediendateien in %note% gefunden. Möchten Sie diese löschen?';
