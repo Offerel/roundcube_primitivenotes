@@ -559,7 +559,7 @@ class primitivenotes extends rcube_plugin{
 		
 		if(in_array($type, $save_allowed)) {
 			if((strlen($oname) > 0) && ($nfile != $ofile)) {
-				//checkLinks($ofile, $nfile);
+				if($this->rc->config->get('check_links')) checkLinks($ofile, $nfile);
 				if(!rename($ofile, $nfile)) {
 					$this->rc->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
 				}
