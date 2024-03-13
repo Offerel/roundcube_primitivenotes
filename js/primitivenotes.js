@@ -253,7 +253,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
-		button.addEventListener('click', openDiv);
+		button.addEventListener('click', switchDiv);
 	});
 
 	document.querySelector('#flink .headings').addEventListener('click', showHeadings);
@@ -829,27 +829,30 @@ function searchList() {
 	}
 }
 
-function openDiv() {
+function switchDiv() {
 	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
 		button.classList.remove('tactive');
 	});
-	this.classList.add('tactive');
 
 	switch(this.innerText) {
 		case 'Extern':
 			document.querySelector('.dldvi').style.display = 'none';
 			document.querySelector('.dldve').style.display = 'block';
+			this.classList.add('tactive');
 			break;
 		case 'Intern':
 			document.querySelector('.dldvi').style.display = 'block';
 			document.querySelector('.dldve').style.display = 'none';
+			this.classList.add('tactive');
 			break;
 		default:
 			document.getElementById('modal').style.visibility = 'hidden';
+			if(document.querySelector('#flink .hshow')) document.querySelector('#flink .hshow').classList.remove('hshow');
 	}
 }
 
 function linkURL() {
+	document.querySelector('#dldvt span').classList.add('tactive');
 	let lsearch = document.getElementById('lsearch');
 	let selectionT = mde.codemirror.getSelection().trim();
 	document.getElementById('lselection').value = selectionT;

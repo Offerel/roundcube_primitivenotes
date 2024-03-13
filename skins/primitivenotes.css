@@ -19,6 +19,7 @@
     background: #00000029;
     position: absolute;
     visibility: hidden;
+	z-index: 9;
 }
 #dldv {
     width: 500px;
