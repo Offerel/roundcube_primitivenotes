@@ -3,7 +3,8 @@
 *   Fix wrong timezone
 *   Fix button order
 *   CSS Fix
-*   Add link dialog
+*   Added link dialog. You can now directly link to local notes from a list and use headings as target
+* Added optional tracking of renamed files. With this, you can enable to check for renamed notes and change the link to this renamed notes automatically. The modiefied date will stay the old date.
 
 ### v2.2.1
 
