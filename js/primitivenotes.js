@@ -905,8 +905,7 @@ function linkSearch() {
 
 	if(dlist.children.length > 0) {
 		dldvn.appendChild(dlist);
-		let selected = document.querySelector('#dlist .lselected');
-		selected.classList.remove('lselected');
+		if(document.querySelector('#dlist .lselected')) document.querySelector('#dlist .lselected').classList.remove('lselected');
 	}
 }
 
