@@ -522,7 +522,8 @@ class primitivenotes extends rcube_plugin{
 
 			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $noteArr, 'mode' => $mode));
 			$this->rc->output->set_pagetitle($this->gettext('notes').' - '.$noteArr['name']);
-		} elseif($filename != "" ) {
+		//} elseif($filename != "" ) {
+		} else {
 			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}
 	}
@@ -560,7 +561,7 @@ class primitivenotes extends rcube_plugin{
 		
 		if(in_array($type, $save_allowed)) {
 			if((strlen($oname) > 0) && ($nfile != $ofile)) {
-				if($this->rc->config->get('check_links')) checkLinks($ofile, $nfile);
+				if($this->rc->config->get('check_links') && $type == "md") $this->checkLinks($ofile, $nfile);
 				if(!rename($ofile, $nfile)) {
 					$this->rc->output->show_message("Could not move/rename note in (\$config['notes_path']) failed. Please check directory permissions.","error");
 				}
@@ -574,24 +575,27 @@ class primitivenotes extends rcube_plugin{
 
 			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
 			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
-			
+
 			if(!file_put_contents($nfile, $eyamls.$content, true)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
-				$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'list' => $this->notes_list()));
+				$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
 			}
 		}
 	}
 
 	function checkLinks($ofile, $nfile) {
 		$dir = $this->notes_path;
-		foreach (glob("$dir/*") as $note) {
-			$ncontent = file_get_contents("$dir/$note");
+		$ofile = basename($ofile);
+		$nfile = basename($nfile);
+		
+		foreach (glob("$dir*") as $note) {
+			$ncontent = file_get_contents($note);
 			if (strpos($ncontent, $ofile) !== false) {
-				$ndate = filemtime($dir/$note);
+				$ndate = filemtime($note);
 				$ncontent = str_replace($ofile, $nfile, $ncontent);
-				file_put_contents($dir/$note, $ncontent);
-				touch($dir/$note, $ndate);
+				file_put_contents($note, $ncontent);
+				touch($note, $ndate);
 			}
 		}
 	}

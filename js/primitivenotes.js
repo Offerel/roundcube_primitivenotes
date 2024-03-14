@@ -793,6 +793,9 @@ function savedNote(response) {
 		if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();
 		const lDom = new DOMParser().parseFromString(response.list, "text/html");
 		document.getElementById('notes-list').appendChild(lDom.body.children[0]);
+		document.getElementById('fname').value = response.name;
+		let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + document.getElementById('fname').value;
+		window.history.pushState({path:newurl},'',newurl);
 	}
 	
 	document.querySelectorAll('#pnlist li a').forEach(function(note){
