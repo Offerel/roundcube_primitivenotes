@@ -58,7 +58,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 				"|",
 					"bold", "italic", "heading", "clean-block", "|",
 					"quote", "code", "unordered-list", "ordered-list", "|",
-					"link",
+					//"link",
 					{
 						name: "linkURL",
 						action: linkURL,
@@ -137,7 +137,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		delimiters: ',|;| '
 	});
 
-	document.getElementById('notessearchform').addEventListener('keyup', searchList, false);
+	document.getElementById('notessearchform').addEventListener('input', searchList, false);
 	document.querySelectorAll('#pnlist li a').forEach(function(note){
 		note.addEventListener('click',function(){
 			showNote(note.parentElement.id, 'show');
@@ -200,16 +200,37 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 		document.body.innerHTML = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/skins/print.css\"></link><link rel=\"stylesheet\" type=\"text/css\" href=\"plugins/primitivenotes/js/highlight/styles/default.css\"></link><title>" + document.getElementById('headerTitle').value + "</title></head><body>" + mde.markdown(mde.value()) + "</body>";
 		window.onfocus=function(){ location.reload();}
 	});
+
+	document.getElementById("notessearchform").addEventListener('keydown', event => {
+		if(event.key === 'Backspace' || event.key === 'Delete') {
+			document.querySelectorAll('#pnlist li').forEach(li => {
+				li.style.display = "";
+			});
+		}
+	});
+
+	document.getElementById("notessearchform").addEventListener('search', event => {
+		console.log("search");
+		if(document.getElementById("notessearchform").value == '') {
+			document.querySelectorAll('#pnlist li').forEach(li => {
+				li.style.display = "";
+			});
+		} else {
+			searchList();
+		}
+	});
 	
 	document.addEventListener("keyup", event => {
 		if(event.key == 'Escape') {
 			if(mde.isPreviewActive() === false && document.getElementById("notessearchform") !== document.activeElement && mde.value() !== '') {
 				tPreview('show');
 			}
-
+			
 			if(document.getElementById("notessearchform") === document.activeElement) {
 				document.getElementById("notessearchform").value = '';
-				document.getElementById("notessearchform").dispatchEvent(new KeyboardEvent('keyup', {'key':''}));
+				document.querySelectorAll('#pnlist li').forEach(li => {
+					li.style.display = "";
+				});
 			}
 		}
 	});
@@ -813,21 +834,38 @@ function savedNote(response) {
 	cContextMenu();
 	loader.remove();
 }
-
+/*
 function searchList() {
-	var input, filter, ul, li, a, i;
-	input = document.getElementById('notessearchform');
-	filter = input.value.toUpperCase();
-	ul = document.getElementById("pnlist");
-	li = ul.getElementsByTagName('li');
+	let search = document.getElementById('notessearchform').value.toLowerCase();
+	let li = document.getElementById("pnlist").getElementsByTagName('li');
 
-	for (i = 0; i < li.length; i++) {
-		liTags = li[i].dataset.tags;
-		liNames = li[i].dataset.name;
-		if (liTags.toUpperCase().indexOf(filter) > -1 || liNames.toUpperCase().indexOf(filter) > -1) {
+	for (let i = 0; i < li.length; i++) {
+		let liTags = li[i].dataset.tags;
+		let liNames = li[i].querySelector('a').title;
+		if (liTags.toLowerCase().indexOf(search) > -1 || liNames.toLowerCase().indexOf(search) > -1) {
 			li[i].style.display = "";
 		} else {
 			li[i].style.display = "none";
+		}
+	}
+}
+*/
+
+function searchList() {
+	let search = document.getElementById('notessearchform').value.toLowerCase().split(' ');
+	let li = document.querySelectorAll('#pnlist li:not([style*="display:none"]):not([style*="display: none"])');
+
+	for (let i = 0; i < li.length; i++) {
+		let liTags = li[i].dataset.tags.toLowerCase().split(', ');
+		let liNames = li[i].querySelector('a').title.toLowerCase().split(' ');
+		let sText = [...new Set(liTags.concat(liNames))].join(' ');
+
+		for(let j = 0; j < search.length; j++) {
+			if(sText.indexOf(search[j]) > -1 ) {
+				li[i].style.display = "";
+			} else {
+				li[i].style.display = "none";
+			}
 		}
 	}
 }
