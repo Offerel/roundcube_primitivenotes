@@ -58,7 +58,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 				"|",
 					"bold", "italic", "heading", "clean-block", "|",
 					"quote", "code", "unordered-list", "ordered-list", "|",
-					//"link",
 					{
 						name: "linkURL",
 						action: linkURL,
@@ -210,7 +209,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	document.getElementById("notessearchform").addEventListener('search', event => {
-		console.log("search");
 		if(document.getElementById("notessearchform").value == '') {
 			document.querySelectorAll('#pnlist li').forEach(li => {
 				li.style.display = "";
