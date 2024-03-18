@@ -458,6 +458,7 @@ class primitivenotes extends rcube_plugin{
 		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
 		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
 		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
+		$anchor = rcube_utils::get_input_value('_anchor', rcube_utils::INPUT_POST, false);
 		$note = $this->notes_path.$nname;
 
 		if(file_exists($note)) {
@@ -518,6 +519,7 @@ class primitivenotes extends rcube_plugin{
 				'mime_type'	=> $mime_type,
 				'filename'	=> $nname,
 				'tags'		=> isset($TagsArray) ? $TagsArray:array(),
+				'anchor'	=> $anchor
 			);
 
 			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $noteArr, 'mode' => $mode));

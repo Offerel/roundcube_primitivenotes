@@ -500,7 +500,6 @@ function cCommand(command) {
 		default:
 			return false;
 	}
-
 }
 
 function downloadNote(note) {
@@ -643,7 +642,8 @@ function togglemData() {
 }
 
 function loadNote(response) {
-	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename;
+	let anchor = (response.note.anchor) ? '#' + response.note.anchor:'';
+	let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?_task=notes&note=' + response.note.filename + anchor;
 	window.history.pushState({path:newurl},'',newurl);
 	
 	loader.remove();
@@ -738,7 +738,10 @@ function loadNote(response) {
 	dlink.forEach(function(e) {
 		e.addEventListener('click', function(link) {
 			link.preventDefault();
-			showNote(document.querySelectorAll("[data-name='" + decodeURIComponent(link.target.attributes.href.value).split('#')[0] + "']")[0].id);
+			let linkurl = decodeURIComponent(link.target.attributes.href.value);
+			let linkurlA = linkurl.split('#');
+			let anchor = linkurlA[1].toLowerCase().replaceAll(' ','-');
+			showNote(document.querySelectorAll("[data-name='" + linkurlA[0] + "']")[0].id, 'show', anchor);
 			return false;
 		});
 		return false;
@@ -973,10 +976,9 @@ function toggleTOC() {
 	if(tocdiv) tocdiv.classList.toggle('tocShow');
 }
 
-function showNote(id, mode='show') {
+function showNote(id, mode='show', anchor='') {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	let postData;
-	
 	let viewA = ['md', 'txt', 'html', 'jpg'];
 	let fA = document.getElementById(id).dataset.format;
 	
@@ -986,6 +988,7 @@ function showNote(id, mode='show') {
 			_name: document.getElementById(id).dataset.name,
 			_id: id,
 			_mode: mode,
+			_anchor: anchor
 		};
 		rcmail.http_post('displayNote', postData, false);
 	} else {
