@@ -189,9 +189,6 @@ code.success::before {
 #layout {
 	background-color: #f4f4f4;
 }
-#layout-content {
-	margin-left: 10px;
-}
 #metah {
 	height: 100%;
 }
@@ -287,7 +284,7 @@ code.success::before {
 	border: thin solid #ced4da;
 	background-color: #fff;
 	border-radius: .2em;
-	margin: 5px 0;
+	margin: 5px 0 5px 5px;
 	outline: 0;
 	text-overflow: ellipsis;
 }
@@ -304,7 +301,7 @@ code.success::before {
 	border: 1px solid transparent !important;
 	overflow-x: auto;
 	flex-wrap: revert !important;
-	margin: 0 10px 0 0;
+	margin: 0 5px 0 5px;
 	border-radius: .3em;
 	overflow-y: hidden;
 }
@@ -515,14 +512,14 @@ span.cm-header.cm-header-2 {
 }
 .EasyMDEContainer {
 	background-color: #f4f4f4;
-	padding: 0 10px 0 0;
+	padding: 0;
 }
 .editor-toolbar {
 	z-index: 11;
 	background-color: #f4f4f4;
 	border-radius: 0!important;
 	border: 0!important;
-	padding: 2px 0 !important;
+	padding: 2px 0 0 5px !important;
 }
 .editor-toolbar button:disabled {
 	pointer-events: none;
