@@ -588,12 +588,15 @@ class primitivenotes extends rcube_plugin{
 		$dir = $this->notes_path;
 		$ofile = basename($ofile);
 		$nfile = basename($nfile);
+
+		$eofile = rawurlencode($ofile);
+		$enfile = rawurlencode($nfile);
 		
 		foreach (glob("$dir*") as $note) {
 			$ncontent = file_get_contents($note);
-			if (strpos($ncontent, $ofile) !== false) {
+			if (strpos($ncontent, $eofile) !== false) {
 				$ndate = filemtime($note);
-				$ncontent = str_replace($ofile, $nfile, $ncontent);
+				$ncontent = str_replace($eofile, $enfile, $ncontent);
 				file_put_contents($note, $ncontent);
 				touch($note, $ndate);
 			}

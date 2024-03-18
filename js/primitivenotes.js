@@ -832,22 +832,6 @@ function savedNote(response) {
 	cContextMenu();
 	loader.remove();
 }
-/*
-function searchList() {
-	let search = document.getElementById('notessearchform').value.toLowerCase();
-	let li = document.getElementById("pnlist").getElementsByTagName('li');
-
-	for (let i = 0; i < li.length; i++) {
-		let liTags = li[i].dataset.tags;
-		let liNames = li[i].querySelector('a').title;
-		if (liTags.toLowerCase().indexOf(search) > -1 || liNames.toLowerCase().indexOf(search) > -1) {
-			li[i].style.display = "";
-		} else {
-			li[i].style.display = "none";
-		}
-	}
-}
-*/
 
 function searchList() {
 	let search = document.getElementById('notessearchform').value.toLowerCase().split(' ');
@@ -926,7 +910,7 @@ function linkSearch() {
 			olist[i].addEventListener('click', function(e) {
 				let selectionT = document.getElementById('lselection').value;
 				document.getElementById('lfile').value = this.dataset.name;
-				let link = '[' + selectionT + '](' + document.getElementById('lfile').value + ')';
+				let link = '[' + selectionT + '](' + encodeURIComponent(document.getElementById('lfile').value) + ')';
 				document.querySelector('#flink .text').innerText = link;
 				postData = {
 					_name: document.getElementById('lfile').value,
@@ -959,9 +943,8 @@ function getHeadings(response) {
 				htext = htext.substring(hlvl).trim();
 				h.innerHTML = htext + '<span>' + heading[1] + '</span>';
 				h.addEventListener('click', e => {
-					let hd = e.srcElement.innerText.split("\n")[0];
-					document.getElementById('lheading').value = encodeURIComponent(hd);
-					let link = '[' + document.getElementById('lselection').value + '](' + document.getElementById('lfile').value + '#' + document.getElementById('lheading').value + ')';
+					document.getElementById('lheading').value = e.target.innerText.split("\n")[0];
+					let link = '[' + document.getElementById('lselection').value + '](' + encodeURIComponent(document.getElementById('lfile').value) + '#' + encodeURIComponent(document.getElementById('lheading').value) + ')';
 					document.querySelector('#flink .text').innerText = link;
 					if(document.getElementById('headinglist')) document.getElementById('headinglist').remove();
 					document.getElementById('dlist').classList.remove('dlh');
