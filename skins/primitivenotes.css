@@ -14,140 +14,147 @@
 	content: '\f249';
 }
 #modal {
-    height: 100%;
-    width: 100%;
-    background: #00000029;
-    position: absolute;
-    visibility: hidden;
+	height: 100%;
+	width: 100%;
+	background: #00000029;
+	position: absolute;
+	visibility: hidden;
 	z-index: 9;
 }
 #dldv {
-    width: 500px;
-    height: 330px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 3px 3px 10px rgba(0,0,0,.3);
-    padding: 0;
+	width: 500px;
+	height: 330px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	background: #fff;
+	border-radius: 5px;
+	box-shadow: 3px 3px 10px rgba(0,0,0,.3);
+	padding: 0;
 }
 #dldvt {
-    background-color: #ededed;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+	background-color: #ededed;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 .dldvi {
-    display: block;
-    margin: 0 .7em;
+	display: block;
+	margin: 0 .7em;
 }
 .dldve {
-    display: none;
-    margin: 0 .7em;
-    height: 219px;
+	display: none;
+	margin: 0 .7em;
+	height: 219px;
 }
 #lsearch, #lurl {
-    width: 100%;
-    border-radius: 5px;
-    outline: 0;
-    border: 1px solid;
-    border-color: #a3a3a3;
-    line-height: 2em;
-    padding: 0 .5em;
-    margin-bottom: .5em;
+	width: 100%;
+	border-radius: 5px;
+	outline: 0;
+	border: 1px solid;
+	border-color: #a3a3a3;
+	line-height: 2em;
+	padding: 0 .5em;
+	margin-bottom: .5em;
 }
 #flink {
-    width: calc(100% - 1.4em);
-    border-radius: .5em;
-    background-color: #d3d3d3;
-    margin: .7em;
-    padding: 0 .5em;
-    line-height: 1.5em;
-    color: #006400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	width: calc(100% - 1.4em);
+	border-radius: .5em;
+	background-color: #d3d3d3;
+	margin: .7em;
+	padding: 0 .5em;
+	line-height: 1.5em;
+	color: #006400;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 #flink .headings {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    right: 15px;
-    position: absolute;
-    visibility: hidden;
-    cursor: pointer;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	text-align: center;
+	right: 15px;
+	position: absolute;
+	visibility: hidden;
+	cursor: pointer;
 }
 .headings.hshow {
-    visibility: visible !important;
+	visibility: visible !important;
 }
 #dlist .date {
-    color: darkslategray;
-    font-size: .8em;
+	color: darkslategray;
+	font-size: .8em;
 }
 #dlist, #headinglist {
-    overflow: auto;
-    height: 100%;
-    padding-inline-start: 0;
+	overflow: auto;
+	height: 100%;
+	padding-inline-start: 0;
 }
 #dlist .size {
-    display: none;
+	display: none;
 }
 #dlist li, #headinglist li {
-    list-style: none;
-    cursor: pointer;
-    border-bottom: 1px solid ghostwhite;
-    background-color: #dcdcdc69;
-    padding: 0 0 0 .5em;
+	list-style: none;
+	cursor: pointer;
+	border-bottom: 1px solid ghostwhite;
+	background-color: #dcdcdc69;
+	padding: 0 0 0 .5em;
 }
 #dlist li:hover, #headinglist li:hover {
-    background-color: aliceblue;
+	background-color: aliceblue;
 }
 #dlist.dlh {
-    display: none;
+	display: none;
 }
 #headinglist > li {
-    line-height: 2em;
+	line-height: 2em;
 }
 #headinglist > li > span {
-    float: right;
-    margin-right: 10px;
+	float: right;
+	margin-right: 10px;
 }
 #dldvn {
-    height: 12em;
-    margin-bottom: 1em;
+	height: 12em;
+	margin-bottom: 1em;
 }
 #dldv button {
-    outline: 0;
-    border: 0;
-    width: 100px;
-    margin-left: 20%;
+	outline: 0;
+	border: 0;
+	width: 100px;
+	margin-left: 20%;
 }
 .tbutton {
-    margin: 0!important;
-    padding: 0;
-    vertical-align: revert;
-    background-color: #d3d3d3;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    width: 100px;
-    display: inline-block;
-    text-align: center;
-    cursor: pointer;
+	margin: 0!important;
+	padding: 0;
+	vertical-align: revert;
+	background-color: #d3d3d3;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	width: 100px;
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
 }
 .tactive {
-    background-color: white;
-    color: black;
+	background-color: white;
+	color: black;
 }
 .tbutton:first-child {
-    border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
 }
 .tbutton:last-child {
-    right: 0;
-    position: absolute;
-    border-top-right-radius: 5px;
-    width: 30px;
+	right: 0;
+	position: absolute;
+	border-top-right-radius: 5px;
+	width: 30px;
+}
+.extlink:after {
+	content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);
+	display: inline-block;
+	width: .8em;
+	height: 1em;
+	margin-left: .2em;
 }
 @media screen and (max-width: 480px) {
 	.editor-toolbar button.clean-block {

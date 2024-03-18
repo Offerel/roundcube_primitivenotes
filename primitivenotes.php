@@ -126,7 +126,7 @@ class primitivenotes extends rcube_plugin{
 			die($file);
 		}
 	}
-	
+
 	function uploadMedia() {
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
@@ -522,7 +522,6 @@ class primitivenotes extends rcube_plugin{
 
 			$this->rc->output->command('plugin.loadNote', array('message' => 'done.','note' => $noteArr, 'mode' => $mode));
 			$this->rc->output->set_pagetitle($this->gettext('notes').' - '.$noteArr['name']);
-		//} elseif($filename != "" ) {
 		} else {
 			$this->rc->output->show_message("Check notes folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 		}

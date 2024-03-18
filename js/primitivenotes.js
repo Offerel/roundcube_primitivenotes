@@ -103,7 +103,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 			sanitizerFunction: function(renderedHTML) {
 				let output = renderedHTML.replaceAll(rcmail.env.mfolder + "/", '?_task=notes&_action=blink&_file=');
 				output = output.replaceAll("a href=\"?_task", "a class=\"intlink\" href=\"?_task");
-				output = output.replaceAll("a href=\"http", "a class=\"extlink\" href=\"http"); 
+				output = output.replaceAll("a href=\"http", "a class=\"extlink\" href=\"http");
 				output = output.replaceAll("a href=\"", "a class=\"dlink\" href=\"");
 				output = output.replaceAll('<pre>', '<pre class="hljs">');
 
@@ -738,7 +738,7 @@ function loadNote(response) {
 	dlink.forEach(function(e) {
 		e.addEventListener('click', function(link) {
 			link.preventDefault();
-			showNote(document.querySelectorAll("[data-name='"+link.target.attributes.href.value+"']")[0].id);
+			showNote(document.querySelectorAll("[data-name='" + decodeURIComponent(link.target.attributes.href.value).split('#')[0] + "']")[0].id);
 			return false;
 		});
 		return false;
