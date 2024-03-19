@@ -180,10 +180,6 @@
 	width: 100%;
 	margin-right: 35px;
 }
-.column-resizer {
-	right: -11px;
-	width: 10px;
-}
 code.success::before {
 	content: 'Copied!';
 	background-color: gold;

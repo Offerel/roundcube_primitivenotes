@@ -1,5 +1,7 @@
-### v2.3.0
+### v2.3.1
+- Fix CSS
 
+### v2.3.0
 - Fix wrong timezone
 - Fix button order
 - CSS Fixes
