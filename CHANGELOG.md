@@ -1,11 +1,14 @@
-### v2.2.2
+### v2.3.0
 
-*   Fix wrong timezone
-*   Fix button order
-*   CSS Fix
-*   Added link dialog. You can now directly link to local notes from a list and use headings as target
-*   Added optional tracking of renamed files. With this, you can enable to check for renamed notes and change the link to this renamed notes automatically. The modiefied date will stay the old date.
-*   Reworked notes search
+- Fix wrong timezone
+- Fix button order
+- CSS Fixes
+- Added a link dialog. You can now directly link to local notes from a list and use headings as target
+- Added optional tracking of renamed files. With this, you can enable to check for renamed notes and change the link to this renamed notes automatically. The modiefied date will stay the old date.
+- Reworked notes search
+- Turndown 7.1.3 (https://github.com/mixmark-io/turndown)
+- Tagify 4.22.1 (https://github.com/yairEO/tagify)
+- Highlight 11.9.0 (https://github.com/highlightjs/highlight.js)
 
 ### v2.2.1
 
