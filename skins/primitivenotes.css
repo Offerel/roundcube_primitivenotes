@@ -189,9 +189,6 @@ code.success::before {
 	border: 1px solid goldenrod;
 	border-radius: 4px;
 }
-#layout {
-	background-color: #f4f4f4;
-}
 #metah {
 	height: 100%;
 }
