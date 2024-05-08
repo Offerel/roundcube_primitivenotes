@@ -189,6 +189,9 @@ code.success::before {
 	border: 1px solid goldenrod;
 	border-radius: 4px;
 }
+#layout {
+	background-color: #f4f4f4;
+}
 #metah {
 	height: 100%;
 }
@@ -676,49 +679,4 @@ span.cm-header.cm-header-2 {
 }
 h1, h2, h3, h4 {
 	font-size: revert;
-}
-@media (prefers-color-scheme: dark) {
-	#main_header {
-		background-color: transparent;
-	}
-	.EasyMDEContainer{
-		background-color: transparent;
-	}
-	.editor-toolbar {
-		background-color: transparent;
-	}
-	.editor-toolbar button {
-		color: ghostwhite;
-	}
-	.editor-preview {
-		background: transparent !important;
-	}
-	.EasyMDEContainer .CodeMirror {
-		background-color: #343a40;
-		color: antiquewhite;
-	}
-	.cm-formatting-code.cm-comment+span.cm-comment {
-		background-color: sienna;
-		color: khaki;
-	}
-	.cm-formatting.cm-formatting-code.cm-comment {
-		background-color: sienna;
-		color: khaki;
-	}
-	.editor-preview code {
-		background-color: sienna;
-		color: khaki;
-	}
-	.hljs {
-		background: darkgray !important;
-	}
-	.CodeMirror {
-		color: antiquewhite;
-	}
-	#headerTitle.readOnly {
-		color: antiquewhite;
-	}
-	.nlist li:hover {
-		background-color: darkgray;
-	}
 }
