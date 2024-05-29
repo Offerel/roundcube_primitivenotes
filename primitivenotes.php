@@ -392,6 +392,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function note_mail_compose($args) {
+		if (!isset($args['param']['note_filename'])) return false;
 		$filename = $args['param']['note_filename'];
 		$name = stripos($filename, "[") ? substr($filename, 0, stripos($filename, "[")):substr($filename, 0, stripos($filename, "."));
 
