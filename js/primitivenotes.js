@@ -276,6 +276,7 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 	});
 
 	document.querySelector('#flink .headings').addEventListener('click', showHeadings);
+	if(new URLSearchParams(location.search).get('note') == null) tPreview('edit');
 });
 
 function uplMedia() {
