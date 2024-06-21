@@ -304,6 +304,7 @@ code.success::before {
 	margin: 0 5px 0 5px;
 	border-radius: .3em;
 	overflow-y: hidden;
+	background-color: transparent;
 }
 #main_header .tagify[readonly]:not(.tagify--mix):not(.tagify--select) .tagify__tag > div::before {
 	animation: unset !important;

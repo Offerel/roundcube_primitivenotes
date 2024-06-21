@@ -587,7 +587,6 @@ function tPreview(mode = '') {
 			document.querySelector('.toc').removeAttribute('disabled');
 			document.querySelectorAll('.editor-preview code').forEach(function(element) {
 				element.addEventListener('click', function() {
-					console.info('clicked');
 					let element = this;
 					element.classList.add('success');
 					navigator.clipboard.writeText(element.innerText).then(function() {
