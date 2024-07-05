@@ -42,7 +42,7 @@ class primitivenotes extends rcube_plugin{
 			$this->include_script('js/primitivenotes.js');
 			$this->include_script('js/highlight/highlight.min.js');
 			$this->include_script('js/easymde/easymde.min.js');
-			$this->include_script('js/tagify/tagify.min.js');
+			$this->include_script('js/tagify/tagify.js');
 			$this->include_script('js/turndown/turndown.min.js');
 			
 			$this->register_action('index', array($this, 'action'));

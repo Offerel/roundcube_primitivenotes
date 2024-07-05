@@ -1,5 +1,6 @@
 ### v2.3.1
 - Fix CSS
+- Tagify 4.27.0 (https://github.com/yairEO/tagify)
 
 ### v2.3.0
 - Fix wrong timezone
