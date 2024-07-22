@@ -878,7 +878,16 @@ function switchDiv() {
 }
 
 function linkURL() {
-	document.querySelector('#dldvt span').classList.add('tactive');
+	let dldvi = document.querySelector('.dldvi');
+
+	if(window.getComputedStyle(dldvi, null).display == 'block') {
+		document.getElementById('dldvt').childNodes[0].classList.add('tactive');
+	} else {
+		document.getElementById('dldvt').childNodes[1].classList.add('tactive');
+	}
+
+	document.getElementById('lurl').value = "";
+
 	let lsearch = document.getElementById('lsearch');
 	let selectionT = mde.codemirror.getSelection().trim();
 	document.getElementById('lselection').value = selectionT;
