@@ -890,6 +890,25 @@ function linkURL() {
 
 	let lsearch = document.getElementById('lsearch');
 	let selectionT = mde.codemirror.getSelection().trim();
+
+	let start = mde.codemirror.getCursor(true);
+	let end = mde.codemirror.getCursor(false);
+	//let linkStart = {'line': 2, 'ch': 30};
+	let linkStart = end;
+	let linkEnd = {'line': 2, 'ch': 50};
+	//let linkEnd = mde.codemirror.findWordAt();
+	//console.log(end);
+
+	//console.log(start['line'], start['ch']);
+	//console.log(end['line'], end['ch']);
+	//let cline = end['line'];
+	//let cch = end['ch'] +1;
+	//let ch2 = cch + 10;
+	//let range = mde.codemirror.getRange({line, ch},{line,ch2});
+	//let range = mde.codemirror.getRange({ line: cline, ch: cch }, { line: cline, ch: ch2 });
+	var range = mde.codemirror.getRange(linkStart, linkEnd);
+	console.log(range);
+
 	document.getElementById('lselection').value = selectionT;
 	lsearch.value = selectionT;
 
