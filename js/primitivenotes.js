@@ -266,9 +266,9 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 
 	document.getElementById('lurl').addEventListener('input', function() {
 		let flink = document.querySelector('#flink .text');
-		let link = '[' + mde.codemirror.getSelection().trim() + '](' + document.getElementById('lurl').value + ')';
+		let link = '[' + document.getElementById('lselection').value + '](' + document.getElementById('lurl').value + ')';
 		flink.innerText = link;
-		flink.title = flink.innerText;
+		flink.title = flink.link;
 	});
 
 	document.querySelectorAll('#dldvt .tbutton').forEach(button => {
@@ -889,23 +889,31 @@ function linkURL() {
 	document.getElementById('lurl').value = "";
 
 	let lsearch = document.getElementById('lsearch');
-	let selectionT = mde.codemirror.getSelection().trim();
+	let selectionT = mde.codemirror.getSelection();
 
 	let lstart = mde.codemirror.getCursor(true);
 	let line = lstart['line'];
 	let lline = mde.codemirror.getRange({line:line, ch:lstart['ch']},{line:line,ch:Infinity});
 	let lStr = lline.substring(0, lline.indexOf(')'));
 	let link = (lStr.includes('](')) ? lStr.split(']('):[mde.codemirror.getRange(lstart, mde.codemirror.getCursor(false))];
-	if(link.length == 2) document.getElementById('lurl').value = link[1];
+
+	if(link.length == 2) {
+		document.getElementById('lurl').value = link[1];
+	} else {
+		link[1] = "";
+	}
 
 	document.getElementById('lselection').value = selectionT;
 	lsearch.value = selectionT;
 
 	selectionT = (selectionT.length > 0) ? selectionT:'unknown';
 
-	let linktext = '[' + selectionT + ']()';
+	let linktext = '[' + link[0] + '](' + link[1] + ')';
+	if(link[1] != "") mde.codemirror.setSelection({line:line, ch:lstart['ch'] - 1}, {line:line, ch:lstart['ch'] + linktext.length - 1});
+
 	let dlistmodal = document.getElementById('modal');
 	document.querySelector('#flink .text').innerText = linktext;
+	document.querySelector('#flink .text').title = linktext;
 	dlistmodal.style.visibility = 'visible';
 	linkSearch();
 	lsearch.addEventListener('keyup',linkSearch);
