@@ -477,6 +477,9 @@ input#source:read-only:not(:placeholder-shown):hover {
 	height: 100%;
 	object-fit: scale-down;
 }
+#upl_form .custom-file {
+    display: none;
+}
 #metah input:focus, #metah .tagify--focus, #metah .CodeMirror-focused {
 	border-color: #37beff !important;
 	box-shadow: 0 0 0 0.2rem rgb(55 190 255 / 25%);
