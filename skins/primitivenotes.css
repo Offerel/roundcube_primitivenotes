@@ -413,7 +413,6 @@ input#source:read-only:not(:placeholder-shown):hover {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-weight: bolder;
-	color: #686868;
 }
 #pnlist .date {
 	font-size: 85%;
@@ -678,9 +677,30 @@ span.cm-header.cm-header-2 {
 h1, h2, h3, h4 {
 	font-size: revert;
 }
+html.dark-mode #main_header,html.dark-mode .editor-toolbar {
+    background-color: rgb(33, 41, 44);
+}
+html.dark-mode #headerTitle.readOnly,
+html.dark-mode .editor-toolbar button {
+    color: #f8f8ff;
+}
+html.dark-mode .editor-preview {
+    background-color: #343a40 !important;
+    color: #faebd7;
+}
+html.dark-mode .editor-preview code {
+    background-color: sienna;
+    color: khaki;
+}
+html.dark-mode .hljs {
+    background: #a9a9a9!important;
+}
+html.dark-mode .EasyMDEContainer {
+    background-color: transparent;
+}
 @media (prefers-color-scheme: dark) {
 	#main_header {
-		background-color: transparent;
+		background-color: #343a40;
 	}
 	.EasyMDEContainer{
 		background-color: transparent;
