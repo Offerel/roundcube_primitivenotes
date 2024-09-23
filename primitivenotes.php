@@ -2,7 +2,7 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.3.1
+ * @version 2.3.2
  * @author Offerel
  * @copyright Copyright (c) 2024, Offerel
  * @license GNU General Public License, version 3
@@ -42,7 +42,7 @@ class primitivenotes extends rcube_plugin{
 			$this->include_script('js/primitivenotes.js');
 			$this->include_script('js/highlight/highlight.min.js');
 			$this->include_script('js/easymde/easymde.min.js');
-			$this->include_script('js/tagify/tagify.min.js');
+			$this->include_script('js/tagify/tagify.js');
 			$this->include_script('js/turndown/turndown.min.js');
 			
 			$this->register_action('index', array($this, 'action'));
@@ -392,6 +392,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function note_mail_compose($args) {
+		if (!isset($args['param']['note_filename'])) return false;
 		$filename = $args['param']['note_filename'];
 		$name = stripos($filename, "[") ? substr($filename, 0, stripos($filename, "[")):substr($filename, 0, stripos($filename, "."));
 
