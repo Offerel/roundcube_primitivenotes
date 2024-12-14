@@ -1,5 +1,4 @@
 <?php
-$labels = array();
 $labels['notes'] = 'Notizen';
 $labels['note_new'] = 'Neu';
 $labels['note_show'] = 'Anzeigen';
@@ -17,7 +16,7 @@ $labels['note_subject'] = 'Per E-Mail senden: ';
 $labels['note_formathtml'] = 'HTML';
 $labels['note_formatmd'] = 'Markdown';
 $labels['note_formattxt'] = 'Normaler Text';
-$labels['note_formatpdf'] = 'Adobe PDF';
+$labels['note_formatpdf'] = 'PDF';
 $labels['note_formatjpg'] = 'JPG';
 $labels['note_formatpng'] = 'PNG';
 $labels['ariallabelnewoptions'] = 'Optionen';
@@ -30,4 +29,4 @@ $labels['note_rmedia_md'] = 'Eingbettete Medien automatisch löschen';
 $labels['note_media_del'] = '%count% Mediendateien in %note% gefunden. Möchten Sie diese löschen?';
 $labels['note_toc'] = 'Inhaltsverzeichnis';
 $labels['note_ntoc'] = 'Nummerierung Inhaltsverzeichnis';
-?>
+$labels['note_download'] = 'Download';
