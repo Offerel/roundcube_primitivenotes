@@ -4,6 +4,12 @@ This is a notes plugin for Roundcube. Mainly notes in Markdown, but also images 
 # History
 Originally, the idea for a standalone note app came from that I wanted to separate my notes from Evernote. Afterwards I ended up at TagSpaces. As TagSpace was too slow and extensive for me personally, I decided to develop my own app. This resulted first in a standalone project and was converted later to this plugin for Roundcube.
 
+# Contribution
+If you would like to support this Plugin, you have various options. You can report bugs via the [Issue Tracker](https://codeberg.org/Offerel/SyncMarks-Webapp/issues). This helps me to fix these bugs as quickly as possible.
+
+Another option is to help translate the app into other languages. This is relatively easy to do via Weblate. The following languages are currently available:
+[![Status](https://translate.codeberg.org/widget/roundcube-primitivenotes/roundcube-plugin/multi-auto.svg)](https://translate.codeberg.org/engage/roundcube-primitivenotes/)
+
 # Installation
 Please see the chapter in the [Wiki](../../../../../Offerel/roundcube_primitivenotes/wiki/#installation).
 
