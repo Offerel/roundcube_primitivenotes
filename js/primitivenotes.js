@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2024, Offerel
  * @license GNU General Public License, version 3
  */
-var mde, tagify, originalData;
+var mde, tagify, originalData, sID;
 var filelist = [];
 var loader = document.createElement("div");
 var ldr = document.createElement("div");
@@ -549,8 +549,10 @@ function sidebyside() {
 			document.querySelector('.CodeMirror-code').classList.add('edVis');
 			sBtn.classList.remove('btninv');
 			eBtn.classList.add('btninv');
+			if (rcmail.env.pn_asv) autoSave('start');
 		} else {
 			tPreview();
+			autoSave('stop');
 		}
 	}, 10);
 }
@@ -565,8 +567,10 @@ function tPreview(mode = '') {
 
 	if(mde.isPreviewActive()) {
 		if(mode == 'edit') mde.togglePreview();
+		if (rcmail.env.pn_asv) autoSave('start');
 	} else {
 		if(mode == 'show') mde.togglePreview();
+		autoSave('stop');
 	}
 
 	var sBtn = document.querySelector('[aria-label="Save"]');
@@ -615,7 +619,25 @@ function tPreview(mode = '') {
 	}, 50);
 }
 
-function saveFile() {
+function autoSave(mode) {
+	let title = document.getElementById('headerTitle');
+	if(mode === 'stop') {
+
+		clearInterval(sID);
+		return false;
+	} else {
+		mde.codemirror.on("change", changed);
+		tagify.on('change', changed);
+		title.addEventListener('change', changed);
+	}
+
+	function changed() {
+		clearInterval(sID);
+		sID = setInterval(saveFile, 10000, 'auto'); // 10 sec
+	}
+}
+
+function saveFile(mode) {
 	document.getElementById("main_area").appendChild(loader);
 
 	let tObj = tagify.value;
@@ -624,6 +646,8 @@ function saveFile() {
 		tagsA.push(tObj[tag].value);
 	}
 
+	mode = (typeof mode === 'string' || mode instanceof String) ? mode:false;
+	
 	const data = {
 		_oname: document.getElementById('fname').value,
 		_content: mde.value(),
@@ -633,6 +657,7 @@ function saveFile() {
 		_modified: document.getElementById('modified').value,
 		_source: document.getElementById('source').value,
 		_tags: tagsA,
+		_mode: mode,
 	};
 	rcmail.http_post('saveNote', data, false);
 }
@@ -808,8 +833,7 @@ function savedNote(response) {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	loader.remove();
 	document.getElementById("notes-list").appendChild(loader);
-	let success = ['done', 'saved'];
-
+	let success = ['done', 'saved','autosaved'];
 
 	if(success.includes(response.message)) {
 		if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();
@@ -831,7 +855,8 @@ function savedNote(response) {
 	} else if (response.message == 'saved') {
 		tPreview();
 	}
-	
+
+	autoSave('stop');
 	cContextMenu();
 	loader.remove();
 }

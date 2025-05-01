@@ -30,4 +30,5 @@ $labels['note_rmedia_md'] = 'Remove automatically embedded Media';
 $labels['note_media_del'] = 'Found %count% media files in %note%. Do you want to delete them?';
 $labels['note_toc'] = 'Table of Contents';
 $labels['note_ntoc'] = 'Numbering Table of contents';
+$labels['pn_asv'] = 'Autosave (10s delay)';
 ?>

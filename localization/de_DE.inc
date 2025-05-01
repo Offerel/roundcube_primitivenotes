@@ -30,3 +30,4 @@ $labels['note_media_del'] = '%count% Mediendateien in %note% gefunden. Möchten 
 $labels['note_toc'] = 'Inhaltsverzeichnis';
 $labels['note_ntoc'] = 'Nummerierung Inhaltsverzeichnis';
 $labels['note_download'] = 'Download';
+$labels['pn_asv'] = 'Autosave (10s Verzögerung)';
