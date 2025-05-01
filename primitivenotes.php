@@ -371,7 +371,14 @@ class primitivenotes extends rcube_plugin{
 											'value' => 1));
 
 		$p['blocks']['main']['options']['pn_ntoc'] = array(	'title'=> html::label($field_id, $this->gettext('note_ntoc')),
-															'content'=> $input->show(intval($this->rc->config->get('nrtoc'))));
+											'content'=> $input->show(intval($this->rc->config->get('nrtoc'))));
+
+		$field_id='pn_asv';
+		$input = new html_checkbox(array(	'name'	=> 'pn_asv',
+											'id'	=> 'pn_asv',
+											'value' => 1));
+		$p['blocks']['main']['options']['pn_asv'] = array(	'title'=> html::label($field_id, $this->gettext('pn_asv')),
+															'content'=> $input->show(intval($this->rc->config->get('pn_asv'))));
 		
 		return $p;
 	}
@@ -385,7 +392,8 @@ class primitivenotes extends rcube_plugin{
 				'check_links'		=> intval(rcube_utils::get_input_value('check_links', rcube_utils::INPUT_POST)),
 				'rm_md_media'		=> intval(rcube_utils::get_input_value('rm_md_media', rcube_utils::INPUT_POST)),
 				'nrtoc'				=> intval(rcube_utils::get_input_value('nrtoc', rcube_utils::INPUT_POST)),
-				'highlight_theme'	=> strval(rcube_utils::get_input_value('highlight_theme', rcube_utils::INPUT_POST))
+				'highlight_theme'	=> strval(rcube_utils::get_input_value('highlight_theme', rcube_utils::INPUT_POST)),
+				'pn_asv'			=> intval(rcube_utils::get_input_value('pn_asv', rcube_utils::INPUT_POST)),
 				);
 		}
         return $p;
@@ -451,6 +459,7 @@ class primitivenotes extends rcube_plugin{
 		$this->rc->output->set_env('aformat', $this->rc->config->get('list_formats', false));
 		$this->rc->output->set_env('mfolder', $this->rc->config->get('media_folder', false));
 		$this->rc->output->set_env('nnote', $this->gettext('notes'));
+		$this->rc->output->set_env('pn_asv', $this->rc->config->get('pn_asv', false));
 		$this->rc->output->set_pagetitle($this->gettext('notes'));
 		$this->rc->output->send('primitivenotes.template');
 	}
@@ -539,6 +548,7 @@ class primitivenotes extends rcube_plugin{
 		$created = rcube_utils::get_input_value('_created', rcube_utils::INPUT_POST, false);
 		$modified = rcube_utils::get_input_value('_modified', rcube_utils::INPUT_POST, false);
 		$source = rcube_utils::get_input_value('_source', rcube_utils::INPUT_POST, false);
+		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
 
 		$ofile = $this->notes_path.$oname;
 
@@ -581,7 +591,14 @@ class primitivenotes extends rcube_plugin{
 			if(!file_put_contents($nfile, $eyamls.$content, true)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
-				$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				
+				if($mode == 'auto') {
+					error_log("auto");
+					$this->rc->output->command('plugin.savedNote', array('message' => 'autosaved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				} else {
+					error_log("manuel");
+					$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				}
 			}
 		}
 	}

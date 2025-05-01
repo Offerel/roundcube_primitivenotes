@@ -1,5 +1,6 @@
 ### v2.3.3
 - Added Chinese translation by Outbreak2096
+- Added Autosave
 
 ### v2.3.2
 - Fix CSS
