@@ -5,13 +5,13 @@
 	"homepage": "https://codeberg.org/Offerel/roundcube_primitivenotes",
 	"type": "roundcube-plugin",
 	"license": "AGPL-3.0",
-	"version": "2.3.2",
+	"version": "2.3.3",
 	"authors": [
-	{
+		{
 		"name": "Offerel",
 		"homepage": "https://codeberg.org/Offerel",
 		"role": "Developer"
-	}
+		}
 	],
 	"repositories": [
 		{
