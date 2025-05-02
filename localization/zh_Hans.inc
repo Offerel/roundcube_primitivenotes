@@ -29,3 +29,4 @@ $labels['note_del_note'] = '是否确定要删除“%note%”？';
 $labels['note_defaultformat'] = '默认格式';
 $labels['note_tags'] = '逗号分隔的标签列表';
 $labels['note_media_del'] = '在 %note% 中找到了 %count% 个媒体文件。是否要删除它们？';
+$labels['pn_asv'] = '自动保存（延迟 10 秒）';
