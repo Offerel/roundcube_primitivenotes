@@ -564,10 +564,14 @@ function tPreview(mode = '') {
 		mode = (mde.isPreviewActive()) ? 'edit':'show';
 	}
 	
-
 	if(mde.isPreviewActive()) {
 		if(mode == 'edit') mde.togglePreview();
-		if (rcmail.env.pn_asv) autoSave('start');
+		if (rcmail.env.pn_asv) {
+			if(mode == 'show') 
+				autoSave('stop');
+			else
+				autoSave('start');
+		}
 	} else {
 		if(mode == 'show') mde.togglePreview();
 		autoSave('stop');
@@ -620,9 +624,10 @@ function tPreview(mode = '') {
 }
 
 function autoSave(mode) {
+	console.log("autoSave: " + mode);
 	let title = document.getElementById('headerTitle');
-	if(mode === 'stop') {
 
+	if(mode === 'stop') {
 		clearInterval(sID);
 		return false;
 	} else {
@@ -833,7 +838,7 @@ function savedNote(response) {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	loader.remove();
 	document.getElementById("notes-list").appendChild(loader);
-	let success = ['done', 'saved','autosaved'];
+	let success = ['done','saved','autosaved'];
 
 	if(success.includes(response.message)) {
 		if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();

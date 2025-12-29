@@ -591,14 +591,9 @@ class primitivenotes extends rcube_plugin{
 			if(!file_put_contents($nfile, $eyamls.$content, true)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
-				
-				if($mode == 'auto') {
-					error_log("auto");
-					$this->rc->output->command('plugin.savedNote', array('message' => 'autosaved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				} else {
-					error_log("manuel");
-					$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				}
+				$message = ($mode == 'auto') ? 'autosaved':'saved';
+				$this->rc->output->command('plugin.savedNote', array('message' => $message, 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				error_log('saved: ' . $mode);
 			}
 		}
 	}

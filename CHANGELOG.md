@@ -1,3 +1,6 @@
+### v2.3.4
+- Fixed Autosave
+
 ### v2.3.3
 - Added Chinese translation by Outbreak2096
 - Added Autosave
