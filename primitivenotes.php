@@ -593,7 +593,7 @@ class primitivenotes extends rcube_plugin{
 			} else {
 				$message = ($mode == 'auto') ? 'autosaved':'saved';
 				$this->rc->output->command('plugin.savedNote', array('message' => $message, 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				error_log('saved: ' . $mode);
+				error_log('saved: '.$message);
 			}
 		}
 	}
