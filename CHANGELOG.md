@@ -1,5 +1,6 @@
 ### v2.3.4
 - Fixed Autosave
+* EasyMDE v2.20.0 (https://github.com/Ionaru/easy-markdown-editor)
 
 ### v2.3.3
 - Added Chinese translation by Outbreak2096
