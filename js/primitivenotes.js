@@ -624,7 +624,6 @@ function tPreview(mode = '') {
 }
 
 function autoSave(mode) {
-	console.log("autoSave: " + mode);
 	let title = document.getElementById('headerTitle');
 
 	if(mode === 'stop') {

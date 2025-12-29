@@ -1,7 +1,8 @@
 ### v2.3.4
-*-* Fixed Autosave
+* Fixed Autosave
 * EasyMDE v2.20.0 (https://github.com/Ionaru/easy-markdown-editor)
-* Highlight 11.11.1 (https://github.com/highlightjs/highlight.js)
+* Highlight v11.11.1 (https://github.com/highlightjs/highlight.js)
+* Tagify v4.35.6 (https://github.com/yairEO/tagify)
 
 ### v2.3.3
 - Added Chinese translation by Outbreak2096
