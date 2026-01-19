@@ -567,7 +567,7 @@ function tPreview(mode = '') {
 	if(mde.isPreviewActive()) {
 		if(mode == 'edit') mde.togglePreview();
 		if (rcmail.env.pn_asv) {
-			if(mode == 'show') 
+			if(mode == 'show')
 				autoSave('stop');
 			else
 				autoSave('start');
@@ -642,6 +642,11 @@ function autoSave(mode) {
 }
 
 function saveFile(mode) {
+	if(mde.isPreviewActive()) {
+		clearInterval(sID);
+		return false;
+	}
+
 	document.getElementById("main_area").appendChild(loader);
 
 	let tObj = tagify.value;
