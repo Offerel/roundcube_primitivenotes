@@ -774,7 +774,8 @@ function loadNote(response) {
 			link.preventDefault();
 			let linkurl = decodeURIComponent(link.target.attributes.href.value);
 			let linkurlA = linkurl.split('#');
-			let anchor = linkurlA[1].toLowerCase().replaceAll(' ','-');
+			//
+			let anchor = (linkurlA.length > 1) ? linkurlA[1].toLowerCase().replaceAll(' ','-'):null;
 			showNote(document.querySelectorAll("[data-name='" + linkurlA[0] + "']")[0].id, 'show', anchor);
 			return false;
 		});
