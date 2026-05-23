@@ -1,5 +1,6 @@
 ### v2.3.4
 * Fixed Autosave
+* Fix internal Link
 * EasyMDE v2.20.0 (https://github.com/Ionaru/easy-markdown-editor)
 * Highlight v11.11.1 (https://github.com/highlightjs/highlight.js)
 * Tagify v4.35.6 (https://github.com/yairEO/tagify)
