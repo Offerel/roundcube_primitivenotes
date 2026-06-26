@@ -79,7 +79,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function getHeadings() {
-		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$nname = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$note = $this->notes_path.$nname;
 		$headings = [];
 		$cb = 0;
@@ -240,7 +240,7 @@ class primitivenotes extends rcube_plugin{
     }
 
 	function getNote() {
-		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false);
+		$name = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false));
 		$media_path = $this->notes_path.$name;
 		$file = @file_get_contents($media_path);
 		$hash = sha1($media_path);
@@ -257,7 +257,7 @@ class primitivenotes extends rcube_plugin{
 
 	function deleteNote() {
 		$file = rcube_utils::get_input_value('_file', rcube_utils::INPUT_POST, false);
-		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$name = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$notes_path = $this->notes_path.$file;
 		
 		if(file_exists($notes_path)) {
@@ -465,7 +465,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function showNote($note='') {
-		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$nname = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
 		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
 		$anchor = rcube_utils::get_input_value('_anchor', rcube_utils::INPUT_POST, false);
