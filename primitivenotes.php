@@ -238,9 +238,10 @@ class primitivenotes extends rcube_plugin{
 					$filename = $fentry['filename'];
 					$format = $fentry['type'];
 					
+					$fname = htmlspecialchars($fentry['name'], ENT_QUOTES | ENT_HTML5,'UTF-8');
 					$pnlist.="<li id='$id' class='$format' data-format='$format' data-tags='$tlist' data-name='$filename'>
-								<a id='note_$id' title='".$fentry['name']."' >
-									<div class='subject'>".$fentry['name']."</div>
+								<a id='note_$id' title='$fname' >
+									<div class='subject'>$fname</div>
 									<div class='size'>$fsize</div>
 									<!-- <div class='date'>".$this->formatter->format($fentry['time'])."</div> -->
 									<div class='date'>".date($this->rc->config->get('date_long', false), $fentry['time'])."</div>
