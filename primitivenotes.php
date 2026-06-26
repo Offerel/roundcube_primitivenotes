@@ -128,6 +128,21 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function uploadMedia() {
+		$allowed = [
+			'image/png',
+			'image/jpeg',
+			'image/gif',
+			'image/webp',
+			'application/pdf'
+		];
+
+		$max_size = 50 * 1024 * 1024;
+
+		if (!in_array($_FILES['dropFile']['type'], $allowed) || $_FILES['dropFile']['size'] > $max_size ) {
+			$this->rc->output->show_message("Could not upload file. Please check size and filetype.","error");
+			return;
+		}
+
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
 		$filename = time().'.'.$path_parts['extension'];
