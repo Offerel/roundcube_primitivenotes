@@ -136,9 +136,7 @@ class primitivenotes extends rcube_plugin{
 			'application/pdf'
 		];
 
-		$max_size = 50 * 1024 * 1024;
-
-		if (!in_array($_FILES['dropFile']['type'], $allowed) || $_FILES['dropFile']['size'] > $max_size ) {
+		if (!in_array($_FILES['dropFile']['type'], $allowed) || $_FILES['dropFile']['size'] > $this->max_upload_size ) {
 			$this->rc->output->show_message("Could not upload file. Please check size and filetype.","error");
 			return;
 		}
@@ -159,10 +157,22 @@ class primitivenotes extends rcube_plugin{
 	}
 	
 	function uploadNote() {
+		$allowed = [
+			'text/markdown',
+			'text/plain',
+			'application/pdf'
+		];
+
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
 		$filename = (strlen($path_parts['filename']) > 225) ? substr($path_parts['filename'], 0, 225):$path_parts['filename'];
 		$note_path = $this->notes_path.$filename.'.'.$path_parts['extension'];
+
+		if(!in_array($_FILES['dropFile']['type'], $allowed)) {
+			$this->rc->output->show_message("Format not allowed","error");
+			return;
+		}
+
 		move_uploaded_file($_FILES['dropFile']['tmp_name'], $note_path);
 		echo $this->notes_list();
 	}
@@ -264,7 +274,9 @@ class primitivenotes extends rcube_plugin{
 		$name = utf8_decode(htmlspecialchars_decode($name));
 		header("Content-Disposition: attachment; filename=\"$name\"");
 		header('Content-Transfer-Encoding: binary');
-		header('Content-Type: application/octet-stream');
+		$mime = mime_content_type($media_path);
+		header("Content-Type: $mime");
+		header("X-Content-Type-Options: nosniff");
 		header("ETag: $hash");
 		header("Last-Modified: ".gmdate('D, d M Y H:i:s T', filemtime($media_path)));
 		header('Content-Length: '.filesize($media_path));
@@ -604,11 +616,18 @@ class primitivenotes extends rcube_plugin{
 			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
 			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
 
+			if (is_link($path)) {
+				$this->rc->output->show_message("File not saved, no file","error");
+				error_log('no file: '.$message);
+				return;
+			}
+
 			if(!file_put_contents($nfile, $eyamls.$content, LOCK_EX)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
 				$message = ($mode == 'auto') ? 'autosaved':'saved';
 				$this->rc->output->command('plugin.savedNote', array('message' => $message, 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				chmod($nfile, 0600);
 				error_log('saved: '.$message);
 			}
 		}
@@ -627,7 +646,12 @@ class primitivenotes extends rcube_plugin{
 			if (strpos($ncontent, $eofile) !== false) {
 				$ndate = filemtime($note);
 				$ncontent = str_replace($eofile, $enfile, $ncontent);
+				if (is_link($path)) {
+					$this->rc->output->show_message("File not saved, no file","error");
+					return;
+				}
 				file_put_contents($note, $ncontent, LOCK_EX);
+				chmod($note, 0600);
 				touch($note, $ndate);
 			}
 		}
