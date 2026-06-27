@@ -564,10 +564,14 @@ function tPreview(mode = '') {
 		mode = (mde.isPreviewActive()) ? 'edit':'show';
 	}
 	
-
 	if(mde.isPreviewActive()) {
 		if(mode == 'edit') mde.togglePreview();
-		if (rcmail.env.pn_asv) autoSave('start');
+		if (rcmail.env.pn_asv) {
+			if(mode == 'show')
+				autoSave('stop');
+			else
+				autoSave('start');
+		}
 	} else {
 		if(mode == 'show') mde.togglePreview();
 		autoSave('stop');
@@ -621,8 +625,8 @@ function tPreview(mode = '') {
 
 function autoSave(mode) {
 	let title = document.getElementById('headerTitle');
-	if(mode === 'stop') {
 
+	if(mode === 'stop') {
 		clearInterval(sID);
 		return false;
 	} else {
@@ -638,6 +642,11 @@ function autoSave(mode) {
 }
 
 function saveFile(mode) {
+	if(mde.isPreviewActive()) {
+		clearInterval(sID);
+		return false;
+	}
+
 	document.getElementById("main_area").appendChild(loader);
 
 	let tObj = tagify.value;
@@ -765,7 +774,7 @@ function loadNote(response) {
 			link.preventDefault();
 			let linkurl = decodeURIComponent(link.target.attributes.href.value);
 			let linkurlA = linkurl.split('#');
-			let anchor = linkurlA[1].toLowerCase().replaceAll(' ','-');
+			let anchor = (linkurlA.length > 1) ? linkurlA[1].toLowerCase().replaceAll(' ','-'):'';
 			showNote(document.querySelectorAll("[data-name='" + linkurlA[0] + "']")[0].id, 'show', anchor);
 			return false;
 		});
@@ -833,7 +842,7 @@ function savedNote(response) {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	loader.remove();
 	document.getElementById("notes-list").appendChild(loader);
-	let success = ['done', 'saved','autosaved'];
+	let success = ['done','saved','autosaved'];
 
 	if(success.includes(response.message)) {
 		if(document.getElementById('pnlist')) document.getElementById('pnlist').remove();

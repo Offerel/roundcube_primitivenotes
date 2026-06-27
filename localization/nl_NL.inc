@@ -29,3 +29,4 @@ $labels['note_rmedia_md'] = 'Automatisch ingesloten media verwijderen';
 $labels['note_toc'] = 'Inhoudsopgave';
 $labels['note_ntoc'] = 'Genummerde inhoudsopgave';
 $labels['note_media_del'] = 'Er zijn %count% mediabestanden aangetroffen in “%note%”. Wilt u ze verwijderen?';
+$labels['pn_asv'] = 'Automatisch opslaan (na 10 sec.)';

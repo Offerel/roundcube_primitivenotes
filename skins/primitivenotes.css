@@ -2,7 +2,8 @@
   --maxwidth: 800px;
 }
 .tagify {
-	width: calc(100% - 10px);
+    width: calc(100% - 10px);
+    height: 37px;
 }
 .ntags {
 	visibility: hidden;

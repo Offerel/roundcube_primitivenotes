@@ -79,7 +79,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function getHeadings() {
-		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$nname = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$note = $this->notes_path.$nname;
 		$headings = [];
 		$cb = 0;
@@ -128,6 +128,19 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function uploadMedia() {
+		$allowed = [
+			'image/png',
+			'image/jpeg',
+			'image/gif',
+			'image/webp',
+			'application/pdf'
+		];
+
+		if (!in_array($_FILES['dropFile']['type'], $allowed) || $_FILES['dropFile']['size'] > $this->max_upload_size ) {
+			$this->rc->output->show_message("Could not upload file. Please check size and filetype.","error");
+			return;
+		}
+
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
 		$filename = time().'.'.$path_parts['extension'];
@@ -144,10 +157,22 @@ class primitivenotes extends rcube_plugin{
 	}
 	
 	function uploadNote() {
+		$allowed = [
+			'text/markdown',
+			'text/plain',
+			'application/pdf'
+		];
+
 		$oname = $_FILES['dropFile']['name'];
 		$path_parts = pathinfo($oname);
 		$filename = (strlen($path_parts['filename']) > 225) ? substr($path_parts['filename'], 0, 225):$path_parts['filename'];
 		$note_path = $this->notes_path.$filename.'.'.$path_parts['extension'];
+
+		if(!in_array($_FILES['dropFile']['type'], $allowed)) {
+			$this->rc->output->show_message("Format not allowed","error");
+			return;
+		}
+
 		move_uploaded_file($_FILES['dropFile']['tmp_name'], $note_path);
 		echo $this->notes_list();
 	}
@@ -223,9 +248,10 @@ class primitivenotes extends rcube_plugin{
 					$filename = $fentry['filename'];
 					$format = $fentry['type'];
 					
+					$fname = htmlspecialchars($fentry['name'], ENT_QUOTES | ENT_HTML5,'UTF-8');
 					$pnlist.="<li id='$id' class='$format' data-format='$format' data-tags='$tlist' data-name='$filename'>
-								<a id='note_$id' title='".$fentry['name']."' >
-									<div class='subject'>".$fentry['name']."</div>
+								<a id='note_$id' title='$fname' >
+									<div class='subject'>$fname</div>
 									<div class='size'>$fsize</div>
 									<!-- <div class='date'>".$this->formatter->format($fentry['time'])."</div> -->
 									<div class='date'>".date($this->rc->config->get('date_long', false), $fentry['time'])."</div>
@@ -240,7 +266,7 @@ class primitivenotes extends rcube_plugin{
     }
 
 	function getNote() {
-		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false);
+		$name = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_GPC, false));
 		$media_path = $this->notes_path.$name;
 		$file = @file_get_contents($media_path);
 		$hash = sha1($media_path);
@@ -248,7 +274,9 @@ class primitivenotes extends rcube_plugin{
 		$name = utf8_decode(htmlspecialchars_decode($name));
 		header("Content-Disposition: attachment; filename=\"$name\"");
 		header('Content-Transfer-Encoding: binary');
-		header('Content-Type: application/octet-stream');
+		$mime = mime_content_type($media_path);
+		header("Content-Type: $mime");
+		header("X-Content-Type-Options: nosniff");
 		header("ETag: $hash");
 		header("Last-Modified: ".gmdate('D, d M Y H:i:s T', filemtime($media_path)));
 		header('Content-Length: '.filesize($media_path));
@@ -257,7 +285,7 @@ class primitivenotes extends rcube_plugin{
 
 	function deleteNote() {
 		$file = rcube_utils::get_input_value('_file', rcube_utils::INPUT_POST, false);
-		$name = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$name = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$notes_path = $this->notes_path.$file;
 		
 		if(file_exists($notes_path)) {
@@ -465,7 +493,7 @@ class primitivenotes extends rcube_plugin{
 	}
 
 	function showNote($note='') {
-		$nname = rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false);
+		$nname = basename(rcube_utils::get_input_value('_name', rcube_utils::INPUT_POST, false));
 		$mode = rcube_utils::get_input_value('_mode', rcube_utils::INPUT_POST, false);
 		$id = rcube_utils::get_input_value('_id', rcube_utils::INPUT_POST, false);
 		$anchor = rcube_utils::get_input_value('_anchor', rcube_utils::INPUT_POST, false);
@@ -588,17 +616,19 @@ class primitivenotes extends rcube_plugin{
 			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
 			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
 
-			if(!file_put_contents($nfile, $eyamls.$content, true)) {
+			if (is_link($path)) {
+				$this->rc->output->show_message("File not saved, no file","error");
+				error_log('no file: '.$message);
+				return;
+			}
+
+			if(!file_put_contents($nfile, $eyamls.$content, LOCK_EX)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
-				
-				if($mode == 'auto') {
-					error_log("auto");
-					$this->rc->output->command('plugin.savedNote', array('message' => 'autosaved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				} else {
-					error_log("manuel");
-					$this->rc->output->command('plugin.savedNote', array('message' => 'saved', 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				}
+				$message = ($mode == 'auto') ? 'autosaved':'saved';
+				$this->rc->output->command('plugin.savedNote', array('message' => $message, 'name' => basename($nfile) ,'list' => $this->notes_list()));
+				chmod($nfile, 0600);
+				error_log('saved: '.$message);
 			}
 		}
 	}
@@ -616,7 +646,12 @@ class primitivenotes extends rcube_plugin{
 			if (strpos($ncontent, $eofile) !== false) {
 				$ndate = filemtime($note);
 				$ncontent = str_replace($eofile, $enfile, $ncontent);
-				file_put_contents($note, $ncontent);
+				if (is_link($path)) {
+					$this->rc->output->show_message("File not saved, no file","error");
+					return;
+				}
+				file_put_contents($note, $ncontent, LOCK_EX);
+				chmod($note, 0600);
 				touch($note, $ndate);
 			}
 		}
