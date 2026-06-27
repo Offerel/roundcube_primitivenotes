@@ -604,7 +604,7 @@ class primitivenotes extends rcube_plugin{
 			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
 			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
 
-			if(!file_put_contents($nfile, $eyamls.$content, true)) {
+			if(!file_put_contents($nfile, $eyamls.$content, LOCK_EX)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
 				$message = ($mode == 'auto') ? 'autosaved':'saved';
@@ -627,7 +627,7 @@ class primitivenotes extends rcube_plugin{
 			if (strpos($ncontent, $eofile) !== false) {
 				$ndate = filemtime($note);
 				$ncontent = str_replace($eofile, $enfile, $ncontent);
-				file_put_contents($note, $ncontent);
+				file_put_contents($note, $ncontent, LOCK_EX);
 				touch($note, $ndate);
 			}
 		}
