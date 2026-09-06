@@ -1,13 +1,3 @@
-#tocdiv div {
-    counter-reset: section;
-}
-#tocdiv ul {
-    counter-reset: item;
-}
-#tocdiv li:not(.ul)::before {
-	content: counters(item, ".") " ";
-	counter-increment: item;
-}
 .editor-preview {
     counter-reset: h1;
 }

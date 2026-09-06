@@ -1,9 +1,9 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.3.3
+ * @version 2.3.5
  * @author Offerel
- * @copyright Copyright (c) 2025, Offerel
+ * @copyright Copyright (c) 2026, Offerel
  * @license GNU General Public License, version 3
  */
 var mde, tagify, originalData, sID;
@@ -549,10 +549,12 @@ function sidebyside() {
 			document.querySelector('.CodeMirror-code').classList.add('edVis');
 			sBtn.classList.remove('btninv');
 			eBtn.classList.add('btninv');
+			//document.getElementById('tocdiv').style.display = 'none';
 			if (rcmail.env.pn_asv) autoSave('start');
 		} else {
 			tPreview();
 			autoSave('stop');
+			//document.getElementById('tocdiv').style.display = 'block';
 		}
 	}, 10);
 }
@@ -591,8 +593,7 @@ function tPreview(mode = '') {
 			document.querySelector('.tagify').classList.remove('taedit');
 			document.getElementById('author').readOnly = true;
 			document.getElementById('source').readOnly = true;
-			document.querySelector('.toc').classList.add('no-disable');
-			document.querySelector('.toc').removeAttribute('disabled');
+			//document.getElementById('tocdiv').style.display = 'block';
 			document.querySelectorAll('.editor-preview code').forEach(function(element) {
 				element.addEventListener('click', function() {
 					let element = this;
@@ -616,9 +617,7 @@ function tPreview(mode = '') {
 			document.querySelector('.tagify').classList.add('taedit');
 			document.getElementById('author').readOnly = false;
 			document.getElementById('source').readOnly = false;
-			document.querySelector('.toc').classList.remove('no-disable');
-			document.querySelector('.toc').setAttribute('disabled', true);
-			if(document.getElementById('tocdiv')) document.getElementById('tocdiv').classList.remove('tocShow');
+			//document.getElementById('tocdiv').style.display = 'none';
 		}
 	}, 50);
 }
@@ -687,7 +686,7 @@ function loadNote(response) {
 		document.getElementById('layout-content').classList.toggle('hidden');
 	}
 
-	if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
+	//if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 	if(document.getElementById('binobj')) document.getElementById('binobj').remove();
 
 	tagify.removeAllTags();
@@ -711,26 +710,17 @@ function loadNote(response) {
 		document.querySelector('.EasyMDEContainer').classList.remove('mdeHide');
 		setTimeout(() => {
 			let headings = document.querySelector('.CodeMirror').querySelectorAll('h1, h2, h3, h4, h5, h6');
-			let toc = document.querySelector('.toc');
 
 			if(headings.length > 0) {
-				toc.classList.add('no-disable');
 				let tocdiv = document.createElement('div');
 				tocdiv.id = 'tocdiv';
-				let thead = document.createElement('h3');
-				thead.innerText = rcmail.gettext("note_toc", "primitivenotes");
-				tocdiv.appendChild(thead);
 				let tdiv = document.createElement('div');
 				tdiv.appendChild(buildToc(tocHierarchi(tocArr(headings))));
 				tocdiv.appendChild(tdiv);
-				document.querySelector('.EasyMDEContainer').appendChild(tocdiv);
-				document.querySelectorAll('#tocdiv a').forEach(function(elem) {
-					elem.addEventListener('click', function(e){
-						tocdiv.classList.toggle('tocShow');
-					});
+				document.querySelector('.EasyMDEContainer').appendChild(tocdiv);				
+				document.querySelectorAll('#tocdiv a').forEach(link => {
+					link.dataset.title = link.textContent.trim();
 				});
-			} else {
-				toc.classList.remove('no-disable');
 			}
 		}, 50);
 		
@@ -791,11 +781,13 @@ function buildToc(headings) {
 			a  = document.createElement('a');
 			a.href = '#' + t.el.id;
 			a.textContent = t.el.textContent;
+			a.dataset.title = a.textContent;
 			li.append(a);
 			if(t.subitems && t.subitems.length) li.append(buildToc(t.subitems));
 			ul.append(li);
 		}
 	}
+	
 	return ul;
 }
 
@@ -1030,11 +1022,6 @@ function showHeadings() {
 	dldvn.appendChild(hlist);
 }
 
-function toggleTOC() {
-	let tocdiv = document.getElementById('tocdiv');
-	if(tocdiv) tocdiv.classList.toggle('tocShow');
-}
-
 function showNote(id, mode='show', anchor='') {
 	document.getElementById('ndata').classList.remove('mtoggle');
 	let postData;
@@ -1092,9 +1079,6 @@ function new_note(a) {
 	document.getElementById('created').value = '';
 	document.getElementById('modified').value = '';
 	document.getElementById('fname').value = '';
-	document.querySelector('.toc').classList.remove('no-disable');
-	document.querySelector('.toc').setAttribute('disabled', true);
-	if(document.getElementById('tocdiv')) document.getElementById('tocdiv').classList.remove('tocShow');
 }
 
 function add_note() {

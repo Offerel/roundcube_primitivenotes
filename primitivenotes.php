@@ -2,9 +2,9 @@
 /**
  * Roundcube Notes Plugin
  *
- * @version 2.3.3
+ * @version 2.3.5
  * @author Offerel
- * @copyright Copyright (c) 2025, Offerel
+ * @copyright Copyright (c) 2026, Offerel
  * @license GNU General Public License, version 3
  */
 class primitivenotes extends rcube_plugin{
@@ -197,7 +197,7 @@ class primitivenotes extends rcube_plugin{
 							$rv = preg_match('"\\[(.*?)\\]"', $name, $tags);
 							if($this->rc->config->get('yaml_support', '') && stripos($file,".md")) {					
 								$contents = file_get_contents($notes_path.$file);
-								$yaml = @yaml_parse($contents);
+								$yaml = parse_frontmatter($contents);
 								if(isset($yaml['tags'])) {
 									if(!is_array($yaml['tags'])) {
 										$delm = (strpos($yaml['tags'], ', ') === false) ? ' ':', ';
@@ -351,19 +351,16 @@ class primitivenotes extends rcube_plugin{
 
 		$field_id='highlight_theme';
 		$cselect = new html_select(array('name' => 'highlight_theme', 'id' => $field_id));
-		$cpath = "plugins/primitivenotes/js/highlight/styles";
-		if ($handle = opendir($cpath)) {
-			while (false !== ($file = readdir($handle))) {
-				if ($file != "." && $file != ".." && is_file($cpath.'/'.$file) && strpos($file,'.css')) {
-					$arrFiles[] = $file;
-				}
-			}
-			closedir($handle);
-			natsort($arrFiles);
-			foreach($arrFiles AS $entry) {
-				$pinfo = pathinfo($entry);
-				$cselect->add(str_replace('.min','',ucwords(str_replace('-', ' ', $pinfo['filename']), ' ')), $entry);
-			}
+		$cpath = __DIR__ . "/js/highlight/styles";
+
+		$arrFiles = glob($cpath . '/*.css') ?: [];
+		natsort($arrFiles);
+		error_log(var_export($arrFiles, true));
+		foreach ($arrFiles as $entry) {
+			$filename = basename($entry);
+			$pinfo = pathinfo($filename);
+			$label = str_replace('.min', '', ucwords(str_replace('-', ' ', $pinfo['filename']), ' '));
+			$cselect->add($label, $filename);
 		}
 		
 		$p['blocks']['main']['options']['highlight_theme'] = array(
@@ -372,11 +369,10 @@ class primitivenotes extends rcube_plugin{
 											
 
 		$field_id='yaml_support';
-		$hint = (!function_exists('yaml_parse')) ? ' (php-yaml missing)':'';
 		$input = new html_checkbox(array(	'name'	=> 'yaml_support',
 											'id'	=> 'yaml_support',
 											'value' => 1));
-		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls').$hint),
+		$p['blocks']['main']['options']['pn_yaml'] = array(	'title'=> html::label($field_id, $this->gettext('note_yamls')),
 															'content'=> $input->show(intval($this->rc->config->get('yaml_support'))));
 
 		$field_id='check_links';
@@ -501,14 +497,10 @@ class primitivenotes extends rcube_plugin{
 
 		if(file_exists($note)) {
 			$fcontent = file_get_contents($note);
+			
 			$yaml = "";
 			if($this->rc->config->get('yaml_support', true)) {
-				if (!function_exists('yaml_parse')) {
-					$msg = "YAML functions not available. php-yaml package missing.";
-					error_log($msg);
-					$this->rc->output->show_message($msg,"error");
-				}
-
+				$pyaml = parse_frontmatter($fcontent);
 				$ydel = '---';
 				$yhb_pos = strpos($fcontent, $ydel);
 				$yhe_pos = strlen($fcontent) >= strlen($ydel) ? strpos($fcontent, $ydel, strlen($ydel)):0;
@@ -517,8 +509,7 @@ class primitivenotes extends rcube_plugin{
 					$fcontent = substr($fcontent,$yhe_pos + strlen($ydel));
 				}
 			}
-
-			$pyaml = @yaml_parse($yaml);
+			
 			if(isset($pyaml['tags']) && !is_array($pyaml['tags'])) $pyaml['tags'] = preg_split("/[\s,]+/", $pyaml['tags']);
 
 			if (isset($pyaml['date'])) {
@@ -607,27 +598,12 @@ class primitivenotes extends rcube_plugin{
 				}
 			}
 
-			if (!function_exists('yaml_emit')) {
-				$msg = "YAML functions not available. php-yaml package missing.";
-				error_log($msg);
-				$this->rc->output->show_message($msg,"error");
-			}
-
-			$eyamls = yaml_emit($eyaml, YAML_UTF8_ENCODING);
-			$eyamls = substr($eyamls, 0, strrpos($eyamls, "\n")-3)."---\n\n";
-
-			if (is_link($path)) {
-				$this->rc->output->show_message("File not saved, no file","error");
-				error_log('no file: '.$message);
-				return;
-			}
-
+			$eyamls = build_frontmatter($eyaml);
 			if(!file_put_contents($nfile, $eyamls.$content, LOCK_EX)) {
 				$this->rc->output->show_message("Could not save note to folder (\$config['notes_path']) failed. Please check directory permissions.","error");
 			} else {
 				$message = ($mode == 'auto') ? 'autosaved':'saved';
 				$this->rc->output->command('plugin.savedNote', array('message' => $message, 'name' => basename($nfile) ,'list' => $this->notes_list()));
-				chmod($nfile, 0600);
 				error_log('saved: '.$message);
 			}
 		}
@@ -675,5 +651,58 @@ class primitivenotes extends rcube_plugin{
 		$factor = round((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 	}
+}
+
+function parse_frontmatter($contents) {
+	$data = [];
+
+	if (!preg_match('/^---\s*\R(.*?)\R---\s*\R/s', $contents, $matches)) {
+		return $data;
+	}
+
+	$lines = preg_split('/\R/', trim($matches[1]));
+	$current_key = null;
+
+	foreach ($lines as $line) {
+		if (preg_match('/^([A-Za-z0-9_-]+):\s*(.*)$/', $line, $m)) {
+			$current_key = $m[1];
+			$value = trim($m[2]);
+			if ($value === '""' || $value === "''") {
+				$value = '';
+			}
+			$data[$current_key] = $value;
+		} elseif ($current_key === 'tags' && preg_match('/^\s*-\s*(.*)$/', $line, $m)) {
+			if (!isset($data['tags']) || !is_array($data['tags'])) {
+				$data['tags'] = [];
+			}
+			$data['tags'][] = trim($m[1]);
+		}
+	}
+
+	return $data;
+}
+
+function build_frontmatter($data) {
+	$out = "---\n";
+	foreach ($data as $key => $value) {
+		if ($key === 'tags' && is_array($value)) {
+			$out .= "tags:\n";
+
+			foreach ($value as $tag) {
+				$out .= "- " . $tag . "\n";
+			}
+
+			continue;
+		}
+
+		if ($value === '') {
+			$value = '""';
+		}
+
+		$out .= $key . ": " . $value . "\n";
+	}
+
+	$out .= "---\n\n";
+	return $out;
 }
 ?>

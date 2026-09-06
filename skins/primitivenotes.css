@@ -1,6 +1,114 @@
 :root {
   --maxwidth: 800px;
 }
+#tocdiv {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+#tocdiv ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#tocdiv li {
+    margin: 2px 0;
+    padding: 0;
+}
+#tocdiv a {
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 14px;
+    margin-left: auto;
+    color: transparent;
+    font-size: 0;
+    text-decoration: none;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: var(--toc-width) 2px;
+    background-image: linear-gradient(
+        rgba(128, 128, 128, 0.5),
+        rgba(128, 128, 128, 0.5)
+    );
+    cursor: pointer;
+    overflow: visible;
+    transition:
+        background-size 0.2s ease;
+}
+#tocdiv > div > ul > li > a {
+    --toc-width: 32px;
+    --toc-hover-width: 40px;
+}
+#tocdiv > div > ul > li > ul > li > a {
+    --toc-width: 26px;
+    --toc-hover-width: 34px;
+}
+#tocdiv > div > ul > li > ul > li > ul > li > a {
+    --toc-width: 20px;
+    --toc-hover-width: 28px;
+}
+#tocdiv > div > ul > li > ul > li > ul > li > ul > li > a {
+    --toc-width: 14px;
+    --toc-hover-width: 22px;
+}
+#tocdiv > div > ul > li > ul > li > ul > li > ul > li > ul > li > a {
+    --toc-width: 8px;
+    --toc-hover-width: 16px;
+}
+#tocdiv a:hover {
+    background-size: var(--toc-hover-width) 2px;
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0.75)
+    );
+}
+#tocdiv a::after {
+    content: attr(data-title);
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    padding: 7px 11px;
+    color: white;
+    background: rgba(30, 30, 30, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.3;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(0, -50%);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0.15s ease;
+    pointer-events: auto;
+}
+#tocdiv a:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -50%);
+}
+#tocdiv a::before {
+    content: "";
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    width: 8px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+#tocdiv a:hover::before {
+    opacity: 0.5;
+}
 .tagify {
     width: calc(100% - 10px);
     height: 37px;
@@ -197,54 +305,6 @@ code.success::before {
 	background-color: aliceblue;
 	opacity: .8;
 	pointer-events: none;
-}
-#tocdiv {
-	position: absolute;
-	background-color: #d4dbde;
-	width: 260px;
-	white-space: nowrap;
-	padding: 5px 0 5px;
-	border-bottom-left-radius: .3em;
-	border-bottom-right-radius: .3em;
-	border: 1px solid #bbb;
-	overflow-x: hidden;
-	right: 30px;
-	border-top: 0;
-	height: 250px;
-	overflow-y: auto;
-	z-index: -1;
-}
-#tocdiv.tocShow {
-	top: 29px;
-	z-index: 9;
-}
-#tocdiv div {
-	height: calc(100% - 35px);
-	overflow: auto;
-	width: 100%;
-	padding-top: 10px;
-	padding-right: 15px;
-}
-#tocdiv h3 {
-	font-size: 1.3em;
-	padding: 10px 10px 2px;
-	background-color: #b6c3c8;
-	width: 258px;
-	margin: 0;
-}
-#tocdiv > li {
-	top: 40px;
-	position: relative;
-}
-#tocdiv ul {
-	margin: 0;
-	padding-left: 15px;
-}
-#tocdiv li {
-	list-style: none;
-	padding: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 .db-spinner {
 	width: 40px;
@@ -507,6 +567,9 @@ span.cm-header.cm-header-1 {
 }
 span.cm-header.cm-header-2 {
 	font-size: calc(1.325rem + .3vw);
+}
+span.cm-header.cm-header-3 {
+    font-size: calc(1.325rem);
 }
 .cm-s-easymde .cm-header-3 {
 	font-size: calc(1.1rem + .1vw);
