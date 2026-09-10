@@ -82,16 +82,6 @@ window.rcmail && rcmail.addEventListener("init", function(a) {
 						action: togglemData,
 						className: "fa fa-lightbulb no-disable",
 						title: "Metadata",
-					},
-					{
-						name: "toc",
-						action: toggleTOC,
-						className: "fa fa-list-alt",
-						title: "TOC",
-						attributes: {
-							disabled: '',
-							id: 'test'
-						}
 					}],
 		shortcuts: {
 			"save": "Ctrl-S",
@@ -549,12 +539,12 @@ function sidebyside() {
 			document.querySelector('.CodeMirror-code').classList.add('edVis');
 			sBtn.classList.remove('btninv');
 			eBtn.classList.add('btninv');
-			//document.getElementById('tocdiv').style.display = 'none';
+			document.getElementById('tocdiv').style.display = 'none';
 			if (rcmail.env.pn_asv) autoSave('start');
 		} else {
 			tPreview();
 			autoSave('stop');
-			//document.getElementById('tocdiv').style.display = 'block';
+			document.getElementById('tocdiv').style.display = 'block';
 		}
 	}, 10);
 }
@@ -593,7 +583,7 @@ function tPreview(mode = '') {
 			document.querySelector('.tagify').classList.remove('taedit');
 			document.getElementById('author').readOnly = true;
 			document.getElementById('source').readOnly = true;
-			//document.getElementById('tocdiv').style.display = 'block';
+			document.getElementById('tocdiv').style.display = 'block';
 			document.querySelectorAll('.editor-preview code').forEach(function(element) {
 				element.addEventListener('click', function() {
 					let element = this;
@@ -617,7 +607,7 @@ function tPreview(mode = '') {
 			document.querySelector('.tagify').classList.add('taedit');
 			document.getElementById('author').readOnly = false;
 			document.getElementById('source').readOnly = false;
-			//document.getElementById('tocdiv').style.display = 'none';
+			if(document.getElementById('tocdiv')) document.getElementById('tocdiv').style.display = 'none';
 		}
 	}, 50);
 }
@@ -686,7 +676,7 @@ function loadNote(response) {
 		document.getElementById('layout-content').classList.toggle('hidden');
 	}
 
-	//if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
+	if(document.getElementById('tocdiv')) document.getElementById('tocdiv').remove();
 	if(document.getElementById('binobj')) document.getElementById('binobj').remove();
 
 	tagify.removeAllTags();
@@ -713,14 +703,20 @@ function loadNote(response) {
 
 			if(headings.length > 0) {
 				let tocdiv = document.createElement('div');
+				let toc_marker = document.createElement('div');
+				let toc_panel = document.createElement('div');
+				
 				tocdiv.id = 'tocdiv';
-				let tdiv = document.createElement('div');
-				tdiv.appendChild(buildToc(tocHierarchi(tocArr(headings))));
-				tocdiv.appendChild(tdiv);
+				toc_marker.className = 'toc-marker';
+				toc_panel.className = 'toc-panel';
+				
+				toc_panel.append(buildToc(headings));
+				toc_marker.append(buildTocMarkers(headings));
+				
+				tocdiv.appendChild(toc_marker);
+				tocdiv.appendChild(toc_panel);
+				
 				document.querySelector('.EasyMDEContainer').appendChild(tocdiv);				
-				document.querySelectorAll('#tocdiv a').forEach(link => {
-					link.dataset.title = link.textContent.trim();
-				});
 			}
 		}, 50);
 		
@@ -773,22 +769,45 @@ function loadNote(response) {
 }
 
 function buildToc(headings) {
-	let li, a, anchor;
-	let ul = document.createElement('ul');
-	if(headings && headings.length) {
-		for(t of headings) {
-			li = document.createElement('li');
-			a  = document.createElement('a');
-			a.href = '#' + t.el.id;
-			a.textContent = t.el.textContent;
-			a.dataset.title = a.textContent;
-			li.append(a);
-			if(t.subitems && t.subitems.length) li.append(buildToc(t.subitems));
-			ul.append(li);
+	let root = document.createElement('ul');
+	let current = root;
+	let levels = [0];
+
+	for(let t of headings) {
+		let level = parseInt(t.tagName.substring(1));
+
+		while(levels.length > 1 && level <= levels[levels.length - 1]) {
+			levels.pop();
+			current = current.parentElement.closest('ul');
 		}
+
+		let li = document.createElement('li');
+		let a = document.createElement('a');
+		a.href = '#' + t.id;
+		a.textContent = t.textContent;
+		a.dataset.title = a.textContent;
+		li.append(a);
+		current.append(li);
+		let sub = document.createElement('ul');
+		li.append(sub);
+		current = sub;
+		levels.push(level);
 	}
-	
-	return ul;
+
+	root.querySelectorAll('li > ul:empty').forEach(ul => ul.remove());
+	return root;
+}
+
+function buildTocMarkers(headings) {
+    let a;
+    let container = document.createDocumentFragment();
+	for (t of headings) {
+		a = document.createElement('a');
+		a.href = '#' + t.id;
+		a.dataset.level = t.tagName.substring(1);
+		container.append(a);
+	}
+    return container;
 }
 
 function tocHierarchi(items) {
